@@ -1,0 +1,22 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="tutorial.xsl" type="XSLT" factoryName="XSLT">
+    <option name="myOutputFile" value="C:\Projects\JohnSmith\demo\tutorial.html" />
+    <option name="myOpenOutputFile" value="false" />
+    <option name="myOpenInBrowser" value="false" />
+    <option name="mySmartErrorHandling" value="true" />
+    <option name="myRunnerPort" value="34873" />
+    <option name="myVmArguments" value="" />
+    <option name="myWorkingDirectory" value="" />
+    <option name="myModule" />
+    <option name="myJdk" />
+    <XsltFile url="file://$PROJECT_DIR$/demo/tutorial.xsl" />
+    <XmlFile url="file://$PROJECT_DIR$/demo/tutorial.xml" />
+    <parameters />
+    <OutputType value="CONSOLE" save-to-file="true" />
+    <FileType name="XHTML" />
+    <JdkChoice value="FROM_MODULE" />
+    <RunnerSettings RunnerId="XsltProgramRunner" />
+    <ConfigurationWrapper RunnerId="XsltProgramRunner" />
+    <method />
+  </configuration>
+</component>

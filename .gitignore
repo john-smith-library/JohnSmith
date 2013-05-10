@@ -163,6 +163,14 @@ pip-log.txt
 .DS_Store
 
 #############
+## Webstorm
+#############
+
+.idea/workspace.xml
+.idea/tasks.xml
+
+
+#############
 ## JohnSmith autogenerate
 #############
 

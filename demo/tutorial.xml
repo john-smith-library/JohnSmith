@@ -1,0 +1,270 @@
+<tutorial>
+    <example id="binding_basicUsage_staticValue">
+        <title>Static value binding</title>
+        <description>Demonstrates simple binding to a static value.</description>
+        <markup><![CDATA[<div id='staticValue'>
+    <div class='fullName'></div>
+</div>]]></markup>
+        <script><![CDATA[js.bind("John Smith").to("#binding_basicUsage_staticValue .fullName");]]></script>
+    </example>
+
+    <example id="binding_basicUsage_dynamicValue">
+        <title>Dynamic value binding</title>
+        <description>Demonstrates simple binding to a dynamic value (current time).</description>
+        <markup><![CDATA[<div class='currentTime'></div>]]></markup>
+        <script><![CDATA[var currentTime = js.bindableValue();
+currentTime.setValue("...");
+
+window.setInterval(function(){
+    currentTime.setValue(new Date().toLocaleTimeString());
+}, 1000);
+
+js.bind(currentTime).to("#binding_basicUsage_dynamicValue .currentTime");]]></script>
+    </example>
+
+    <example id="binding_simpleList_customFormatting">
+        <title>List binding</title>
+        <description>Demonstrates custom item formatter usage for list binding.</description>
+        <markup><![CDATA[<ul id='people'></ul>]]></markup>
+        <script><![CDATA[var people = js.bindableList();
+
+js.bind(people).to({
+    handler: "list",
+    to: "#people",
+    formatter: {
+        format: function(value){
+            return $("<li class='person'></li>").text(value);
+        }
+    }
+});
+
+people.setValue(["John Smith", "Marilyn Manson"]);]]></script>
+    </example>
+
+    <example id="binding_simpleList_interaction">
+        <title>List binding interaction</title>
+        <description>Demonstrates using add/remove methods of bindable list. Note that you can add or remove multiple items at one call.</description>
+        <markup><![CDATA[<ul id='employee'></ul>]]></markup>
+        <script><![CDATA[var employee = js.bindableList();
+
+js.bind(employee).to({
+    handler: "list",
+    to: "#employee",
+    formatter: {
+        format: function(value){
+            return $("<li class='person'></li>").text(value);
+        }
+    }
+});
+
+employee.add("Joe Bloggs", "Fred Bloggs", "Bob Soap");
+employee.add("Charlie Farnsbarns");
+employee.add("John Q. Public");
+employee.add("Joe Public");
+
+employee.remove("Fred Bloggs", "John Q. Public");]]></script>
+    </example>
+
+    <example id="view_simple">
+        <title>Simple vew</title>
+        <description>Demonstrates simple view rendering.</description>
+        <markup><![CDATA[<script id='personTemplate' type='text/view'>
+    <div class='person'>
+        <span class='firstName'></span>
+        <span class='lastName'></span>
+    </div>
+</script>
+
+<div id="me">
+</div>]]></markup>
+        <script><![CDATA[var viewModel = {
+    firstName: "John",
+    lastName: "Smith"
+};
+
+var view = js.createView(
+    "#personTemplate",
+    function(view, viewModel){
+        view.bind(viewModel.firstName).to(".firstName");
+        view.bind(viewModel.lastName).to(".lastName");
+    },
+    viewModel);
+
+view.renderTo("#me");]]></script>
+    </example>
+
+    <example id="view_resetState">
+        <title>Using resetState method</title>
+        <description><![CDATA[<code>resetState</code> is a point to initialize bindable values. <code>resetState</code> is called by the veiw after rendering when all bindable values are ready.]]></description>
+        <markup><![CDATA[<script id='personDetailsTemplate' type='text/view'>
+
+    <table class='table table-bordered'>
+        <tr>
+            <th>First name:</th>
+            <td class='firstName'></td>
+        </tr>
+        <tr>
+            <th>Last name:</th>
+            <td class='lastName'></td>
+        </tr>
+    </table>
+</script>
+
+<div id="meDetails">
+</div>]]></markup>
+        <script><![CDATA[var viewModel = {
+    firstName: js.bindableValue(),
+    lastName: js.bindableValue(),
+    resetState: function(){
+        // this function will be called by the vew after rendering.
+        this.firstName.setValue("John");
+        this.lastName.setValue("Smith");
+    }
+};
+
+var view = js.createView(
+    "#personDetailsTemplate",
+    function(view, viewModel){
+        view.bind(viewModel.firstName).to(".firstName");
+        view.bind(viewModel.lastName).to(".lastName");
+    },
+    viewModel);
+
+view.renderTo("#meDetails");]]></script>
+    </example>
+
+
+
+    <example id="view_simple">
+        <title>Multiple root-level elements in view template</title>
+        <description></description>
+        <markup><![CDATA[<script id='personTemplate2' type='text/view'>
+    <span class='firstName'></span>
+    <span class='lastName'></span>
+</script>
+
+<div id="me2">
+</div>]]></markup>
+        <script><![CDATA[var viewModel = {
+    firstName: "John",
+    lastName: "Smith"
+};
+
+var view = js.createView(
+    "#personTemplate2",
+    function(view, viewModel){
+        view.bind(viewModel.firstName).to(".firstName");
+        view.bind(viewModel.lastName).to(".lastName");
+    },
+    viewModel);
+
+view.renderTo("#me2");]]></script>
+    </example>
+
+
+
+    <example id="view_simple">
+        <title>Using a view for rendering bindable value</title>
+        <description>Demonstrates how views could be used to render bindable value.</description>
+        <markup><![CDATA[<script id='friendTemplate' type='text/view'>
+    <div class='friend'>
+        <span class='firstName'></span>
+        <span class='lastName'></span>
+    </div>
+</script>
+
+<div id="myFriend">
+</div>]]></markup>
+        <script><![CDATA[var friend = js.bindableValue();
+
+var friendViewFactory = function(friend){
+    return js.createView(
+        "#friendTemplate",
+        function(view, viewModel){
+            view.bind(viewModel.firstName).to(".firstName");
+            view.bind(viewModel.lastName).to(".lastName");
+        },
+        friend
+    );
+}
+
+js.bind(friend).to({
+    handler: "render",
+    to: "#myFriend",
+    view: friendViewFactory
+});
+
+friend.setValue({
+    firstName: "Joe",
+    lastName: "Bloggs"
+});
+
+]]></script>
+    </example>
+
+    <example id="view_list">
+        <title>Using a view for rendering list item</title>
+        <description>Demonstrates how views could be used for render bindable list items.</description>
+        <markup><![CDATA[<script id='friendRowTemplate' type='text/view'>
+    <tr class='friend'>
+        <td>
+            <input type="checkbox" />
+        </td>
+        <td class='firstName'></td>
+        <td class='lastName'></td>
+        <td>
+            <a href="#">view details</a>
+        </td>
+    </tr>
+</script>
+
+<table id="friendsTable" class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th></th>
+            <th>First name</th>
+            <th>Last name</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>]]></markup>
+        <script><![CDATA[/* Model */
+var Friend = function(firstName, lastName){
+    this.firstName = firstName;
+    this.lastName = lastName;
+}
+
+/* View Model */
+
+var friends = js.bindableList();
+
+/* View */
+
+var friendViewFactory = function(friend){
+    return js.createView(
+        "#friendRowTemplate",
+        function(view, viewModel){
+            view.bind(viewModel.firstName).to(".firstName");
+            view.bind(viewModel.lastName).to(".lastName");
+        },
+        friend
+    );
+}
+
+js.bind(friends).to({
+    handler: "list",
+    to: "#friendsTable tbody",
+    view: friendViewFactory
+});
+
+friends.setValue([
+    new Friend("Joe", "Bloggs"),
+    new Friend("Fred",  "Bloggs"),
+    new Friend("Bob", "Soap")
+]);
+
+]]></script>
+    </example>
+</tutorial>

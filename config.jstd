@@ -1,0 +1,11 @@
+load:
+  - src/Common.js
+  - src/Binding.js
+  - src/Config.js
+  - src/Config.js
+  - test/common/ArrayListTests.js
+  - test/binding/BindableValueTest.js
+  - test/binding/BindingWireTests.js
+  - test/binding/StaticBindableValueTests.js
+  - test/binding/DefaultBindingManagerTests.js
+  - test/binding/BindableListTests.js
