@@ -1,4 +1,5 @@
-echo "Publishing artifacts\n"
+#!/bin/bash
+echo -e "Publishing artifacts\n"
 
 git config --global user.email "guryanovev@gmail.com"
 git config --global user.name "Travis"
