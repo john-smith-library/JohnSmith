@@ -7,9 +7,9 @@ env:
 script:
     - "node scripts/build_tutorial.js"
     - "mkdir ${HOME}/build_artifacts"
-    - "cp -R out ${HOME}/build_artifacts"
+    - "cp -R out/* ${HOME}/build_artifacts"
     - "rm -r *"
-    - "cp -R ${HOME}/build_artifacts ."
+    - "cp -R ${HOME}/build_artifacts/* ."
     - "git config --global user.email 'guryanovev@gmail.com'"
     - "git config --global user.name 'Travis'"
     - "git remote add upstream https://${GH_TOKEN}@github.com/guryanovev/JohnSmith.git"
