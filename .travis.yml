@@ -5,7 +5,7 @@ env:
   global:
     - secure: "JH7N4LAjAywkt010l+20n3FWsrzX2bjzvm+wKf04+IIoNp6QTkYqRFTT6uII\n1Fqs2x0H5cyPgum/ji++vdFLOKkusKTTUdqDr3a8296wdIxm3VpXCusjHqkP\nnpL5SYGuUPyAfIT5YOstO7kfk11Nuex9bWb1mmF/JcBI7P+AbLI="
 script:
-    - "node scripts/build_tutorial.js && ./scripts/post_build.sh"
+    - "node scripts/build_tutorial.js"
     - "echo -e 'Publishing artifacts\n'"
     - "git config --global user.email 'guryanovev@gmail.com'"
     - "git config --global user.name 'Travis'"
