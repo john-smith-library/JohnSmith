@@ -5,6 +5,8 @@ env:
   global:
     - secure: "JH7N4LAjAywkt010l+20n3FWsrzX2bjzvm+wKf04+IIoNp6QTkYqRFTT6uII\n1Fqs2x0H5cyPgum/ji++vdFLOKkusKTTUdqDr3a8296wdIxm3VpXCusjHqkP\nnpL5SYGuUPyAfIT5YOstO7kfk11Nuex9bWb1mmF/JcBI7P+AbLI="
 script:
+    - npm install -g typescript
+    - tsc --out "out/john-smith-0.0.1.debug.js" --comments src/Common.ts src/Binding.ts src/View.ts src/JQuery.ts src/Debug.ts
     - "node scripts/build_tutorial.js"
     - "mkdir ${HOME}/build_artifacts"
     - "cp -R out/* ${HOME}/build_artifacts"
