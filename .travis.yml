@@ -11,7 +11,7 @@ script:
     - "git config --global user.email 'guryanovev@gmail.com'"
     - "git config --global user.name 'Travis'"
     - "git remote add upstream https://${GH_TOKEN}@github.com/guryanovev/JohnSmith.git"
-    - "git checkout -B gh-pages"
+    - "git checkout --orphan gh-pages"
     - "rm -r *"
     - "git rm -rf ."
     - "cp -R ${HOME}/build_artifacts/* ."
