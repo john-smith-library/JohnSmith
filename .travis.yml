@@ -16,5 +16,6 @@ script:
     - "git rm -rf ."
     - "cp -R ${HOME}/build_artifacts/* ."
     - "git add -f ."
-    - "git commit -q -m 'Travis build ${TRAVIS_BUILD_NUMBER} pushed to gh-pages'"
+    - echo "$TRAVIS_BUILD_NUMBER"
+    - git commit -q -m "Travis build $TRAVIS_BUILD_NUMBER pushed to gh-pages"
     - "git push -fq upstream gh-pages"
