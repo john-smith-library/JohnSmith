@@ -6,7 +6,7 @@ env:
     - secure: "JH7N4LAjAywkt010l+20n3FWsrzX2bjzvm+wKf04+IIoNp6QTkYqRFTT6uII\n1Fqs2x0H5cyPgum/ji++vdFLOKkusKTTUdqDr3a8296wdIxm3VpXCusjHqkP\nnpL5SYGuUPyAfIT5YOstO7kfk11Nuex9bWb1mmF/JcBI7P+AbLI="
 
 before_script:
-    - mkdir "temp_tools"
+    - mkdir "${HOME}/temp_tools"
     - "curl -o ${HOME}/temp_tools/JsTestDriver-1.3.3d.jar 'http://js-test-driver.googlecode.com/files/JsTestDriver-1.3.3d.jar'"
     - "java -jar ${HOME}/temp_tools/JsTestDriver-1.3.3d.jar --port 9876 &"
     - "sleep 3"
