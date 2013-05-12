@@ -1,5 +1,5 @@
 var path = require('path');
-var fs = require('fs');
+var fs = require('fs-extra');
 var jade = require('jade');
 
 var fn = jade.compile(fs.readFileSync("scripts/examples_template.jade"));
@@ -11,9 +11,9 @@ if (!fs.existsSync("out")) {
 var examplesBaseDir = "src_examples";
 var outputHtmlFile = path.join("out", "examples.html");
 
-//fs.copy(
-//    path.join(examplesBaseDir, "assets"),
-//    path.join("out", "assets"));
+fs.copy(
+    path.join(examplesBaseDir, "assets"),
+    path.join("out", "assets"));
 
 console.log("Building examples html...");
 
