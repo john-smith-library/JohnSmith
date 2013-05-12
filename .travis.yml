@@ -7,6 +7,7 @@ env:
 
 before_script:
     - mkdir "temp_tools"
+    - "curl -o temp_tools/JsTestDriver-1.3.3d.jar 'http://js-test-driver.googlecode.com/files/JsTestDriver-1.3.3d.jar'"
     - "java -jar temp_tools/JsTestDriver-1.3.3d.jar --port 9876 &"
     - "sleep 3"
     - "phantomjs scripts/js-test-driver-phantomjs/phantomjs-jstd.js &"
