@@ -57,5 +57,7 @@ testCase.prototype.testCustomFormatterReturnsJQueryObjectShouldRenderValue = fun
 
     foo.setValue("bar");
 
-    assertEquals("Bound value", "<span style=\"color: black;\">bar</span>", $("#testDynamicBinding").html());
+    assertEquals("Count of span elements", 1, $("#testDynamicBinding").find("span").length);
+    assertEquals("Bound value", "bar", $("#testDynamicBinding").find("span").text());
+    assertNotUndefined("Bound value", $("#testDynamicBinding").find("span").css("color"));
 }
