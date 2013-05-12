@@ -38,6 +38,10 @@ module JohnSmith.Views {
         public renderTo(destination:any):void {
             var templateElement = this.elementFactory.createElement(this.templateQuery);
 
+            if (templateElement.isEmpty()){
+                throw new Error("Template [" + this.templateQuery + "] content for view is empty");
+            }
+
             var destinationElement = typeof destination == "string" ?
                 this.elementFactory.createElement(destination) :
                 destination;
@@ -51,10 +55,7 @@ module JohnSmith.Views {
                 {
                     root: this.rootElement,
                     view: this
-                }
-            );
-
-            //this.rootElement.append("<div style='position: absolute; background: yellow; padding: 5px; font-size: 11px;'>view</div>");
+                });
 
             this.initCallback(this, this.viewModel);
 
@@ -89,6 +90,8 @@ module JohnSmith.Views {
         }
 
         public render(value: any, destination: JohnSmith.Common.IElement): JohnSmith.Common.IElement {
+            console.log(this.viewFactory);
+
             if (this.currentView){
                 this.currentView.dispose();
             }
@@ -112,11 +115,43 @@ module JohnSmith.Views {
 
     js.addHandlerTransformer({
         description: "{view: Function} => {renderer: IValueRenderer} [Sets renderer for view]",
-        transform: function(data: any, context: JohnSmith.Common.IElement): any{
-            if (data && (data.handler === "render" || data.handler === "list") && data.view) {
-                data.renderer = new ViewValueRenderer(data.view)
+
+        checkApplicability: function(data:any[], bindable:JohnSmith.Binding.IBindable, context:JohnSmith.Common.IElement): JohnSmith.Binding.TransformerApplicability{
+            if (data && data.length > 0){
+                if (data[0].handler === "render" && data[0].view) {
+                    return JohnSmith.Binding.TransformerApplicability.Applicable;
+                }
             }
 
+            return JohnSmith.Binding.TransformerApplicability.Unknown;
+            //return data && data.length > 0 && data[0].handler === "render" && data[0].view;
+        },
+
+        transform: function(data: any[], context: JohnSmith.Common.IElement): any{
+            data[0].renderer = new ViewValueRenderer(data[0].view)
+            return data;
+        }
+    });
+
+    js.addHandlerTransformer({
+        description: "[{}, function(){}] => {view: function(){}} [Converts second argument to view property]",
+
+        checkApplicability: function(data:any[], bindable:JohnSmith.Binding.IBindable, context:JohnSmith.Common.IElement): JohnSmith.Binding.TransformerApplicability{
+            if (data && data.length > 0){
+                if (data[0].view) {
+                    return JohnSmith.Binding.TransformerApplicability.NotApplicable;
+                }
+
+                if (typeof data[0] === "object" && data.length > 1 && data[1].constructor && data[1].apply && data[1].call) {
+                    return JohnSmith.Binding.TransformerApplicability.Applicable;
+                }
+            }
+
+            return JohnSmith.Binding.TransformerApplicability.Unknown;
+        },
+
+        transform: function(data: any[], context: JohnSmith.Common.IElement): any{
+            data[0].view = data[1];
             return data;
         }
     });

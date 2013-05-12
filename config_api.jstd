@@ -1,0 +1,10 @@
+load:
+  - demo/scripts/jquery-2.0.0.min.js
+  - src/Common.js
+  - src/Binding.js
+  - src/View.js
+  - src/JQuery.js
+  - src/Debug.js
+  - test_api/1_staticBinding.js
+  - test_api/2_dynamicBinding.js
+  - test_api/3_listBinding.js

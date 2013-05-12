@@ -46,9 +46,15 @@ module JohnSmith.Binding {
         createHandler: (handlerData: any, context: JohnSmith.Common.IElement) => IBindableHandler;
     }
 
+    export interface IBindingData {
+        bindableData: any;
+        context: JohnSmith.Common.IElement;
+        handlerData: any[];
+    }
+
     // sets up bindings between any objects
     export interface IBindableManager {
-        bind: (bindable: any, handler: any, context: JohnSmith.Common.IElement) => BindingWire;
+        bind: (data: IBindingData) => BindingWire;
     }
 
     // stores a combination of bindable and handler
@@ -224,11 +230,11 @@ module JohnSmith.Binding {
             this.handlerDataTransformers = handlerDataTransformers;
         }
 
-        public bind(bindableData: any, handlerData: any, context: JohnSmith.Common.IElement): BindingWire {
-            Log().info("Binding ", bindableData, " to ", handlerData);
+        public bind(data:IBindingData): BindingWire {
+            Log().info("Binding ", data.bindableData, " to ", data.handlerData);
 
-            var bindable: IBindable = this.getBindable(bindableData);
-            var handler: IBindableHandler = this.getHandler(handlerData, context);
+            var bindable: IBindable = this.getBindable(data.bindableData);
+            var handler: IBindableHandler = this.getHandler(data.handlerData, bindable, data.context);
 
             Log().info("    resolved bindable: ", bindable);
             Log().info("    resolved handler: ", handler);
@@ -249,21 +255,69 @@ module JohnSmith.Binding {
             throw new Error("Could not transform object " + bindableObject + " to bindable");
         }
 
-        private getHandler(handlerObject: any, context: JohnSmith.Common.IElement): IBindableHandler {
-            var data: any = handlerObject;
+        private getHandler(handlerData: any[], bindable:IBindable, context: JohnSmith.Common.IElement): IBindableHandler {
+            var data: any[] = handlerData;
+            var transformers: IHandlerDataTransformer[] = [];
+
+            // copy transformers to new array
             for (var i = 0; i < this.handlerDataTransformers.count(); i++){
-                data = this.handlerDataTransformers.getAt(i).transform(data, context);
+                transformers.push(this.handlerDataTransformers.getAt(i));
             }
+
+            var isTransformed = false;
+            var lastTransformersCount;
+            while(!isTransformed){
+                // do transformation iteration
+                var currentTransformerIndex = 0;
+                lastTransformersCount = transformers.length;
+                while (currentTransformerIndex < transformers.length) {
+                    var currentTransformer:IHandlerDataTransformer = transformers[currentTransformerIndex];
+                    var applicability = currentTransformer.checkApplicability(data, bindable, context);
+                    switch (applicability){
+                        case TransformerApplicability.NotApplicable:
+                            transformers.splice(currentTransformerIndex, 1);
+                            break;
+                        case TransformerApplicability.Applicable:
+                            Log().info("    apply transformer [" + (currentTransformer.description || "No Description") + "]")
+                            currentTransformer.transform(data, bindable, context);
+                            transformers.splice(currentTransformerIndex, 1);
+                            break;
+                        case TransformerApplicability.Unknown:
+                            currentTransformerIndex++;
+                            break;
+                    }
+                }
+
+                // transformation iteration complete
+
+                if (transformers.length == 0){
+                    // no more transformers to apply, finish transformation
+                    isTransformed = true;
+                }
+
+                if (lastTransformersCount == transformers.length){
+                    // no transformers were applied in the current iteration, finish transformation
+                    isTransformed = true;
+                }
+            }
+
+//            for (var i = 0; i < this.handlerDataTransformers.count(); i++){
+//                var transformer = this.handlerDataTransformers.getAt(i);
+//                if (transformer.canTransform(data, bindable, context)) {
+//                    Log().info("    apply transformer [" + i + "]")
+//                    data = transformer.transform(data, bindable, context);
+//                }
+//            }
 
             for (var i = 0; i < this.handlerFactories.count(); i++) {
                 var factory: JohnSmith.Binding.IHandlerFactory = this.handlerFactories.getAt(i);
-                var result: IBindableHandler = factory.createHandler(data, context);
+                var result: IBindableHandler = factory.createHandler(data[0], context);
                 if (result) {
                     return result;
                 }
             }
 
-            throw new Error("Could not transform object " + handlerObject + " to bindable handler");
+            throw new Error("Could not transform object " + handlerData + " to bindable handler");
         }
     }
 
@@ -282,12 +336,6 @@ module JohnSmith.Binding {
         render: (value: any, destination: JohnSmith.Common.IElement) => JohnSmith.Common.IElement;
         dispose?: () => void;
     }
-
-//    export interface IListContentDestination {
-//        empty: () => void;
-//        append: (item: any, html: string) => void;
-//        remove: (item: any) => void;
-//    }
 
     export interface IValueToElementMapper {
         getElementFor(value:any, root:JohnSmith.Common.IElement):JohnSmith.Common.IElement;
@@ -449,10 +497,17 @@ module JohnSmith.Binding {
     // Handler Factory
     /////////////////////////////////
 
+    export enum TransformerApplicability {
+        NotApplicable,
+        Applicable,
+        Unknown
+    }
+
     // Transforms handler data to canonical form.
     export interface IHandlerDataTransformer {
-         description?: string;
-         transform: (data:any, context:JohnSmith.Common.IElement) => any;
+        description?: string;
+        checkApplicability: (data:any[], bindable:IBindable, context:JohnSmith.Common.IElement) => TransformerApplicability;
+        transform: (data:any[], bindable:IBindable, context:JohnSmith.Common.IElement) => any[];
     }
 
     export interface HandlerOptions {
@@ -462,6 +517,7 @@ module JohnSmith.Binding {
     export interface RenderHandlerOptions extends HandlerOptions {
         contentDestination?: JohnSmith.Common.IElement;
         renderer?: IValueRenderer;
+        type?: string;
     }
 
     export interface RenderListOptions extends RenderHandlerOptions {
@@ -475,7 +531,8 @@ module JohnSmith.Binding {
             }
 
             var options: RenderHandlerOptions = handlerData;
-            if ((!options.handler) || (options.handler != "render")) {
+            var validOptions = options.handler === "render" && options.type === "value";
+            if (!validOptions) {
                 return null;
             }
 
@@ -502,7 +559,8 @@ module JohnSmith.Binding {
             }
 
             var options: RenderListOptions = handlerData;
-            if ((!options.handler) || (options.handler != "list")) {
+            var validOptions = options.handler === "render" && options.type === "list";
+            if (!validOptions) {
                 return null;
             }
 
@@ -542,8 +600,12 @@ module JohnSmith.Binding {
             this.context = context;
         }
 
-        public to(handler: any):BindingConfig {
-            this.manager.bind(this.bindable, handler, this.context).init();
+        public to(...handler: any[]):BindingConfig {
+            this.manager.bind({
+                bindableData: this.bindable,
+                handlerData: handler,
+                context: this.context
+            }).init();
             return this;
         }
     }
@@ -629,27 +691,120 @@ module JohnSmith.Binding {
 
     js.addHandlerTransformer({
         description: "{} => {handler: 'render'} [Sets handler to 'render' if it is not set]",
-        transform: function(data: any, context: JohnSmith.Common.IElement): any{
-            if (data && typeof data === "object") {
-                if (!data.handler){
-                    data.handler = "render";
+
+        checkApplicability: function(data:any[], bindable:IBindable, context:JohnSmith.Common.IElement): TransformerApplicability{
+            if (data && data.length > 0) {
+                if (data[0].handler) {
+                    return TransformerApplicability.NotApplicable;
+                }
+
+                console.log(data[0]);
+                if (typeof data[0] === "object") {
+                    return TransformerApplicability.Applicable;
                 }
             }
 
+            return TransformerApplicability.Unknown;
+            //return data && data.length > 0 && typeof (data[0]) === "object" && (!data[0].handler);
+        },
+
+        transform: function(data: any[], bindable:IBindable, context: JohnSmith.Common.IElement): any{
+            data[0].handler = "render";
             return data;
         }
     });
 
+    js.addHandlerTransformer({
+        description: "{handler: 'render'} => {handler: 'render', type: 'list'} [Sets type to 'list']",
+
+        checkApplicability: function(data:any[], bindable:IBindable, context:JohnSmith.Common.IElement): TransformerApplicability{
+            if (data && data.length > 0 && data[0].handler === "render"){
+                if (data[0].type) {
+                    return TransformerApplicability.NotApplicable;
+                }
+
+                if (bindable instanceof BindableList){
+                    return TransformerApplicability.Applicable;
+                } else if (bindable){
+                    var value = bindable.getValue();
+                    if (value instanceof Array){
+                        return TransformerApplicability.Applicable;
+                    }
+                }
+
+                return TransformerApplicability.NotApplicable;
+            }
+
+            return TransformerApplicability.Unknown;
+
+            //return data && data.length > 0 && data[0].handler === "render";
+        },
+
+        transform: function(data: any[], bindable:IBindable, context: JohnSmith.Common.IElement): any{
+            data[0].type = 'list';
+            return data;
+        }
+    });
+
+    js.addHandlerTransformer({
+        description: "{handler: 'render'} => {handler: 'render', type: 'value'} [Sets type to 'value']",
+
+        checkApplicability: function(data:any[], bindable:IBindable, context:JohnSmith.Common.IElement): TransformerApplicability{
+            if (data && data.length > 0 && data[0].handler === "render"){
+                if (data[0].type) {
+                    return TransformerApplicability.NotApplicable;
+                }
+
+                if (bindable instanceof BindableList){
+                    return TransformerApplicability.NotApplicable;
+                } else if (bindable){
+                    var value = bindable.getValue();
+                    if (value instanceof Array){
+                        return TransformerApplicability.NotApplicable;
+                    }
+                }
+
+                return TransformerApplicability.Applicable;
+            }
+
+            return TransformerApplicability.Unknown;
+            //return data && data.length > 0 && data[0].handler === "render" && (!data[0].type);
+        },
+
+        transform: function(data: any[], bindable:IBindable, context: JohnSmith.Common.IElement): any{
+            data[0].type = 'value';
+            return data;
+        }
+    });
+
+    /** Adds default formatter */
     js.addHandlerTransformer({
         description: "{handler: 'render'} => {formatter: IValueFormatter} [Sets default formatter]",
-        transform: function(data: any, context: JohnSmith.Common.IElement): any{
-            if (data && typeof data === "object" && data.handler && (data.handler === "render" || data.handler === "list")) {
-                if ((!data.formatter) && (!data.renderer)){
-                    data.formatter =  {
-                        format: function (value: any): string {
-                            return value;
-                        }
+
+        checkApplicability: function(data:any[], bindable:IBindable, context:JohnSmith.Common.IElement): TransformerApplicability {
+            if (data && data.length > 0){
+                if (data[0].renderer || data[0].formatter) {
+                    return TransformerApplicability.NotApplicable;
+                }
+
+                if (data[0].handler === "render"){
+                    return TransformerApplicability.Applicable;
+                }
+            }
+
+            return TransformerApplicability.Unknown;
+
+            //return data && data.length > 0 && data[0].handler === "render" && (!data[0].formatter) && (!data[0].renderer);
+        },
+
+        transform: function(data: any[], bindable:IBindable, context: JohnSmith.Common.IElement): any{
+            data[0].formatter =  {
+                format: function (value: any): string {
+                    if (value == null){
+                        return null;
                     }
+
+                    return value.toString();
                 }
             }
 
@@ -657,36 +812,52 @@ module JohnSmith.Binding {
         }
     });
 
+    /** Adds renderer resolver */
     js.addHandlerTransformer({
         description: "{formatter: IValueFormatter} => {renderer: IValueRenderer} [Converts value formatter to value renderer]",
-        transform: function(data: any, context: JohnSmith.Common.IElement): any{
-            if (data && typeof data === "object" && data.handler && (data.handler === "render" || data.handler === "list")) {
-                if (data.formatter && (!data.renderer)){
-                    var formatter = <JohnSmith.Binding.IValueFormatter> data.formatter;
-                    data.renderer =  {
-                        render: function(value: any, destination: JohnSmith.Common.IElement) : JohnSmith.Common.IElement {
-                            var formattedValue = formatter.format(value);
-                            var result = destination.append(formattedValue);
 
-                            js.event.bus.trigger(
-                                "valueRendered",
-                                {
-                                    originalValue: value,
-                                    formattedValue: formattedValue,
-                                    root: result,
-                                    destination: destination
-                                });
+        checkApplicability: function(data:any[], bindable:IBindable, context:JohnSmith.Common.IElement): TransformerApplicability {
+            if (data && data.length > 0){
+                if (data[0].renderer) {
+                    return TransformerApplicability.NotApplicable;
+                }
 
-                            //destination.append("<div style='position: absolute; background: green; padding: 5px; font-size: 11px;'>bound</div>");
-                            return  result;
-                        }
-                    }
+                if (data[0].handler === "render" && data[0].formatter){
+                    return TransformerApplicability.Applicable;
+                }
+            }
 
-                    if (formatter.dispose) {
-                        data.renderer.dispose = function(){
-                            formatter.dispose;
-                        }
-                    }
+            return TransformerApplicability.Unknown;
+            //return data && data.length > 0 && data[0].handler === "render" && data[0].formatter && (!data[0].renderer);
+        },
+
+        transform: function(data: any[], bindable:IBindable, context: JohnSmith.Common.IElement): any{
+            // get formatter from input array
+            var formatter = <JohnSmith.Binding.IValueFormatter> data[0].formatter;
+
+            // put renderer to input array
+            data[0].renderer =  {
+                render: function(value: any, destination: JohnSmith.Common.IElement) : JohnSmith.Common.IElement {
+                    var formattedValue = formatter.format(value);
+                    var result = destination.append(formattedValue);
+
+                    js.event.bus.trigger(
+                        "valueRendered",
+                        {
+                            originalValue: value,
+                            formattedValue: formattedValue,
+                            root: result,
+                            destination: destination
+                        });
+
+                    return  result;
+                }
+            }
+
+            // if formatter could be disposed, add dispose method to renderer
+            if (formatter.dispose) {
+                data[0].renderer.dispose = function(){
+                    formatter.dispose;
                 }
             }
 

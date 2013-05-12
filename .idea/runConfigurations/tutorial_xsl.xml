@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="tutorial.xsl" type="XSLT" factoryName="XSLT">
-    <option name="myOutputFile" value="C:\Projects\JohnSmith\demo\tutorial.html" />
+    <option name="myOutputFile" value="C:\Projects\OpenSource\JohnSmith\demo\tutorial.html" />
     <option name="myOpenOutputFile" value="false" />
     <option name="myOpenInBrowser" value="false" />
     <option name="mySmartErrorHandling" value="true" />

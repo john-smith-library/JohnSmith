@@ -121,6 +121,7 @@ module JohnSmith.Common {
     /////////////////////////////////
 
     export interface IElement {
+        isEmpty: () => bool;
         empty: () => void;
         append: (html:string) => IElement;
         getHtml: () => string;

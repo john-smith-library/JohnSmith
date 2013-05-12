@@ -2,13 +2,11 @@
   <library name="Generated files" type="javaScript">
     <properties>
       <sourceFilesUrls>
-        <item url="file://$PROJECT_DIR$/src/Debug.js" />
-        <item url="file://$PROJECT_DIR$/src/Common.min.js" />
-        <item url="file://$PROJECT_DIR$/src/Binding.min.js" />
-        <item url="file://$PROJECT_DIR$/src/JQuery.js" />
         <item url="file://$PROJECT_DIR$/src/Common.js" />
+        <item url="file://$PROJECT_DIR$/src/JQuery.js" />
         <item url="file://$PROJECT_DIR$/src/Binding.js" />
         <item url="file://$PROJECT_DIR$/src/View.js" />
+        <item url="file://$PROJECT_DIR$/src/Debug.js" />
       </sourceFilesUrls>
     </properties>
     <CLASSES>
@@ -17,13 +15,15 @@
       <root url="file://$PROJECT_DIR$/src/Config.js" />
       <root url="file://$PROJECT_DIR$/src/Ioc.js" />
       <root url="file://$PROJECT_DIR$/src/Config.min.js" />
-      <root url="file://$PROJECT_DIR$/src/Debug.js" />
       <root url="file://$PROJECT_DIR$/src/Common.min.js" />
       <root url="file://$PROJECT_DIR$/src/Binding.min.js" />
-      <root url="file://$PROJECT_DIR$/src/JQuery.js" />
+      <root url="file://$PROJECT_DIR$/src/Binding.min.js" />
+      <root url="file://$PROJECT_DIR$/src/Common.min.js" />
       <root url="file://$PROJECT_DIR$/src/Common.js" />
-      <root url="file://$PROJECT_DIR$/src/Binding.js" />
+      <root url="file://$PROJECT_DIR$/src/JQuery.js" />
       <root url="file://$PROJECT_DIR$/src/View.js" />
+      <root url="file://$PROJECT_DIR$/src/Binding.js" />
+      <root url="file://$PROJECT_DIR$/src/Debug.js" />
     </CLASSES>
     <SOURCES />
   </library>

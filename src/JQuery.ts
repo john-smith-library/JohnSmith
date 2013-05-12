@@ -3,65 +3,6 @@
 declare var $: any;
 
 module JohnSmith.JQuery {
-//    export class JQueryBindableHandlerTransformer implements JohnSmith.Binding.IHandlerFactory {
-//        public createHandler(handler: any, context: JohnSmith.Common.IElement): JohnSmith.Binding.IBindableHandler {
-//            var elementFactory:JohnSmith.Common.IElementFactory = js.ioc.resolve("elementFactory");
-//
-////            if (typeof handler == "string") {
-////                return new JohnSmith.Binding.HandlerFactoryResult(
-////                    null, {
-////                        handler: "render",
-////                        contentDestination: context == null ?
-////                            elementFactory.createElement(handler) :
-////                            context.findRelative(handler)
-////                    });
-////            }
-//
-////            if (handler && handler.handler && handler.to && (handler.handler == "render")) {
-////                handler.contentDestination = context == null ?
-////                    elementFactory.createElement(handler.to) :
-////                    context.findRelative(handler.to);
-////
-////                return null;
-////            }
-//
-////            if (handler && handler.handler && handler.to && handler.handler == "list") {
-////                var contentDestination:JohnSmith.Binding.IListContentDestination = {
-////                    empty: function(){
-////                        $(handler.to).empty();
-////                    },
-////                    append: function(item: any, html: string){
-////                        $(html)
-////                            .data("dataItem", item)
-////                            .addClass("dataItem")
-////                            .appendTo($(handler.to));
-////                    },
-////                    remove: function(item: any){
-////                        var elementsToDelete:any[] = [];
-////                        $(handler.to)
-////                            .find(".dataItem")
-////                            .each(function(index, element){
-////                                var $element = $(element);
-////                                if ($element.data("dataItem") == item){
-////                                    elementsToDelete.push($element);
-////                                }
-////                            });
-////
-////                        for (var i = 0; i < elementsToDelete.length; i++){
-////                            elementsToDelete[i].remove();
-////                        }
-////                    }
-////                };
-////
-////                handler.contentDestination = contentDestination;
-////
-////                return null;
-////            }
-//
-//            return null;
-//        }
-//    }
-
     class JQueryElement implements JohnSmith.Common.IElement {
         private target:any;
 
@@ -69,11 +10,19 @@ module JohnSmith.JQuery {
             this.target = target;
         }
 
-        public empty() : void{
+        public isEmpty(): bool{
+            return this.target.length == 0;
+        }
+
+        public empty(): void{
             this.target.empty();
         }
 
         public append(html:string) : JohnSmith.Common.IElement{
+            if (!html) {
+                return null;
+            }
+
             var parsedHtml =
                 typeof html === "string" ?
                 $($.parseHTML(html)) : $(html);
@@ -110,14 +59,21 @@ module JohnSmith.JQuery {
 
     js.addHandlerTransformer({
         description: "{to: 'selector'} => {contentDestination: IElement} [Converts 'to' selector to DOM element]",
-        transform: function(data: any, context:JohnSmith.Common.IElement): any {
-            if (data && data.handler && (data.handler === "render" || data.handler === "list") && data.to) {
-                var elementFactory:JohnSmith.Common.IElementFactory = <JohnSmith.Common.IElementFactory> js.ioc.resolve("elementFactory");
 
-                data.contentDestination = context == null ?
-                    elementFactory.createElement(data.to) :
-                    context.findRelative(data.to);
+        checkApplicability: function(data:any[], bindable:JohnSmith.Binding.IBindable, context:JohnSmith.Common.IElement): JohnSmith.Binding.TransformerApplicability{
+            if (data && data.length > 0 && data[0].handler === "render" && data[0].to){
+                return JohnSmith.Binding.TransformerApplicability.Applicable;
             }
+
+            return JohnSmith.Binding.TransformerApplicability.Unknown;
+        },
+
+        transform: function(data: any[], bindable:JohnSmith.Binding.IBindable, context:JohnSmith.Common.IElement): any {
+            var elementFactory:JohnSmith.Common.IElementFactory = <JohnSmith.Common.IElementFactory> js.ioc.resolve("elementFactory");
+
+            data[0].contentDestination = context == null ?
+                elementFactory.createElement(data[0].to) :
+                context.findRelative(data[0].to);
 
             return data;
         }
@@ -125,13 +81,20 @@ module JohnSmith.JQuery {
 
     js.addHandlerTransformer({
         description: "'selector' => {to: 'selector', handler: 'render'} [Handles selector and converts it to object with 'to' property]",
-        transform: function(data: any, context:JohnSmith.Common.IElement): any {
-            if (typeof data == "string") {
-                return {
-                    to: data,
-                    handler: 'render'
-                };
+
+        checkApplicability: function(data:any[], bindable:JohnSmith.Binding.IBindable, context:JohnSmith.Common.IElement): JohnSmith.Binding.TransformerApplicability{
+            if (data && data.length > 0 && typeof data[0] == "string"){
+                return JohnSmith.Binding.TransformerApplicability.Applicable;
             }
+
+            return JohnSmith.Binding.TransformerApplicability.NotApplicable;
+        },
+
+        transform: function(data: any[], bindable:JohnSmith.Binding.IBindable, context:JohnSmith.Common.IElement): any {
+            data[0] = {
+                to: data[0],
+                handler: 'render'
+            };
 
             return data;
         }
@@ -139,33 +102,42 @@ module JohnSmith.JQuery {
 
     js.addHandlerTransformer({
         description: "{handler: 'list'} => {handler: 'list', mapper: IValueToElementMapper} [Adds value to element mapper]",
-        transform: function(data: any, context:JohnSmith.Common.IElement): any {
-            if (data && data.handler === "list") {
-                if (!data.mapper) {
-                    var mapper:JohnSmith.Binding.IValueToElementMapper = {
-                        getElementFor: function(value:any, root:JohnSmith.Common.IElement):JohnSmith.Common.IElement {
-                            var $items = (<JQueryElement> root.findRelative(".dataItem")).getTarget();
-                            for (var i = 0; i < $items.length; i++){
-                                var $element = $($items[i]);
-                                if ($element.data("dataItem") === value){
-                                    return new JQueryElement($element)
-                                }
-                            }
 
-                            return null;
-                        },
-
-                        attachValueToElement: function(value:any, element:JohnSmith.Common.IElement) {
-                            var $target = (<JQueryElement> element).getTarget();
-                            $target
-                                .addClass("dataItem")
-                                .data("dataItem", value);
-                        }
-                    };
-
-                    data.mapper = mapper;
+        checkApplicability: function(data:any[], bindable:JohnSmith.Binding.IBindable, context:JohnSmith.Common.IElement): JohnSmith.Binding.TransformerApplicability{
+            if (data && data.length > 0 && data[0].handler === "render" && data[0].type === "list"){
+                if (data[0].mapper) {
+                    return JohnSmith.Binding.TransformerApplicability.NotApplicable;
                 }
+
+                return JohnSmith.Binding.TransformerApplicability.Applicable;
             }
+
+            return JohnSmith.Binding.TransformerApplicability.Unknown;
+        },
+
+        transform: function(data: any[], bindable:JohnSmith.Binding.IBindable, context:JohnSmith.Common.IElement): any {
+            var mapper:JohnSmith.Binding.IValueToElementMapper = {
+                getElementFor: function(value:any, root:JohnSmith.Common.IElement):JohnSmith.Common.IElement {
+                    var $items = (<JQueryElement> root.findRelative(".dataItem")).getTarget();
+                    for (var i = 0; i < $items.length; i++){
+                        var $element = $($items[i]);
+                        if ($element.data("dataItem") === value){
+                            return new JQueryElement($element)
+                        }
+                    }
+
+                    return null;
+                },
+
+                attachValueToElement: function(value:any, element:JohnSmith.Common.IElement) {
+                    var $target = (<JQueryElement> element).getTarget();
+                    $target
+                        .addClass("dataItem")
+                        .data("dataItem", value);
+                }
+            };
+
+            data[0].mapper = mapper;
 
             return data;
         }
