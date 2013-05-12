@@ -1,0 +1,30 @@
+doctype
+head
+    link(rel="stylesheet", href="assets/styles/idea.css")
+    link(rel="stylesheet", href="assets/styles/bootstrap.min.css")
+
+    script(src='http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js')
+    script(src='john-smith.debug.js')
+    script(src='assets/scripts/highlight.pack.js')
+    script(src='assets/scripts/bootstrap.min.js')
+html
+    body
+        div.container
+            h1 JohnSmith Examples
+            div#example
+                each example in examples
+                    div.example
+                        header !{example.description}
+                        section.html
+                            h4 HTML:
+                            pre
+                                code.html #{example.markup}
+                        section.javascript
+                            h4 JavaScript:
+                            pre
+                                code.html #{example.code}
+                        section.result
+                            h4 Result:
+                            !{example.markup}
+                            script (function(){!{example.code}}());
+        script hljs.initHighlightingOnLoad();

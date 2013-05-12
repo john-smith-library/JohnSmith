@@ -1,1 +1,1 @@
-js.bind("John Smith").to("#binding_basicUsage_staticValue .fullName");
+js.bind("John Smith").to("#staticBindingExample .fullName");
