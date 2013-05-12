@@ -9,6 +9,7 @@ before_script:
     - npm install -g typescript
     - npm install jade
     - npm install fs-extra
+    - npm -g install closurecompiler
     - mkdir "${HOME}/temp_tools"
     - "curl -o ${HOME}/temp_tools/JsTestDriver-1.3.3d.jar 'http://js-test-driver.googlecode.com/files/JsTestDriver-1.3.3d.jar'"
     - "java -jar ${HOME}/temp_tools/JsTestDriver-1.3.3d.jar --port 9876 &"
@@ -19,7 +20,8 @@ before_script:
 script:
     - mkdir out
     - tsc --out "out/john-smith.debug.js" --comments src/Common.ts src/Binding.ts src/View.ts src/JQuery.ts src/Debug.ts
-    - tsc --out "out/john-smith.js" src/Common.ts src/Binding.ts src/View.ts src/JQuery.ts src/Debug.ts
+    - tsc --out "out/john-smith.js" src/Common.ts src/Binding.ts src/View.ts src/JQuery.ts
+    - ccjs "out/john-smith.js" > "out/john-smith.min.js"
     - "java -jar ${HOME}/temp_tools/JsTestDriver-1.3.3d.jar --config config_api_travis.jstd --tests all"
     - "node scripts/build_tutorial.js"
     - "mkdir ${HOME}/build_artifacts"

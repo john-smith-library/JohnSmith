@@ -177,4 +177,5 @@ pip-log.txt
 src/*.js
 src/*.js.map
 out
+tools
 node_modules

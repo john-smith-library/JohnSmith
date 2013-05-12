@@ -26,7 +26,7 @@ console.log(examplesCount + " examples found");
 for (var i = 0; i < examplesCount; i++){
     var exampleId = exampleDirs[i];
     var exampleDir = path.join(examplesBaseDir, exampleId);
-    if (exampleId !== "assets"){
+    if (exampleId !== "assets" && exampleId !== "empty"){
         console.log("Building example " + exampleId);
 
         var contentFile = path.join(exampleDir, "content.html");
