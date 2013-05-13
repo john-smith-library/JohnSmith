@@ -11,9 +11,28 @@ if (!fs.existsSync("out")) {
 var examplesBaseDir = "src_examples";
 var outputHtmlFile = path.join("out", "examples.html");
 
-fs.copy(
-    path.join(examplesBaseDir, "assets"),
-    path.join("out", "assets"));
+var assetsSourcePath = path.join(examplesBaseDir, "assets");
+var assetsDestPath = path.join("out", "assets");
+var rootAssets = path.join(assetsDestPath, "root");
+
+fs.copy(assetsSourcePath, assetsDestPath, function(err){
+    if (!err) {
+        if (fs.existsSync(rootAssets)) {
+            var rootAssetsFiles = fs.readdirSync(rootAssets);
+            for (var i = 0; i < rootAssetsFiles.length; i++){
+                var rootAssetFile = path.join(rootAssets, rootAssetsFiles[i]);
+                console.log("Copy " + rootAssetFile + " to out root");
+                fs.createReadStream(rootAssetFile).pipe(fs.createWriteStream(path.join("out", rootAssetsFiles[i])));
+            }
+
+            //fs.removeSync(rootAssets);
+        }
+
+
+    }
+});
+
+
 
 console.log("Building examples html...");
 
