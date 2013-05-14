@@ -1,6 +1,7 @@
 var path = require('path');
 var fs = require('fs-extra');
 var jade = require('jade');
+var yaml = require('js-yaml');
 
 var fn = jade.compile(fs.readFileSync("scripts/examples_template.jade"));
 
@@ -32,8 +33,6 @@ fs.copy(assetsSourcePath, assetsDestPath, function(err){
     }
 });
 
-
-
 console.log("Building examples html...");
 
 var examples = [];
@@ -48,9 +47,16 @@ for (var i = 0; i < examplesCount; i++){
     if (exampleId !== "assets" && exampleId !== "empty"){
         console.log("Building example " + exampleId);
 
+        var title = null;
+        var configFile = path.join(exampleDir, "config.yaml");
         var contentFile = path.join(exampleDir, "content.html");
         var codeFile = path.join(exampleDir, "code.js");
         var markupFile = path.join(exampleDir, "markup.html");
+
+        if (fs.existsSync(configFile)){
+            var configData = yaml.load(fs.readFileSync(configFile).toString());
+            title = configData.title;
+        }
 
         if (!fs.existsSync(contentFile)){
             throw new Error("Required file " + contentFile + " not found!");
@@ -58,6 +64,7 @@ for (var i = 0; i < examplesCount; i++){
 
         examples.push({
             id: exampleId,
+            title: title,
             markup: fs.readFileSync(markupFile).toString(),
             code: fs.readFileSync(codeFile).toString(),
             description: fs.readFileSync(contentFile)

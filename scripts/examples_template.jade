@@ -1,31 +1,55 @@
 doctype
 head
-    link(rel="stylesheet", href="assets/styles/idea.css")
+    link(rel="stylesheet", href="assets/styles/github.css")
     link(rel="stylesheet", href="assets/styles/bootstrap.min.css")
+    link(rel="stylesheet", href="assets/styles/app.css")
 
     script(src='http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js')
     script(src='john-smith.debug.js')
     script(src='assets/scripts/highlight.pack.js')
     script(src='assets/scripts/bootstrap.min.js')
 html
-    body
-        div.container
-            h1 JohnSmith Examples
+    body(data-spy="scroll", data-target="#mainNavigation")
+        header#mainHeader
+            section#logo
+                div.title JohnSmith
+                div.description magicless JavaScript MVVM framework
+            section#links Download:
+                a(href='john-smith.min.js') minified version
+                a(href='john-smith.debug.js') debug version
+            section#resources Resources:
+                a(href='https://github.com/guryanovev/JohnSmith') GitHub Repository
+                a(href='https://travis-ci.org/guryanovev/JohnSmith', title='Travis CI Build Status')
+                    img(src='https://travis-ci.org/guryanovev/JohnSmith.png', alt='Build Status')
+        aside
+            ul#mainNavigation
+                each example in examples
+                    li
+                        a(href='##{example.id}') #{example.title}
 
+        div#mainContainer
             div#example
                 each example in examples
-                    div.example
+                    div.example(id='#{example.id}')
+                        h2 #{example.title}
                         header !{example.description}
-                        section.html
-                            h4 HTML:
-                            pre
-                                code.html #{example.markup}
-                        section.javascript
-                            h4 JavaScript:
-                            pre
-                                code.javascript #{example.code}
+
+                        div(class='row-fluid sourceCode')
+                            section.javascript.span6
+                                h4 JavaScript
+                                div.content
+                                    pre
+                                        code.javascript #{example.code}
+                            section.html.span6
+                                h4  HTML
+                                div.content
+                                    pre
+                                        code.html #{example.markup}
+
                         section.result
                             h4 Result:
                             !{example.markup}
                             script (function(){!{example.code}}());
-        script hljs.initHighlightingOnLoad();
+        footer
+        script
+            hljs.initHighlightingOnLoad();

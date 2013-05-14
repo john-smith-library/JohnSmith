@@ -9,6 +9,7 @@ before_script:
     - npm install -g typescript
     - npm install jade
     - npm install fs-extra
+    - npm install js-yaml
     - npm -g install closurecompiler
     - mkdir "${HOME}/temp_tools"
     - "curl -o ${HOME}/temp_tools/JsTestDriver-1.3.3d.jar 'http://js-test-driver.googlecode.com/files/JsTestDriver-1.3.3d.jar'"
