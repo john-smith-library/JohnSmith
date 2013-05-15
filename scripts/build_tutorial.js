@@ -3,6 +3,7 @@ var fs = require('fs-extra');
 var jade = require('jade');
 var yaml = require('js-yaml');
 
+var version = process.env.VERSION || "DEV";
 var fn = jade.compile(fs.readFileSync("scripts/examples_template.jade"));
 
 if (!fs.existsSync("out")) {
@@ -25,11 +26,7 @@ fs.copy(assetsSourcePath, assetsDestPath, function(err){
                 console.log("Copy " + rootAssetFile + " to out root");
                 fs.createReadStream(rootAssetFile).pipe(fs.createWriteStream(path.join("out", rootAssetsFiles[i])));
             }
-
-            //fs.removeSync(rootAssets);
         }
-
-
     }
 });
 
@@ -72,5 +69,7 @@ for (var i = 0; i < examplesCount; i++){
     }
 }
 
-fs.writeFileSync(outputHtmlFile, fn({ examples: examples }));
-console.log(process.env.VERSION);
+fs.writeFileSync(outputHtmlFile, fn({
+    examples: examples,
+    version: version
+}));
