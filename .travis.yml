@@ -9,7 +9,7 @@ env:
     - REVISION: 0
 
 before_script:
-    - export VERSION="${MAJOR_VERSION}.${MINOR_VERSION}.${REVISION}.${$TRAVIS_BUILD_NUMBER}"
+    - export VERSION="${MAJOR_VERSION}.${MINOR_VERSION}.${REVISION}.${TRAVIS_BUILD_NUMBER}"
     - npm install -g typescript
     - npm install jade
     - npm install fs-extra
