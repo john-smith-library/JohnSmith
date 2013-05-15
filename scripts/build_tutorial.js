@@ -73,4 +73,4 @@ for (var i = 0; i < examplesCount; i++){
 }
 
 fs.writeFileSync(outputHtmlFile, fn({ examples: examples }));
-console.log(process.env.TRAVIS_BUILD_NUMBER);
+console.log(process.env.VERSION);

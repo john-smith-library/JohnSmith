@@ -4,8 +4,12 @@ node_js:
 env:
   global:
     - secure: "JH7N4LAjAywkt010l+20n3FWsrzX2bjzvm+wKf04+IIoNp6QTkYqRFTT6uII\n1Fqs2x0H5cyPgum/ji++vdFLOKkusKTTUdqDr3a8296wdIxm3VpXCusjHqkP\nnpL5SYGuUPyAfIT5YOstO7kfk11Nuex9bWb1mmF/JcBI7P+AbLI="
+    - MAJOR_VERSION: 0
+    - MINOR_VERSION: 1
+    - REVISION: 0
 
 before_script:
+    - export VERSION="${MAJOR_VERSION}.${MINOR_VERSION}.${REVISION}.${$TRAVIS_BUILD_NUMBER}"
     - npm install -g typescript
     - npm install jade
     - npm install fs-extra
