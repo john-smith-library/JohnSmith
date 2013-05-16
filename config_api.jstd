@@ -5,6 +5,4 @@ load:
   - src/View.js
   - src/JQuery.js
   - src/Debug.js
-  - test_api/1_staticBinding.js
-  - test_api/2_dynamicBinding.js
-  - test_api/3_listBinding.js
+  - test_api/*.js

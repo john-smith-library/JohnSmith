@@ -10,7 +10,13 @@ module JohnSmith.Views {
         getRootElement: () => JohnSmith.Common.IElement;
     }
 
+    interface IChildView {
+        child: IView;
+        destination: any;
+    }
+
     export class DefaultView implements IView {
+        private children:IChildView[];
         private rootElement: JohnSmith.Common.IElement;
         private eventBus:JohnSmith.Common.IEventBus;
         private viewModel:IViewModel;
@@ -35,11 +41,22 @@ module JohnSmith.Views {
             this.eventBus = eventBus;
         }
 
+        public addChild(destination:any, child:IView){
+            if (!this.hasChildren()) {
+                this.children = [];
+            }
+
+            this.children.push({
+                child: child,
+                destination: destination
+            });
+        }
+
         public renderTo(destination:any):void {
             var templateElement = this.elementFactory.createElement(this.templateQuery);
 
             if (templateElement.isEmpty()){
-                throw new Error("Template [" + this.templateQuery + "] content for view is empty");
+                throw new Error("Template [" + this.templateQuery + "] content is empty");
             }
 
             var destinationElement = typeof destination == "string" ?
@@ -57,9 +74,18 @@ module JohnSmith.Views {
                     view: this
                 });
 
-            this.initCallback(this, this.viewModel);
+            if (this.hasChildren()){
+                for (var i = 0; i < this.children.length; i++) {
+                    var childData = this.children[i];
+                    childData.child.renderTo(this.rootElement.findRelative(childData.destination));
+                }
+            }
 
-            if (this.viewModel.resetState){
+            if (this.initCallback){
+                this.initCallback(this, this.viewModel);
+            }
+
+            if (this.viewModel && this.viewModel.resetState){
                 this.viewModel.resetState();
             }
         }
@@ -78,6 +104,15 @@ module JohnSmith.Views {
 
         public dispose(): void {
             // todo implement
+            if (this.hasChildren()){
+                for (var i = 0; i < this.children.length; i++){
+                    this.children[i].child.dispose();
+                }
+            }
+        }
+
+        private hasChildren():bool {
+            return this.children != null;
         }
     }
 
