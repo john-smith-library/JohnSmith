@@ -27,6 +27,9 @@ html
                     li
                         a(href='##{example.id}') #{example.title}
 
+        script
+            var examples = [];
+
         div#mainContainer
             div#example
                 each example in examples
@@ -46,10 +49,20 @@ html
                                     pre
                                         code.html #{example.markup}
 
+                        form(action='http://jsfiddle.net/api/post/jquery/2.0/', method='POST', target='_blank')
+                            input(type='hidden', value='#{example.code}', name='js')
+                            input(type='hidden', value='#{example.markup}', name='html')
+                            input(type='hidden', value='/', name='wrap')
+                            input(type='hidden', value='http://john-smith-js.com/john-smith.debug.js', name='resources')
+                            input(type='submit', value='Open in jsFiddle')
+
                         section.result
                             h4 Result:
-                            !{example.markup}
-                            script (function(){!{example.code}}());
+                            div.resultContent
+                                !{example.markup}
+                        script (function(){!{example.code}}());
+
         footer
+
         script
             hljs.initHighlightingOnLoad();

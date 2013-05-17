@@ -166,6 +166,17 @@ aside a
     top: 0;
 }
 
+.example .result .resultContent
+{
+    padding: 10px;
+    border: 2px dashed #CCCCCC;
+}
+
+.example form
+{
+    padding-top: 20px;
+}
+
 /* Main Footer */
 
 footer

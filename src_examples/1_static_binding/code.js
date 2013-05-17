@@ -1,1 +1,2 @@
-js.bind("John Smith").to("#staticBindingExample .fullName");
+js.bind("John").to("#staticBindingExample .firstName");
+js.bind("Smith").to("#staticBindingExample .lastName");
