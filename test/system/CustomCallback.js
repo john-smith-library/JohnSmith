@@ -1,4 +1,4 @@
-var testCase = TestCase("Custom Callback");
+var testCase = TestCase("system.CustomCallback");
 
 testCase.prototype.testBindableValueShouldCallCustomCallback = function(){
     var foo = js.bindableValue();

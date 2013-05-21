@@ -1,4 +1,4 @@
 cd ..
-tsc --out "out/john-smith.debug.js" --comments src/Common.ts src/Binding.ts src/View.ts src/JQuery.ts src/Debug.ts
-tsc --out "out/john-smith.js" src/Common.ts src/Binding.ts src/View.ts src/JQuery.ts
+node scripts/build_core.js --configuration debug
+node scripts/build_core.js --configuration release --outFileName out/john-smith.js --outMinFileName out/john-smith.min.js
 ccjs "out/john-smith.js" > "out/john-smith.min.js"

@@ -1,6 +1,0 @@
-load:
-  - libs/jquery-2.0.0.js
-  - out/john-smith.debug.js
-
-test:
-  - test_api/*.js

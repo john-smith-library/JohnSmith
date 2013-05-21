@@ -1,8 +1,0 @@
-load:
-  - libs/jquery-2.0.0.js
-  - out/john-smith.debug.js
-
-test:
-  - test/system/*.js
-  - test/unit/binding/*.js
-  - test/unit/common/*.js

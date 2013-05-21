@@ -1,4 +1,4 @@
-var testCase = new TestCase("Dynamic Binding");
+var testCase = new TestCase("system/DynamicBinding");
 
 testCase.prototype.testShouldRenderValue = function(){
     $("body").append("<div id='testDynamicBinding'><span class='value'></span></div>");
