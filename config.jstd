@@ -3,4 +3,5 @@ load:
   - out/john-smith.debug.js
 
 test:
-  - test/*.js
+  - test/system/*.js
+  - test/unit/*.js
