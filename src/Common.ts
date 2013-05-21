@@ -1,5 +1,3 @@
-var js = js || {};
-
 module JohnSmith.Common {
     export interface IDisposable {
         dispose: () => void;
@@ -73,6 +71,14 @@ module JohnSmith.Common {
     };
 
     /////////////////////////////////
+    // Exposing public API
+    /////////////////////////////////
+
+    var jsVarName = "js";
+    window[jsVarName] = window[jsVarName] || {}
+    export var JS = window[jsVarName];
+
+    /////////////////////////////////
     // Events
     /////////////////////////////////
 
@@ -113,8 +119,8 @@ module JohnSmith.Common {
         }
     }
 
-    js.event = {};
-    js.event.bus = new DefaultEventBus();
+    JS.event = {};
+    JS.event.bus = new DefaultEventBus();
 
     /////////////////////////////////
     // Dom services
@@ -152,5 +158,5 @@ module JohnSmith.Common {
         }
     };
 
-    js.ioc = ioc;
+    JS.ioc = ioc;
 }

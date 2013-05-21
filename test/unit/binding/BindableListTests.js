@@ -1,4 +1,4 @@
-var testCase = TestCase("Binding.BindableList");
+var testCase = TestCase("Binding/BindableList");
 
 var ListenerMock = function(){
     this.calls = [];

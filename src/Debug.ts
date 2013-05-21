@@ -1,4 +1,6 @@
 /// <reference path="Common.ts"/>
+/// <reference path="View.ts"/>
+/// <reference path="JQuery.ts"/>
 
 // Replace no-op logger with console-based implementation
 JohnSmith.Common.log = {
@@ -40,7 +42,7 @@ log.info("========================================================== ");
 log.info("  Configuration details:");
 log.info("    Handler data transformers:");
 
-var handlerDataTransformers = js.getHandlerDataTransformers();
+var handlerDataTransformers = JohnSmith.Common.JS.getHandlerDataTransformers();
 for (var i = 0; i < handlerDataTransformers.count(); i++){
     log.info("      - [" + i + "] " + (handlerDataTransformers.getAt(i).description || "No description"));
 }

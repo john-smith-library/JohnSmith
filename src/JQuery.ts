@@ -1,4 +1,5 @@
-/// <reference path="Binding.ts"/>
+/// <reference path="binding/Contracts.ts"/>
+/// <reference path="binding/BindableManager.ts"/>
 
 declare var $: any;
 
@@ -57,7 +58,7 @@ module JohnSmith.JQuery {
     // Configuring handler transformers
     /////////////////////////////////
 
-    js.addHandlerTransformer({
+    JohnSmith.Common.JS.addHandlerTransformer({
         description: "{to: 'selector'} => {contentDestination: IElement} [Converts 'to' selector to DOM element]",
 
         checkApplicability: function(data:any[], bindable:JohnSmith.Binding.IBindable, context:JohnSmith.Common.IElement): JohnSmith.Binding.TransformerApplicability{
@@ -69,7 +70,7 @@ module JohnSmith.JQuery {
         },
 
         transform: function(data: any[], bindable:JohnSmith.Binding.IBindable, context:JohnSmith.Common.IElement): any {
-            var elementFactory:JohnSmith.Common.IElementFactory = <JohnSmith.Common.IElementFactory> js.ioc.resolve("elementFactory");
+            var elementFactory:JohnSmith.Common.IElementFactory = <JohnSmith.Common.IElementFactory> JohnSmith.Common.JS.ioc.resolve("elementFactory");
 
             data[0].contentDestination = context == null ?
                 elementFactory.createElement(data[0].to) :
@@ -79,7 +80,7 @@ module JohnSmith.JQuery {
         }
     }, true);
 
-    js.addHandlerTransformer({
+    JohnSmith.Common.JS.addHandlerTransformer({
         description: "'selector' => {to: 'selector', handler: 'render'} [Handles selector and converts it to object with 'to' property]",
 
         checkApplicability: function(data:any[], bindable:JohnSmith.Binding.IBindable, context:JohnSmith.Common.IElement): JohnSmith.Binding.TransformerApplicability{
@@ -100,7 +101,7 @@ module JohnSmith.JQuery {
         }
     }, true);
 
-    js.addHandlerTransformer({
+    JohnSmith.Common.JS.addHandlerTransformer({
         description: "{handler: 'list'} => {handler: 'list', mapper: IValueToElementMapper} [Adds value to element mapper]",
 
         checkApplicability: function(data:any[], bindable:JohnSmith.Binding.IBindable, context:JohnSmith.Common.IElement): JohnSmith.Binding.TransformerApplicability{
@@ -147,7 +148,7 @@ module JohnSmith.JQuery {
     // Configuring ioc dependencies
     /////////////////////////////////
 
-    js.ioc.register(
+    JohnSmith.Common.JS.ioc.register(
         "elementFactory",
         {
             createElement: function(query:string){

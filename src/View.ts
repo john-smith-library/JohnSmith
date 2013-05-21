@@ -1,4 +1,7 @@
-/// <reference path="Binding.ts"/>
+/// <reference path="Common.ts"/>
+/// <reference path="binding/Contracts.ts"/>
+/// <reference path="binding/BindableManager.ts"/>
+/// <reference path="binding/Handling.ts"/>
 
 module JohnSmith.Views {
     export interface IViewModel {
@@ -125,8 +128,6 @@ module JohnSmith.Views {
         }
 
         public render(value: any, destination: JohnSmith.Common.IElement): JohnSmith.Common.IElement {
-            console.log(this.viewFactory);
-
             if (this.currentView){
                 this.currentView.dispose();
             }
@@ -148,7 +149,7 @@ module JohnSmith.Views {
     // Config
     /////////////////////////////////
 
-    js.addHandlerTransformer({
+    JohnSmith.Common.JS.addHandlerTransformer({
         description: "{view: Function} => {renderer: IValueRenderer} [Sets renderer for view]",
 
         checkApplicability: function(data:any[], bindable:JohnSmith.Binding.IBindable, context:JohnSmith.Common.IElement): JohnSmith.Binding.TransformerApplicability{
@@ -159,7 +160,6 @@ module JohnSmith.Views {
             }
 
             return JohnSmith.Binding.TransformerApplicability.Unknown;
-            //return data && data.length > 0 && data[0].handler === "render" && data[0].view;
         },
 
         transform: function(data: any[], context: JohnSmith.Common.IElement): any{
@@ -168,7 +168,7 @@ module JohnSmith.Views {
         }
     });
 
-    js.addHandlerTransformer({
+    JohnSmith.Common.JS.addHandlerTransformer({
         description: "[{}, function(){}] => {view: function(){}} [Converts second argument to view property]",
 
         checkApplicability: function(data:any[], bindable:JohnSmith.Binding.IBindable, context:JohnSmith.Common.IElement): JohnSmith.Binding.TransformerApplicability{
@@ -191,14 +191,14 @@ module JohnSmith.Views {
         }
     });
 
-    js.createView = function(templateQuery:string, initCallback: (view:IView, viewModel:IViewModel) => void, viewModel:any):IView{
+    JohnSmith.Common.JS.createView = function(templateQuery:string, initCallback: (view:IView, viewModel:IViewModel) => void, viewModel:any):IView{
         return new DefaultView(
-            <JohnSmith.Binding.IBindableManager> js.ioc.resolve("bindingManager"),
-            <JohnSmith.Common.IElementFactory> js.ioc.resolve("elementFactory"),
+            <JohnSmith.Binding.IBindableManager> JohnSmith.Common.JS.ioc.resolve("bindingManager"),
+            <JohnSmith.Common.IElementFactory> JohnSmith.Common.JS.ioc.resolve("elementFactory"),
             templateQuery,
             initCallback,
             viewModel,
-            js.event.bus
+            JohnSmith.Common.JS.event.bus
         )
     }
 }

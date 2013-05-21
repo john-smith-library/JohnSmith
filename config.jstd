@@ -1,9 +1,6 @@
 load:
-  - src/Common.js
-  - src/Binding.js
-  - test/common/ArrayListTests.js
-  - test/binding/BindableValueTest.js
-  - test/binding/BindingWireTests.js
-  - test/binding/StaticBindableValueTests.js
-  - test/binding/DefaultBindingManagerTests.js
-  - test/binding/BindableListTests.js
+  - libs/jquery-2.0.0.js
+  - out/john-smith.debug.js
+
+test:
+  - test/*.js

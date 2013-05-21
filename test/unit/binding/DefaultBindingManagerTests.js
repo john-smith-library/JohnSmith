@@ -14,13 +14,16 @@ testCase.prototype.testShouldCreateWireIfFactoriesProvided = function() {
     var handlerFactories = new JohnSmith.Common.ArrayList();
     handlerFactories.add({
         createHandler: function(data){
-            return new JohnSmith.Binding.HandlerFactoryResult(handler, null);
+            return handler;
         }
     });
 
     var manager = new JohnSmith.Binding.DefaultBindingManager(bindableFactories, handlerFactories);
 
-    var wire = manager.bind({foo: "bar"}, {foo: 42});
+    var wire = manager.bind({
+        bindableData: {foo: "bar"},
+        handlerData: {foo: 42}
+    });
 
     assertNotNull("Created wire", wire);
     assertEquals("Wire bindable", bindable, wire.getBindable());
@@ -39,7 +42,7 @@ testCase.prototype.testNoHandlerFactoryShouldThrowError = function() {
     });
 
     var handlerFactories = new JohnSmith.Common.ArrayList();
-    var manager = new JohnSmith.Binding.DefaultBindingManager(bindableFactories, handlerFactories);
+    var manager = new JohnSmith.Binding.DefaultBindingManager(bindableFactories, handlerFactories, []);
 
     assertException(
         "Try to create a wire",
@@ -60,7 +63,7 @@ testCase.prototype.testNoBindableFactoryShouldThrowError = function() {
         }
     });
 
-    var manager = new JohnSmith.Binding.DefaultBindingManager(bindableFactories, handlerFactories);
+    var manager = new JohnSmith.Binding.DefaultBindingManager(bindableFactories, handlerFactories, []);
 
     assertException(
         "Try to create a wire",
