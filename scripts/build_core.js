@@ -12,7 +12,7 @@ function readSrcDir(dirPath, allFiles, isDebug){
         if (childStat.isDirectory()) {
             readSrcDir(childPath, allFiles, isDebug);
         } else if (childStat.isFile() && path.extname(childPath) === ".ts") {
-            var needToSkip = isDebug && childPath.toLowerCase().indexOf("debug") !== -1;
+            var needToSkip = (!isDebug) && childPath.toLowerCase().indexOf("debug") !== -1;
             if (!needToSkip) {
                 allFiles.push(childPath);
             }

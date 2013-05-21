@@ -11,7 +11,7 @@ if (!fs.existsSync("out")) {
 }
 
 var examplesBaseDir = "src_examples";
-var outputHtmlFile = path.join("out", "examples.html");
+var outputHtmlFile = path.join("out", "index.html");
 
 var assetsSourcePath = path.join(examplesBaseDir, "assets");
 var assetsDestPath = path.join("out", "assets");
