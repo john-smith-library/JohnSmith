@@ -30,7 +30,7 @@ script:
     - cp out/john-smith.debug.js out/john-smith-${VERSION}.debug.js &
     - cp out/john-smith.js out/john-smith-${VERSION}.js &
     - cp out/john-smith.min.js out/john-smith-${VERSION}.min.js
-    - java -jar ${HOME}/temp_tools/JsTestDriver-1.3.3d.jar --config config.jstd --tests all
+    - java -jar ${HOME}/temp_tools/JsTestDriver-1.3.3d.jar --config config.jstd --tests all --server http://localhost:9876
     - "node scripts/build_tutorial.js"
     - "mkdir ${HOME}/build_artifacts"
     - "cp -R out/* ${HOME}/build_artifacts"
