@@ -1,4 +1,4 @@
-var testCase = new TestCase("List Binding");
+var testCase = new TestCase("system.ListBinding");
 
 var SimpleFormatter = function(){
     this.format = function(value){
@@ -45,17 +45,15 @@ testCase.prototype.testViewFormatterShouldRenderValue = function(){
 
     var viewModel = js.bindableList();
 
-    var viewFactory = function(item){
-        return js.createView(
-            "#fooView",
-            function(view, viewModel){
-                view.bind(viewModel.foo).to(".value1");
-                view.bind(viewModel.bar).to(".value2");
-            },
-            item);
+    var View = function(viewModel){
+        this.template = "#fooView";
+        this.init = function(viewModel){
+            this.bind(viewModel.foo).to(".value1");
+            this.bind(viewModel.bar).to(".value2");
+        };
     };
 
-    js.bind(viewModel).to("#listBinding ul", viewFactory);
+    js.bind(viewModel).to("#listBinding ul", View);
 
     viewModel.add({
         foo: "foo1",

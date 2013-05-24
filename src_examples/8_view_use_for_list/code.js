@@ -11,18 +11,15 @@ var friends = js.bindableList();
 
 /* View */
 
-var friendViewFactory = function(friend){
-    return js.createView(
-        "#friendRowTemplate",
-        function(view, viewModel){
-            view.bind(viewModel.firstName).to(".firstName");
-            view.bind(viewModel.lastName).to(".lastName");
-        },
-        friend
-    );
+var FriendView = function(){
+    this.template = "#friendRowTemplate";
+    this.init = function(viewModel){
+        this.bind(viewModel.firstName).to(".firstName");
+        this.bind(viewModel.lastName).to(".lastName");
+    };
 }
 
-js.bind(friends).to("#friendsTable tbody", friendViewFactory);
+js.bind(friends).to("#friendsTable tbody", FriendView);
 
 friends.setValue([
     new Friend("Joe", "Bloggs"),

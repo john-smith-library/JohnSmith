@@ -1,4 +1,4 @@
-var bindingBindableValue = TestCase("Binding.BindableValue");
+var bindingBindableValue = TestCase("unit.binding.BindableValue");
 
 bindingBindableValue.prototype.testCanAddListener = function() {
     var bindableValue = new JohnSmith.Binding.BindableValue();

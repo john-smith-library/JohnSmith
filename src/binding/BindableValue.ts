@@ -1,7 +1,9 @@
 /// <reference path="Contracts.ts"/>
 
 module JohnSmith.Binding {
-    /// Simple bindable value.
+    /**
+     * Creates simple bindable value.
+     */
     export class BindableValue implements IBindable {
         private listeners: JohnSmith.Common.ArrayList;
         private value: any;

@@ -4,6 +4,32 @@ module JohnSmith.Common {
     }
 
     /////////////////////////////////
+    // Utils
+    /////////////////////////////////
+
+    export class TypeUtils
+    {
+        /**
+         * Checks if provided object is a function.
+         * @param target An object to check.
+         * @returns {boolean}
+         */
+        public static isFunction(target: any){
+            var getType = {};
+            return (target && getType.toString.call(target) === '[object Function]');
+        }
+
+        /**
+         * Checks if provided object is actual object.
+         * @param target An object to check.
+         * @returns {boolean}
+         */
+        public static isObject(target: any){
+            return typeof target === "[Object]";
+        }
+    }
+
+    /////////////////////////////////
     // Collections
     /////////////////////////////////
 
@@ -144,19 +170,58 @@ module JohnSmith.Common {
     // Ioc
     /////////////////////////////////
 
+    interface IDependency {
+        target: any;
+        provider: (container: IContainer) => any;
+    }
+
     export interface IContainer {
         resolve(key:string);
         register(key:string, service: any);
     }
 
-    var ioc:IContainer = {
-        resolve: function(key:string){
-            return this[key];
-        },
-        register: function(key:string, service: any){
-            this[key] = service;
+    class Container implements IContainer {
+        private items: IDependency[];
+
+        constructor(){
+            this.items = [];
         }
-    };
+
+        public resolve(key:string): any{
+            var dependency = this[key];
+
+            if (!dependency){
+                return null;
+            }
+
+            if (!dependency.target){
+                var target = dependency.provider.call(this, this);
+                dependency.target = target;
+            }
+
+            return dependency.target;
+        }
+
+        public register(key:string, service: any): void{
+            var dependency:IDependency;
+
+            if (TypeUtils.isFunction(service)){
+                dependency = {
+                    target: null,
+                    provider: service
+                };
+            } else {
+                dependency = {
+                    target: service,
+                    provider: null
+                };
+            }
+
+            this[key] = dependency;
+        }
+    }
+
+    var ioc:IContainer = new Container();
 
     JS.ioc = ioc;
 }

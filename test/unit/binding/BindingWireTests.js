@@ -1,4 +1,4 @@
-var testCase = TestCase("Binding.BindingWire");
+var testCase = TestCase("unit.binding.BindingWire");
 
 var FakeHandler = function() {
     var handler = this;

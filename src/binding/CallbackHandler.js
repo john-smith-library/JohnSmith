@@ -32,9 +32,7 @@ var JohnSmith;
             checkApplicability: function (data, bindable, context) {
                 if(data && data.length > 0) {
                     var firstArgument = data[0];
-                    var getType = {
-                    };
-                    if(firstArgument && getType.toString.call(firstArgument) === '[object Function]') {
+                    if(JohnSmith.Common.TypeUtils.isFunction(firstArgument)) {
                         return Binding.TransformerApplicability.Applicable;
                     }
                 }

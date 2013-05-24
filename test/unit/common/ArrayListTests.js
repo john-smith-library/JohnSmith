@@ -1,4 +1,4 @@
-var testCase = TestCase("Common.ArrayList");
+var testCase = TestCase("unit.common.ArrayList");
 
 testCase.prototype.testCountIsZeroForEmptyList = function(){
     var list = new JohnSmith.Common.ArrayList();

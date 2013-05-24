@@ -1,17 +1,15 @@
 var friend = js.bindableValue();
 
-var friendViewFactory = function(friend){
-    return js.createView(
-        "#friendTemplate",
-        function(view, viewModel){
-            view.bind(viewModel.firstName).to(".firstName");
-            view.bind(viewModel.lastName).to(".lastName");
-        },
-        friend
-    );
-}
+var FriendView = function(){
+    this.template = "#friendTemplate";
 
-js.bind(friend).to("#myFriend", friendViewFactory);
+    this.init = function(viewModel){
+        this.bind(viewModel.firstName).to(".firstName");
+        this.bind(viewModel.lastName).to(".lastName");
+    };
+};
+
+js.bind(friend).to("#myFriend", FriendView);
 
 friend.setValue({
     firstName: "Joe",

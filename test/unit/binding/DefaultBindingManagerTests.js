@@ -1,4 +1,4 @@
-var testCase = TestCase("Binding.DefaultBindingManager");
+var testCase = TestCase("unit.binding.DefaultBindingManager");
 
 testCase.prototype.testShouldCreateWireIfFactoriesProvided = function() {
     var bindable = {};
@@ -47,7 +47,10 @@ testCase.prototype.testNoHandlerFactoryShouldThrowError = function() {
     assertException(
         "Try to create a wire",
         function(){
-            manager.bind({foo: "bar"}, "[handler]");
+            manager.bind({
+                bindableData: {foo: "bar"},
+                handlerData: {foo: 42}
+            });
         });
 };
 
@@ -68,6 +71,9 @@ testCase.prototype.testNoBindableFactoryShouldThrowError = function() {
     assertException(
         "Try to create a wire",
         function(){
-            manager.bind({foo: "bar"}, "[handler]");
+            manager.bind({
+                bindableData: {foo: "bar"},
+                handlerData: {foo: 42}
+            });
         });
 };

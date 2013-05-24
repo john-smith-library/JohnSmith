@@ -8,6 +8,17 @@ module JohnSmith.Views {
         resetState?: () => void;
     }
 
+    /**
+     * Describes the data needed for creating a view.
+     */
+    export interface IViewData {
+        template: any;
+        init?: (viewModel: any) => void;
+    }
+
+    /**
+     * View interface. For internal usage mainly, client meant to use IViewData.
+     */
     export interface IView extends JohnSmith.Common.IDisposable {
         renderTo: (destination:any) => void;
         getRootElement: () => JohnSmith.Common.IElement;
@@ -19,27 +30,27 @@ module JohnSmith.Views {
     }
 
     export class DefaultView implements IView {
-        private children:IChildView[];
-        private rootElement: JohnSmith.Common.IElement;
-        private eventBus:JohnSmith.Common.IEventBus;
-        private viewModel:IViewModel;
+        /** Read only fields */
         private elementFactory:JohnSmith.Common.IElementFactory;
         private bindableManager:JohnSmith.Binding.IBindableManager;
-        private templateQuery:string;
-        private initCallback: (view:IView, viewModel:any) => void;
+        private eventBus:JohnSmith.Common.IEventBus;
+        private viewModel:IViewModel;
+        private data:IViewData;
+
+        /** Regular fields */
+        private children:IChildView[];
+        private rootElement: JohnSmith.Common.IElement;
 
         constructor (
             bindableManager:JohnSmith.Binding.IBindableManager,
             elementFactory:JohnSmith.Common.IElementFactory,
-            templateQuery:string,
-            initCallback: (view:IView, viewModel:any) => void,
+            viewData: IViewData,
             viewModel:IViewModel,
             eventBus:JohnSmith.Common.IEventBus){
 
             this.bindableManager = bindableManager;
             this.elementFactory = elementFactory;
-            this.templateQuery = templateQuery;
-            this.initCallback = initCallback;
+            this.data = viewData;
             this.viewModel = viewModel;
             this.eventBus = eventBus;
         }
@@ -56,10 +67,10 @@ module JohnSmith.Views {
         }
 
         public renderTo(destination:any):void {
-            var templateElement = this.elementFactory.createElement(this.templateQuery);
+            var templateElement = this.elementFactory.createElement(this.data.template);
 
             if (templateElement.isEmpty()){
-                throw new Error("Template [" + this.templateQuery + "] content is empty");
+                throw new Error("Template [" + this.data.template + "] content is empty");
             }
 
             var destinationElement = typeof destination == "string" ?
@@ -84,8 +95,8 @@ module JohnSmith.Views {
                 }
             }
 
-            if (this.initCallback){
-                this.initCallback(this, this.viewModel);
+            if (this.data.init){
+                this.data.init.call(this, this.viewModel);
             }
 
             if (this.viewModel && this.viewModel.resetState){
@@ -119,6 +130,60 @@ module JohnSmith.Views {
         }
     }
 
+    /**
+     * Resolves provided vew descriptor and creates view.
+     */
+    export interface IViewFactory {
+        resolve: (dataDescriptor: any, viewModel: any) => IView;
+    }
+
+    /**
+     * Default implementation of IViewFactory
+     */
+    export class DefaultViewFactory implements IViewFactory {
+        private elementFactory:JohnSmith.Common.IElementFactory;
+        private bindableManager:JohnSmith.Binding.IBindableManager;
+        private eventBus:JohnSmith.Common.IEventBus;
+
+        constructor (
+            bindableManager:JohnSmith.Binding.IBindableManager,
+            elementFactory:JohnSmith.Common.IElementFactory,
+            eventBus:JohnSmith.Common.IEventBus){
+
+            this.bindableManager = bindableManager;
+            this.elementFactory = elementFactory;
+            this.eventBus = eventBus;
+        }
+
+        public resolve(dataDescriptor: any, viewModel: any) : IView {
+            if (!dataDescriptor){
+                throw new Error("Expected view data object was not defined")
+            }
+
+            if (JohnSmith.Common.TypeUtils.isFunction(dataDescriptor)){
+                var newInstance = new dataDescriptor();
+                return this.resolve(newInstance, viewModel);
+            }
+
+            if (dataDescriptor.template){
+                return new DefaultView(
+                    this.bindableManager,
+                    this.elementFactory,
+                    <IViewData> dataDescriptor,
+                    viewModel,
+                    this.eventBus);
+            }
+
+            if (dataDescriptor.renderTo && dataDescriptor.getRootElement()){
+                return <IView> dataDescriptor;
+            }
+
+
+            throw new Error("Could not resolve view data by provided descriptor");
+        }
+    }
+
+
     export class ViewValueRenderer implements JohnSmith.Binding.IValueRenderer {
         private viewFactory: (value:any) => IView;
         private currentView: IView;
@@ -149,8 +214,17 @@ module JohnSmith.Views {
     // Config
     /////////////////////////////////
 
+    JohnSmith.Common.JS.ioc.register(
+        "viewFactory",
+        function(ioc){
+            return new DefaultViewFactory(
+                <JohnSmith.Binding.IBindableManager> ioc.resolve("bindingManager"),
+                <JohnSmith.Common.IElementFactory> ioc.resolve("elementFactory"),
+                JohnSmith.Common.JS.event.bus);
+        });
+
     JohnSmith.Common.JS.addHandlerTransformer({
-        description: "{view: Function} => {renderer: IValueRenderer} [Sets renderer for view]",
+        description: "{view: any} => {renderer: IValueRenderer} [Sets renderer for view]",
 
         checkApplicability: function(data:any[], bindable:JohnSmith.Binding.IBindable, context:JohnSmith.Common.IElement): JohnSmith.Binding.TransformerApplicability{
             if (data && data.length > 0){
@@ -163,13 +237,18 @@ module JohnSmith.Views {
         },
 
         transform: function(data: any[], context: JohnSmith.Common.IElement): any{
-            data[0].renderer = new ViewValueRenderer(data[0].view)
+            var viewFactory:IViewFactory = JohnSmith.Common.JS.ioc.resolve("viewFactory");
+            var viewDescriptor = data[0].view;
+
+            data[0].renderer = new ViewValueRenderer(function(viewModel){
+                return viewFactory.resolve(viewDescriptor, viewModel);
+            });
             return data;
         }
     });
 
     JohnSmith.Common.JS.addHandlerTransformer({
-        description: "[{}, function(){}] => {view: function(){}} [Converts second argument to view property]",
+        description: "[{}, any] => {view: any} [Converts second argument to view property]",
 
         checkApplicability: function(data:any[], bindable:JohnSmith.Binding.IBindable, context:JohnSmith.Common.IElement): JohnSmith.Binding.TransformerApplicability{
             if (data && data.length > 0){
@@ -177,7 +256,7 @@ module JohnSmith.Views {
                     return JohnSmith.Binding.TransformerApplicability.NotApplicable;
                 }
 
-                if (typeof data[0] === "object" && data.length > 1 && data[1].constructor && data[1].apply && data[1].call) {
+                if (typeof data[0] === "object" && data.length > 1) {
                     return JohnSmith.Binding.TransformerApplicability.Applicable;
                 }
             }
@@ -186,19 +265,21 @@ module JohnSmith.Views {
         },
 
         transform: function(data: any[], context: JohnSmith.Common.IElement): any{
-            data[0].view = data[1];
+            var viewDescriptor = data[1];
+            var viewFactory:IViewFactory = JohnSmith.Common.JS.ioc.resolve("viewFactory");
+
+            try {
+                viewFactory.resolve(viewDescriptor, null);
+                data[0].view = viewDescriptor;
+            } catch(Error) {
+            }
+
             return data;
         }
     });
 
-    JohnSmith.Common.JS.createView = function(templateQuery:string, initCallback: (view:IView, viewModel:IViewModel) => void, viewModel:any):IView{
-        return new DefaultView(
-            <JohnSmith.Binding.IBindableManager> JohnSmith.Common.JS.ioc.resolve("bindingManager"),
-            <JohnSmith.Common.IElementFactory> JohnSmith.Common.JS.ioc.resolve("elementFactory"),
-            templateQuery,
-            initCallback,
-            viewModel,
-            JohnSmith.Common.JS.event.bus
-        )
-    }
+    JohnSmith.Common.JS.createView = function(viewDescriptor: any, viewModel:any):JohnSmith.Views.IView{
+        var viewFactory = JohnSmith.Common.JS.ioc.resolve("viewFactory");
+        return viewFactory.resolve(viewDescriptor, viewModel);
+    };
 }

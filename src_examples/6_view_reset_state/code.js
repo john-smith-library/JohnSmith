@@ -8,12 +8,14 @@ var viewModel = {
     }
 };
 
-var view = js.createView(
-    "#personDetailsTemplate",
-    function(view, viewModel){
-        view.bind(viewModel.firstName).to(".firstName");
-        view.bind(viewModel.lastName).to(".lastName");
-    },
-    viewModel);
+var PersonView = function(){
+    this.template = "#personTemplate";
+    this.init = function(viewModel){
+        this.bind(viewModel.firstName).to(".firstName");
+        this.bind(viewModel.lastName).to(".lastName");
+    }
+};
+
+var view = js.createView(PersonView, viewModel);
 
 view.renderTo("#meDetails");

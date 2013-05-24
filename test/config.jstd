@@ -4,5 +4,7 @@ load:
 
 test:
   - system/*.js
+  - system/api/*.js
   - unit/binding/*.js
   - unit/common/*.js
+  - unit/views/*.js

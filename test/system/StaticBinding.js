@@ -1,4 +1,4 @@
-var testCase = new TestCase("Static Binding");
+var testCase = new TestCase("system.StaticBinding");
 
 testCase.prototype.testShouldRenderValue = function(){
     $("body").append("<div id='testStaticBinding'><span class='value'></span></div>");

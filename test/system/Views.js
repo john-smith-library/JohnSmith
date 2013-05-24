@@ -1,65 +1,5 @@
-var testCase = new TestCase("Views");
-
-testCase.prototype.testSimpleViewShouldAppendTemplateDestination = function(){
-    $("body").append(
-        "<script id='simpleView' type='text/view'>" +
-            "<div>view content</div>" +
-        "</script>");
-
-    $("body").append("<div id='viewDestination'></div>");
-
-    var view = js.createView("#simpleView");
-    view.renderTo("#viewDestination");
-
-    assertEquals("Rendered view", "view content", $("#viewDestination").text());
-};
-
-testCase.prototype.testViewWithBindingShouldRenderTemplate = function(){
-    $("body").append(
-        "<script id='simpleView' type='text/view'>" +
-            "<div class='value'></div>" +
-        "</script>");
-
-    $("body").append("<div id='viewDestination'></div>");
-
-    var view = js.createView(
-        "#simpleView",
-        function(view){
-            view.bind("foo").to(".value");
-        });
-
-    view.renderTo("#viewDestination");
-
-    assertEquals("Value elements count", 1, $("#viewDestination .value").length);
-    assertEquals("Rendered value", "foo", $("#viewDestination .value").text());
-};
-
-testCase.prototype.testViewWithViewModelShouldRenderTemplate = function(){
-    $("body").append(
-        "<script id='simpleView' type='text/view'>" +
-            "<div class='value'></div>" +
-        "</script>");
-
-    $("body").append("<div id='viewDestination'></div>");
-
-    var viewModel = {
-        value: js.bindableValue()
-    };
-
-    var view = js.createView(
-        "#simpleView",
-        function(view, viewModel){
-            view.bind(viewModel.value).to(".value");
-        },
-        viewModel);
-
-    view.renderTo("#viewDestination");
-
-    viewModel.value.setValue("bar");
-
-    assertEquals("Value elements count", 1, $("#viewDestination .value").length);
-    assertEquals("Rendered value", "bar", $("#viewDestination .value").text());
-};
+/** Tests different use cases of view rendering. */
+var testCase = new TestCase("system.Views");
 
 testCase.prototype.testViewWithResetStateShouldRenderTemplate = function(){
     $("body").append(
@@ -72,16 +12,16 @@ testCase.prototype.testViewWithResetStateShouldRenderTemplate = function(){
     var viewModel = {
         value: js.bindableValue(),
         resetState: function(){
-            viewModel.value.setValue("bar2");
+            this.value.setValue("bar2");
         }
     };
 
-    var view = js.createView(
-        "#simpleView",
-        function(view, viewModel){
-            view.bind(viewModel.value).to(".value");
-        },
-        viewModel);
+    var view = js.createView({
+        template: "#simpleView",
+        init: function(viewModel){
+            this.bind(viewModel.value).to(".value");
+        }
+    }, viewModel);
 
     view.renderTo("#viewDestination");
 
@@ -107,19 +47,18 @@ testCase.prototype.testNestedViewShouldRenderTemplate = function(){
     var viewModel = {
         value: js.bindableValue(),
         resetState: function(){
-            viewModel.value.setValue("foo");
+            this.value.setValue("foo");
         }
     };
 
-    var childView = js.createView(
-        "#childView",
-        function(view, childViewModel){
-            view.bind(childViewModel.value).to(".value");
-        },
-        viewModel
-    )
+    var childView = js.createView({
+        template: "#childView",
+        init: function(childViewModel){
+            this.bind(childViewModel.value).to(".value");
+        }},
+        viewModel);
 
-    var parentView = js.createView("#parentView");
+    var parentView = js.createView({template: "#parentView"});
     parentView.addChild(".parent", childView);
 
     parentView.renderTo("#viewDestination");
