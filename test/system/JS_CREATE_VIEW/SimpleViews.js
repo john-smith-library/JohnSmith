@@ -1,5 +1,5 @@
 /** Tests different signatures of js.createView function */
-var testCase = TestCase("system.api.js_createView");
+var testCase = TestCase("system.JS_CREATE_VIEW.SimpleViews");
 
 var PersonViewModel = function(){
     this.firstName = "John";
@@ -67,4 +67,4 @@ testCase.prototype.assertCanRenderView = function(view){
     assertTrue("View content rendered", $("#viewDestination .person").length === 1);
     assertEquals("First name", "John", $("#viewDestination .person .firstName").text());
     assertEquals("Last name", "Smith", $("#viewDestination .person .lastName").text());
-}
+};

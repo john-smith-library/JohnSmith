@@ -11,4 +11,4 @@ testCase.prototype.testBindableValueShouldCallCustomCallback = function(){
     foo.setValue("bar");
 
     assertTrue("Callback was called", wasCalled);
-}
+};

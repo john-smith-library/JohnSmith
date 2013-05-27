@@ -27,6 +27,7 @@ module JohnSmith.Views {
     interface IChildView {
         child: IView;
         destination: any;
+        viewModel: any;
     }
 
     export class DefaultView implements IView {
@@ -36,6 +37,7 @@ module JohnSmith.Views {
         private eventBus:JohnSmith.Common.IEventBus;
         private viewModel:IViewModel;
         private data:IViewData;
+        private viewFactory:IViewFactory;
 
         /** Regular fields */
         private children:IChildView[];
@@ -46,23 +48,26 @@ module JohnSmith.Views {
             elementFactory:JohnSmith.Common.IElementFactory,
             viewData: IViewData,
             viewModel:IViewModel,
-            eventBus:JohnSmith.Common.IEventBus){
+            eventBus:JohnSmith.Common.IEventBus,
+            viewFactory:IViewFactory){
 
             this.bindableManager = bindableManager;
             this.elementFactory = elementFactory;
             this.data = viewData;
             this.viewModel = viewModel;
             this.eventBus = eventBus;
+            this.viewFactory = viewFactory
         }
 
-        public addChild(destination:any, child:IView){
+        public addChild(destination:any, child:IView, viewModel: any){
             if (!this.hasChildren()) {
                 this.children = [];
             }
 
             this.children.push({
                 child: child,
-                destination: destination
+                destination: destination,
+                viewModel: viewModel
             });
         }
 
@@ -88,15 +93,17 @@ module JohnSmith.Views {
                     view: this
                 });
 
+            if (this.data.init){
+                this.data.init.call(this, this.viewModel);
+            }
+
             if (this.hasChildren()){
                 for (var i = 0; i < this.children.length; i++) {
                     var childData = this.children[i];
-                    childData.child.renderTo(this.rootElement.findRelative(childData.destination));
+                    var viewModel = childData.viewModel;
+                    var child = this.viewFactory.resolve(childData.child, viewModel);
+                    child.renderTo(this.rootElement.findRelative(childData.destination));
                 }
-            }
-
-            if (this.data.init){
-                this.data.init.call(this, this.viewModel);
             }
 
             if (this.viewModel && this.viewModel.resetState){
@@ -171,10 +178,11 @@ module JohnSmith.Views {
                     this.elementFactory,
                     <IViewData> dataDescriptor,
                     viewModel,
-                    this.eventBus);
+                    this.eventBus,
+                    this);
             }
 
-            if (dataDescriptor.renderTo && dataDescriptor.getRootElement()){
+            if (dataDescriptor.renderTo && dataDescriptor.getRootElement){
                 return <IView> dataDescriptor;
             }
 

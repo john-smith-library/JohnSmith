@@ -18,7 +18,11 @@ module JohnSmith.Binding {
         }
 
         public valueChanged(oldValue: Object, newValue: Object, changeType: DataChangeReason) {
-            this.callback(newValue, oldValue, changeType);
+            // context should be 'window' by default
+            // so 'native' functions like 'alert' would work correctly
+            var context = window;
+
+            this.callback.call(context, newValue, oldValue, changeType);
         }
 
         public dispose(): void {
