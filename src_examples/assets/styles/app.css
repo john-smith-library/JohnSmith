@@ -91,7 +91,7 @@ aside
 
 aside ul
 {
-    padding: 30px;
+    padding: 0 0 0 30px;
     margin: 0;
 }
 
@@ -104,14 +104,28 @@ aside ul li
 
 aside ul li
 {
-    margin-bottom: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
 }
 
 aside a
 {
+    font-size: 14px;
+    color: #5A2E2E;
+}
+
+aside ul.navLevel0 {
+    padding: 30px;
+}
+
+aside ul.navLevel0 a {
     font-size: 16px;
     font-weight: bold;
-    color: #5A2E2E;
+}
+
+aside ul.navLevel0 ul.navLevel1 a {
+    font-size: 14px;
+    font-weight: normal;
 }
 
 /* Main Container */
@@ -128,7 +142,7 @@ aside a
     padding-bottom: 30px;
 }
 
-.example:before {
+.topic:before {
     display: block;
     content: " ";
     margin-top: -120px;
@@ -136,25 +150,32 @@ aside a
     visibility: hidden;
 }
 
-.example
+.topic
 {
     padding-bottom: 30px;
 }
 
-.example .sourceCode section
+.topic header .content
+{
+    padding: 20px;
+    background: #EEEEEE;
+}
+
+.topic .sourceCode section
 {
     border: 1px solid #DFBA69;
     background: #FFFEDF;
     position: relative;
+    margin-bottom: 20px;
 }
 
-.example .sourceCode .content
+.topic .sourceCode .content
 {
     height: 300px;
     overflow: auto;
 }
 
-.example .sourceCode section h4
+.topic .sourceCode section h4
 {
     background: #DFBA69;
     font-size: 16px;
@@ -166,13 +187,13 @@ aside a
     top: 0;
 }
 
-.example .result .resultContent
+.topic .result .resultContent
 {
     padding: 10px;
     border: 2px dashed #CCCCCC;
 }
 
-.example form
+.topic form
 {
     padding-top: 20px;
 }

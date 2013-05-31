@@ -45,9 +45,27 @@ testCase.prototype.testNestedView_ViewClassInInitData_ShouldRenderViewTree = fun
     this.assertCanRenderView(parent);
 };
 
-testCase.prototype.testNestedView_ViewInstanceAddedToInstance_ShouldRenderViewTree = function(){
+testCase.prototype.testNestedView_ViewInstanceInInitData_ShouldRenderViewTree = function(){
+    var parent = js.createView({
+        template: "#parentTemplate",
+        init: function(){
+            this.addChild(".parent", new ChildView(), new ChildViewModel());
+        }
+    });
+
+    this.assertCanRenderView(parent);
+};
+
+testCase.prototype.testNestedView_ViewClassAddedToInstance_ShouldRenderViewTree = function(){
     var parent = js.createView({ template: "#parentTemplate" });
     parent.addChild(".parent", ChildView, new ChildViewModel());
+
+    this.assertCanRenderView(parent);
+};
+
+testCase.prototype.testNestedView_ViewInstanceAddedToInstance_ShouldRenderViewTree = function(){
+    var parent = js.createView({ template: "#parentTemplate" });
+    parent.addChild(".parent", new ChildView(), new ChildViewModel());
 
     this.assertCanRenderView(parent);
 };

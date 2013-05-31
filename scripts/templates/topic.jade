@@ -1,7 +1,7 @@
 doctype
 head
     title
-      | JohnSmith - Lightweight and simple JavaScript MVVM Framework
+        | JohnSmith - Lightweight and simple JavaScript MVVM Framework
 
     meta(charset="UTF-8")
 
@@ -35,9 +35,6 @@ html
                 a(href='https://travis-ci.org/guryanovev/JohnSmith', title='Travis CI Build Status')
                     img(src='https://travis-ci.org/guryanovev/JohnSmith.png', alt='Build Status')
 
-        //-*************************************************************************************************************
-        //- Topic Navigation
-        //-*************************************************************************************************************
         mixin navigationList(currentTopics, level)
             ul(class="navLevel#{level}")
                 each topic in currentTopics
@@ -45,11 +42,7 @@ html
                         a(href='##{topic.id}') #{topic.title}
                         if topic.children.length > 0
                             mixin navigationList(topic.children, level + 1)
-        //-*************************************************************************************************************
 
-        //-*************************************************************************************************************
-        //- Topic Content
-        //-*************************************************************************************************************
         mixin topicContent(currentTopics)
             each topic in currentTopics
                 if topic.description

@@ -1,16 +1,7 @@
-/* Model */
-
-var Friend = function(firstName, lastName){
-    this.firstName = firstName;
-    this.lastName = lastName;
-}
-
-/* View Model */
-
+/* Create a bindable list */
 var friends = js.bindableList();
 
 /* View */
-
 var FriendView = function(){
     this.template = "#friendRowTemplate";
     this.init = function(viewModel){
@@ -22,7 +13,7 @@ var FriendView = function(){
 js.bind(friends).to("#friendsTable tbody", FriendView);
 
 friends.setValue([
-    new Friend("Joe", "Bloggs"),
-    new Friend("Fred",  "Bloggs"),
-    new Friend("Bob", "Soap")
+    { firstName: "Joe", lastName: "Bloggs"},
+    { firstName: "Fred", lastName: "Bloggs"},
+    { firstName: "Bob", lastName: "Soap"}
 ]);
