@@ -9,7 +9,7 @@ var ViewModel = function(){
 };
 
 var PersonView = function(){
-    this.template = "#personTemplate";
+    this.template = "#personDetailsTemplate";
     this.init = function(viewModel){
         this.bind(viewModel.firstName).to(".firstName");
         this.bind(viewModel.lastName).to(".lastName");

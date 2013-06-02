@@ -23,7 +23,7 @@ head
         ga('send', 'pageview');
 html
     body(data-spy="scroll", data-target="#mainNavigation")
-        header#mainHeader
+        header#mainHeader.clearfix
             section#logo
                 div.title JohnSmith
                 div.description magicless JavaScript MVVM framework
@@ -38,65 +38,68 @@ html
         mixin navigationList(currentTopics, level)
             ul(class="navLevel#{level}")
                 each topic in currentTopics
+                    - var itemClass = topic.id === currentTopic.id ? "selected" : ""
                     li
-                        a(href='##{topic.id}') #{topic.title}
+                        a.topicLink(href='#{topic.id}.html', class=itemClass, id=topic.id + "Link") #{topic.title}
                         if topic.children.length > 0
                             mixin navigationList(topic.children, level + 1)
 
-        mixin topicContent(currentTopics)
-            each topic in currentTopics
-                if topic.description
-                    div.topic(id='#{topic.id}')
-                        h2 #{topic.title}
+        mixin articleTopic(currentTopic)
+            - var isVisible = !(currentTopic.code)
+            - var articleStyle = isVisible ? "" : "display: none"
+            div#article(style=articleStyle)
+                section.description
+                    div.content
+                        !{currentTopic.description}
 
-                        if topic.code
-                            div(class='row-fluid sourceCode')
-                                section.javascript.span6.block
-                                    h4 JavaScript
-                                    div.content
-                                        pre
-                                            code.javascript #{topic.code}
-                                section.html.span6.block
-                                    h4  HTML
-                                    div.content
-                                        pre
-                                            code.html #{topic.markup}
+        mixin exampleTopic(currentTopic)
+            - var isVisible = currentTopic.code != null
+            - var articleStyle = isVisible ? "" : "display: none"
+            div#example(style=articleStyle)
+                div(class='row-fluid sourceCode')
+                    section.javascript.span6.block
+                        h4 JavaScript
+                        div.content
+                            pre
+                                code.javascript #{currentTopic.code}
+                    section.html.span6.block
+                        h4  HTML
+                        div.content
+                            pre
+                                code.html #{currentTopic.markup}
+                div(class='row-fluid descriptionAndResult')
+                    section.span6.block.description
+                        div.content
+                            !{currentTopic.description}
+                    section.result.span6.block
+                        div.content
+                            h4 Result
 
-                        div(class='row-fluid descriptionAndResult')
-                            if !topic.code
-                                header.span6 !{topic.description}
-                            if topic.code
-                                header.span6.block
-                                    div.content
-                                        !{topic.description}
-                                section.result.span6.block
-                                    h4 Result:
-                                    div.resultContent
-                                        !{topic.markup}
+                            div.resultContent
+                                !{currentTopic.markup}
 
-                                    form(action='http://jsfiddle.net/api/post/jquery/2.0/', method='POST', target='_blank')
-                                        input(type='hidden', value='#{topic.code}', name='js')
-                                        input(type='hidden', value='#{topic.markup}', name='html')
-                                        input(type='hidden', value='/', name='wrap')
-                                        input(type='hidden', value='http://john-smith-js.com/john-smith.debug.js', name='resources')
-                                        input(type='submit', value='Open in jsFiddle')
+                            form(action='http://jsfiddle.net/api/post/jquery/2.0/', method='POST', target='_blank')
+                                input(type='hidden', value='#{currentTopic.code}', name='js')
+                                input(type='hidden', value='#{currentTopic.markup}', name='html')
+                                input(type='hidden', value='/', name='wrap')
+                                input(type='hidden', value='http://john-smith-js.com/john-smith.debug.js', name='resources')
+                                input(type='submit', value='Open in jsFiddle')
 
-                                script (function(){!{topic.code}}());
-
-                if topic.children.length > 0
-                    mixin topicContent(topic.children)
+                    script (function(){!{currentTopic.code}}());
 
         aside
             mixin navigationList(topics, 0)
 
-        script
-            var examples = [];
 
         div#mainContainer
-            div#example
-                mixin topicContent(topics)
+            div#topic
+                h2 #{currentTopic.title}
 
-        footer
+                mixin articleTopic(currentTopic)
+                mixin exampleTopic(currentTopic)
+
+        div#overlay(style="display: none")
+            div.content Loading...
 
         script
             hljs.initHighlightingOnLoad();

@@ -1,0 +1,52 @@
+<div class="row-fluid">
+    <div class="span6">
+        <p>
+            JohnSmith is a lightweight and simple JavaScript framework that works in conjunction with
+            <a href="http://jquery.com">jQuery</a>.
+            JohnSmith allows you to use all the features of jQuery while following separation of concerns principle
+            with <a href="http://en.wikipedia.org/wiki/Model_View_ViewModel">MVVM</a> pattern.
+        </p>
+
+        <h3>Getting started</h3>
+
+        <p>To get started you need to reference jQuery and JohnSmith libs:</p>
+
+        <p>
+            <pre><code class="html">&lt;script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"&gt;&lt;/script&gt;
+&lt;script src="john-smith.debug.js"&gt;&lt;/script&gt;</code></pre>
+        </p>
+
+        <p>When DOM is ready you can construct views, configure bindings etc:</p>
+
+        <p>
+<pre><code class="html">&lt;script&gt;
+    $(function(){
+    // ..JohnSmith code goes here...
+    });
+&lt;/script&gt;</code></pre>
+        </p>
+
+        <h3>Core concepts</h3>
+        <p>Core JohnSmith concepts are:</p>
+        <ul>
+            <li>
+                <strong>Binding</strong><br />
+                <p>
+                    Binding allows you to handle values change event and update corresponding UI.
+                    <br />
+                    <a class="topicLink" href="static_binding.html">Learn more...</a>
+                </p>
+            </li>
+            <li>
+                <strong>Views</strong>
+                <p>
+                    View is an object that wires logic to DOM elements.
+                    View configures binding and sets up event handlers.
+                    Views also support nesting, so you can build complicated UI creating child views.
+                    <br />
+                    <a class="topicLink" href="introduce_view.html">Learn more...</a>
+                </p>
+            </li>
+        </ul>
+    </div>
+</div>
