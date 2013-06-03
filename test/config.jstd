@@ -5,6 +5,7 @@ load:
 test:
   - system/*.js
   - system/JS_CREATE_VIEW/*.js
+  - system/JS_BIND/*.js
   - unit/binding/*.js
   - unit/common/*.js
   - unit/views/*.js

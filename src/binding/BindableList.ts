@@ -4,6 +4,8 @@
 
 module JohnSmith.Binding {
     export class BindableList extends BindableValue implements IBindable {
+        private _count: BindableValue;
+
         constructor(){
             super();
             super.setValue([]);
@@ -17,6 +19,7 @@ module JohnSmith.Binding {
             }
 
             super.setValue(value);
+            this.notifyCountListeners();
         }
 
         public add(...args:any[]): void {
@@ -25,7 +28,7 @@ module JohnSmith.Binding {
                 array.push(args[i]);
             }
 
-            super.notifyListeners(args, DataChangeReason.add);
+            this.reactOnChange(args, DataChangeReason.add);
         }
 
         public remove(...args:any[]):void {
@@ -43,7 +46,32 @@ module JohnSmith.Binding {
                 }
             }
 
-            super.notifyListeners(args, DataChangeReason.remove);
+            this.reactOnChange(args, DataChangeReason.remove);
+        }
+
+        /** Returns a bindable value that stores size of the list */
+        public count():BindableValue {
+            if (!this._count) {
+                this._count = new BindableValue();
+            }
+
+            return this._count;
+        }
+
+        private reactOnChange(items: any[], reason:DataChangeReason):void{
+            super.notifyListeners(items, reason);
+            this.notifyCountListeners();
+        }
+
+        private notifyCountListeners():void {
+            if (this._count){
+                if (this.getValue()) {
+                    this._count.setValue(this.getValue().length);
+                } else {
+                    this._count.setValue(0);
+                }
+
+            }
         }
     }
 
