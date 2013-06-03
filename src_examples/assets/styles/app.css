@@ -16,6 +16,10 @@ pre
     border-radius: 0;
 }
 
+button::-moz-focus-inner {
+    border: 0;
+}
+
 /* Main Header */
 
 #mainHeader
@@ -152,10 +156,13 @@ aside ul.navLevel0 a {
 }
 
 aside ul.navLevel0 ul.navLevel1 a.selected,
+aside ul.navLevel0 ul.navLevel1 a.selected:HOVER,
+aside ul.navLevel0 a.selected:HOVER,
 aside ul.navLevel0 a.selected
 {
     background: #666666;
     border-color: #666666;
+    color: #FFFFFF;
 }
 
 aside ul.navLevel0 a:hover
@@ -178,8 +185,6 @@ aside ul.navLevel0 ul.navLevel1 a {
     background: #95c1e5;
     border-bottom-color: #87b3d8;
 }
-
-
 
 /* Main Container */
 
