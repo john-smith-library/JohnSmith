@@ -133,6 +133,20 @@ aside a
     text-decoration: none;
 }
 
+aside a span
+{
+    font-size: 11px;
+    font-weight: bold;
+
+    line-height: 1em;
+    color: #e74955;
+    background: #FFFFFF;
+    float: right;
+    padding: 4px 5px;
+
+    border-radius: 5px;
+}
+
 aside a:hover
 {
     text-decoration: none;

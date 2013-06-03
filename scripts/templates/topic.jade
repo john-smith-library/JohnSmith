@@ -41,6 +41,8 @@ html
                     - var itemClass = topic.id === currentTopic.id ? "selected" : ""
                     li
                         a.topicLink(href='#{topic.id}.html', class=itemClass, id=topic.id + "Link") #{topic.title}
+                            if topic.isNew
+                                span new
                         if topic.children.length > 0
                             mixin navigationList(topic.children, level + 1)
 

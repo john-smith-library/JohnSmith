@@ -23,11 +23,14 @@ function discoverExamplesDirectory(dirPath, topicCollection){
                 title = configData.title;
 
                 var cleanTopicId = topicId.replace(/^\d\d_/, "");
+
                 console.log(cleanTopicId);
+
                 var topic = {
                     id: cleanTopicId,
                     title: title,
-                    children: []
+                    children: [],
+                    isNew: configData.isNew || false
                 };
 
                 if (fs.existsSync(markupFile)){
@@ -105,8 +108,3 @@ console.log("Building examples html...");
 var topics = [];
 discoverExamplesDirectory(examplesBaseDir, topics);
 generatePages(topics, topics);
-
-//fs.writeFileSync(outputHtmlFile, fn({
-//    topics: topics,
-//    version: version
-//}));
