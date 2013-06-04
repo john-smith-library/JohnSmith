@@ -76,16 +76,16 @@ function generatePages(topics, allTopics){
 
 var version = process.env.VERSION || "DEV";
 var fn = jade.compile(fs.readFileSync("scripts/templates/topic.jade"));
+var sitemapTemplate = jade.compile(fs.readFileSync("scripts/templates/sitemap.jade"));
 
 if (!fs.existsSync("out")) {
     fs.mkdirSync("out");
 }
 
 var examplesBaseDir = "src_examples";
-var outputHtmlFile = path.join("out", "index.html");
-
 var assetsSourcePath = path.join(examplesBaseDir, "assets");
 var assetsDestPath = path.join("out", "assets");
+var outSitemapPath = path.join("out", "sitemap.xml");
 var rootAssets = path.join(assetsDestPath, "root");
 
 fs.mkdirsSync(path.join("out", "ajax"));
@@ -103,8 +103,11 @@ fs.copy(assetsSourcePath, assetsDestPath, function(err){
     }
 });
 
-console.log("Building examples html...");
-
 var topics = [];
 discoverExamplesDirectory(examplesBaseDir, topics);
 generatePages(topics, topics);
+
+fs.writeFileSync(outSitemapPath, sitemapTemplate({
+    topics: topics,
+    version: version
+}));
