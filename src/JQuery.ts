@@ -1,7 +1,10 @@
+/// <reference path="binding/Handling.ts"/>
 /// <reference path="binding/Contracts.ts"/>
 /// <reference path="binding/BindableManager.ts"/>
+/// <reference path="Common.ts"/>
 
 declare var $: any;
+declare var jQuery: any;
 
 module JohnSmith.JQuery {
     class JQueryElement implements JohnSmith.Common.IElement {
@@ -19,17 +22,36 @@ module JohnSmith.JQuery {
             this.target.empty();
         }
 
-        public append(html:string) : JohnSmith.Common.IElement{
+        public appendHtml(html:string) : JohnSmith.Common.IElement{
             if (!html) {
-                return null;
+                throw new Error("Could not append empty string!")
             }
 
-            var parsedHtml =
-                typeof html === "string" ?
-                $($.parseHTML(html)) : $(html);
+            if (typeof html !== "string"){
+                throw new Error("Expected string markup but was" + html);
+            }
+
+            var parsedHtml = $($.parseHTML(html));
 
             this.target.append(parsedHtml);
             return new JQueryElement(parsedHtml);
+        }
+
+        public appendText(text:string) : JohnSmith.Common.IElement{
+            if (!text) {
+                throw new Error("Could not append empty string!")
+            }
+
+            if (typeof text !== "string"){
+                throw new Error("Expected string text but was" + text);
+            }
+
+            var encodedHtml = $("<div/>").text(text).html();
+            return this.appendHtml(encodedHtml);
+//            var result = $(encodedHtml)
+//
+//            this.target.append(result);
+//            return new JQueryElement(result);
         }
 
         public getHtml() : string {
@@ -51,6 +73,56 @@ module JohnSmith.JQuery {
 
         public getTarget(): any {
             return this.target;
+        }
+
+        public setText(text:string) {
+            this.target.text(text);
+        }
+
+        public setHtml(html:string) {
+            this.target.html(html);
+        }
+
+        public addClass(className: string) : void {
+            this.target.addClass(className);
+        }
+
+        public removeClass(className: string) : void {
+            this.target.removeClass(className);
+        }
+
+        public attachClickHandler(callback: () => void) : void {
+            this.target.click(callback);
+        }
+
+        public getValue() : string {
+            return this.target.val();
+        }
+
+        public setValue(value: string) : string{
+            return this.target.val(value);
+        }
+    }
+
+    export class JQueryMarkupResolver implements JohnSmith.Common.IMarkupResolver {
+        public resolve(markup: any): string {
+            var jqueryMarkup =
+                markup instanceof jQuery ?
+                markup : $(markup);
+
+            if (jqueryMarkup.parent().length > 0){
+                return jqueryMarkup.html();
+            }
+
+            if (typeof markup === "string") {
+                return markup;
+            }
+
+            if (markup instanceof jQuery) {
+                return $("<p>").append(markup).html();
+            }
+
+            throw new Error("Could not resolve markup by object " + markup);
         }
     }
 
@@ -92,10 +164,19 @@ module JohnSmith.JQuery {
         },
 
         transform: function(data: any[], bindable:JohnSmith.Binding.IBindable, context:JohnSmith.Common.IElement): any {
-            data[0] = {
-                to: data[0],
-                handler: 'render'
-            };
+            var lastDataItem = data[data.length - 1];
+            var selector = data[0];
+            if (JohnSmith.Common.TypeUtils.isObject(lastDataItem)){
+                data[0] = lastDataItem;
+                data.pop();
+            } else {
+                data[0] = {};
+            }
+
+            data[0].to = selector;
+            if (!data[0].handler) {
+                data[0].handler = 'render';
+            }
 
             return data;
         }
@@ -159,5 +240,7 @@ module JohnSmith.JQuery {
             }
         }
     );
+
+    JohnSmith.Common.JS.ioc.register("markupResolver", new JQueryMarkupResolver());
 }
 

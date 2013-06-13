@@ -25,7 +25,7 @@ module JohnSmith.Common {
          * @returns {boolean}
          */
         public static isObject(target: any){
-            return typeof target === "[Object]";
+            return target != null && typeof target === "object";
         }
     }
 
@@ -152,18 +152,52 @@ module JohnSmith.Common {
     // Dom services
     /////////////////////////////////
 
+    /**
+     * Describes the type of string value
+     */
+    export class ValueType {
+        /** The value contains plain text */
+        public static text = "text";
+
+        /** The value contains prepared html */
+        public static html = "html";
+
+        /** The value contains an object that could be transformed to html */
+        public static unknown = "unknown";
+    }
+
     export interface IElement {
         isEmpty: () => bool;
         empty: () => void;
-        append: (html:string) => IElement;
+        appendHtml: (html:string) => IElement;
+        appendText: (text:string) => IElement;
         getHtml: () => string;
         findRelative: (query:string) => IElement;
         remove: () => void;
+
+        addClass: (className: string) => void;
+        removeClass: (className: string) => void;
+
+        setHtml(html:string);
+        setText(text: string);
+
+        getValue: () => string;
+        setValue(value: string);
+
+        attachClickHandler: (callback: () => void) => void;
     }
 
     export interface IElementFactory {
         createElement(query:string);
         createRelativeElement(parent:IElement, query:string);
+    }
+
+    export interface IMarkupResolver {
+        /**
+         * Resolves markup object and returns valid html string.
+         * @param markup
+         */
+        resolve(markup: any): string;
     }
 
     /////////////////////////////////

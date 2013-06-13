@@ -9,6 +9,12 @@ testCase.prototype.testCanResolveInstances = function(){
     assertEquals("Resolved service", foo, resolvedFoo);
 };
 
+testCase.prototype.testNoDependencyRegistered_ShouldReturnNull = function(){
+    var resolvedFoo = js.ioc.resolve("no_such_object");
+
+    assertNull("Resolved service", resolvedFoo);
+};
+
 testCase.prototype.testCanResolveByProvider = function(){
     var foo = "foo";
     js.ioc.register(

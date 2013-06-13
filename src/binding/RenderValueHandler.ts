@@ -41,16 +41,10 @@ module JohnSmith.Binding {
 
         private doRender(value: any):void {
             this.contentDestination.empty();
-            if (value) {
-                this.valueRenderer.render(value, this.contentDestination)
-            };
+            if (value !== null && value !== undefined) {
+                this.valueRenderer.render(value, this.contentDestination);
+            }
         }
-    }
-
-    export interface RenderHandlerOptions extends HandlerOptions {
-        contentDestination?: JohnSmith.Common.IElement;
-        renderer?: IValueRenderer;
-        type?: string;
     }
 
     export class RenderValueFactory implements IHandlerFactory {
@@ -78,6 +72,32 @@ module JohnSmith.Binding {
                 options.renderer);
 
             return handler;
+        }
+    }
+
+    export class FormElementValueRenderer implements IValueRenderer {
+        public render(value: any, destination: JohnSmith.Common.IElement) : JohnSmith.Common.IElement {
+            var currentValue = destination.getValue();
+            if (currentValue !== value){
+                destination.setValue(value);
+            }
+
+            return destination;
+        }
+    }
+
+    export class DefaultFormatter implements IValueFormatter {
+        private _defaultValueType: string;
+
+        constructor(defaultValueType: string){
+            this._defaultValueType = defaultValueType;
+        }
+
+        public format(value: any): IFormattedValue {
+            return {
+                value: value.toString(),
+                type: this._defaultValueType
+            };
         }
     }
 
@@ -151,21 +171,16 @@ module JohnSmith.Binding {
             }
 
             return TransformerApplicability.Unknown;
-
-            //return data && data.length > 0 && data[0].handler === "render" && (!data[0].formatter) && (!data[0].renderer);
         },
 
         transform: function(data: any[], bindable:IBindable, context: JohnSmith.Common.IElement): any{
-            data[0].formatter =  {
-                format: function (value: any): string {
-                    if (value == null){
-                        return null;
-                    }
-
-                    return value.toString();
-                }
+            var encode = true;
+            if (data[0].encode !== undefined){
+                encode = data[0].encode;
             }
 
+            var defaultValueType = encode ? Common.ValueType.text : Common.ValueType.html;
+            data[0].formatter =  new DefaultFormatter(defaultValueType);
             return data;
         }
     });
@@ -186,29 +201,38 @@ module JohnSmith.Binding {
             }
 
             return TransformerApplicability.Unknown;
-            //return data && data.length > 0 && data[0].handler === "render" && data[0].formatter && (!data[0].renderer);
         },
 
-        transform: function(data: any[], bindable:IBindable, context: JohnSmith.Common.IElement): any{
+        transform: function(data: any[], bindable:IBindable, context: Common.IElement): any{
             // get formatter from input array
-            var formatter = <JohnSmith.Binding.IValueFormatter> data[0].formatter;
+            var formatter = <Binding.IValueFormatter> data[0].formatter;
 
             // put renderer to input array
             data[0].renderer =  {
-                render: function(value: any, destination: JohnSmith.Common.IElement) : JohnSmith.Common.IElement {
+                render: function(value: any, destination: JohnSmith.Common.IElement) : Common.IElement {
                     var formattedValue = formatter.format(value);
-                    var result = destination.append(formattedValue);
+                    var result:Common.IElement = null;
+                    if (formattedValue.type === Common.ValueType.text) {
+                        result = destination.appendText(formattedValue.value);
+                    } else if (formattedValue.type === Common.ValueType.html) {
+                        result = destination.appendHtml(formattedValue.value);
+                    } else if (formattedValue.type === Common.ValueType.unknown) {
+                        var markup = Common.JS.ioc.resolve("markupResolver").resolve(formattedValue.value);
+                        result = destination.appendHtml(markup);
+                    } else {
+                        throw new Error("Unknown value type: " + formattedValue.type);
+                    }
 
                     JohnSmith.Common.JS.event.bus.trigger(
                         "valueRendered",
                         {
                             originalValue: value,
                             formattedValue: formattedValue,
-                            root: result,
+                            root: destination,
                             destination: destination
                         });
 
-                    return  result;
+                    return result;
                 }
             }
 

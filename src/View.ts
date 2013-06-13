@@ -38,6 +38,7 @@ module JohnSmith.Views {
         private viewModel:IViewModel;
         private data:IViewData;
         private viewFactory:IViewFactory;
+        private markupResolver:Common.IMarkupResolver;
 
         /** Regular fields */
         private children:IChildView[];
@@ -48,15 +49,17 @@ module JohnSmith.Views {
             elementFactory:JohnSmith.Common.IElementFactory,
             viewData: IViewData,
             viewModel:IViewModel,
-            eventBus:JohnSmith.Common.IEventBus,
-            viewFactory:IViewFactory){
+            eventBus: JohnSmith.Common.IEventBus,
+            viewFactory: IViewFactory,
+            markupResolver: Common.IMarkupResolver){
 
             this.bindableManager = bindableManager;
             this.elementFactory = elementFactory;
             this.data = viewData;
             this.viewModel = viewModel;
             this.eventBus = eventBus;
-            this.viewFactory = viewFactory
+            this.viewFactory = viewFactory;
+            this.markupResolver = markupResolver;
         }
 
         public addChild(destination:any, child:IView, viewModel: any){
@@ -72,19 +75,12 @@ module JohnSmith.Views {
         }
 
         public renderTo(destination:any):void {
-            var templateElement = this.elementFactory.createElement(this.data.template);
-
-            if (templateElement.isEmpty()){
-                throw new Error("Template [" + this.data.template + "] content is empty");
-            }
-
+            var templateHtml = this.markupResolver.resolve(this.data.template);
             var destinationElement = typeof destination == "string" ?
                 this.elementFactory.createElement(destination) :
                 destination;
 
-            var templateHtml = templateElement.getHtml();
-
-            this.rootElement = destinationElement.append(templateHtml);
+            this.rootElement = destinationElement.appendHtml(templateHtml);
 
             this.eventBus.trigger(
                 "viewRendered",
@@ -151,15 +147,18 @@ module JohnSmith.Views {
         private elementFactory:JohnSmith.Common.IElementFactory;
         private bindableManager:JohnSmith.Binding.IBindableManager;
         private eventBus:JohnSmith.Common.IEventBus;
+        private markupResolver:JohnSmith.Common.IMarkupResolver;
 
         constructor (
             bindableManager:JohnSmith.Binding.IBindableManager,
             elementFactory:JohnSmith.Common.IElementFactory,
-            eventBus:JohnSmith.Common.IEventBus){
+            eventBus:JohnSmith.Common.IEventBus,
+            markupResolver:JohnSmith.Common.IMarkupResolver){
 
             this.bindableManager = bindableManager;
             this.elementFactory = elementFactory;
             this.eventBus = eventBus;
+            this.markupResolver = markupResolver;
         }
 
         public resolve(dataDescriptor: any, viewModel: any) : IView {
@@ -179,20 +178,19 @@ module JohnSmith.Views {
                     <IViewData> dataDescriptor,
                     viewModel,
                     this.eventBus,
-                    this);
+                    this,
+                    this.markupResolver);
             }
 
             if (dataDescriptor.renderTo && dataDescriptor.getRootElement){
                 return <IView> dataDescriptor;
             }
 
-
             throw new Error("Could not resolve view data by provided descriptor");
         }
     }
 
-
-    export class ViewValueRenderer implements JohnSmith.Binding.IValueRenderer {
+    export class ViewValueRenderer implements Binding.IValueRenderer {
         private viewFactory: (value:any) => IView;
         private currentView: IView;
 
@@ -228,7 +226,8 @@ module JohnSmith.Views {
             return new DefaultViewFactory(
                 <JohnSmith.Binding.IBindableManager> ioc.resolve("bindingManager"),
                 <JohnSmith.Common.IElementFactory> ioc.resolve("elementFactory"),
-                JohnSmith.Common.JS.event.bus);
+                JohnSmith.Common.JS.event.bus,
+                <JohnSmith.Common.IMarkupResolver> ioc.resolve("markupResolver"));
         });
 
     JohnSmith.Common.JS.addHandlerTransformer({

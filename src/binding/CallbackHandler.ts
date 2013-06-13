@@ -30,7 +30,7 @@ module JohnSmith.Binding {
     }
 
     JohnSmith.Common.JS.addHandlerFactory({
-        createHandler: function (data: any, context: JohnSmith.Common.IElement): IBindableHandler {
+        createHandler: function (data: any, context: Common.IElement): IBindableHandler {
             if (data && data.handler === "callback") {
                 return new CallbackHandler(data.callback);
             }

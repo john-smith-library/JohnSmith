@@ -5,7 +5,8 @@ testCase.prototype.setUp = function(){
         /* Set all dependencies to null because view factory does not use it directly */
         null, /* BindingManager */
         null, /* Element Factory */
-        null  /* Event Bus */);
+        null, /* Event Bus */
+        null  /* Markup resolver */);
 };
 
 testCase.prototype.testCreateView_ObjectViewData_ShouldCreateView = function(){

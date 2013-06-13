@@ -123,6 +123,8 @@ module JohnSmith.Binding {
         }
 
         private getHandler(handlerData: any[], bindable:IBindable, context: JohnSmith.Common.IElement): IBindableHandler {
+            //var lastArgument = handlerData[handlerData.length - 1];
+
             this.transformHandlerData(handlerData, bindable, context);
 
             for (var i = 0; i < this.handlerFactories.count(); i++) {

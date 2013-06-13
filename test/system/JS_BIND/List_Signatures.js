@@ -1,7 +1,93 @@
-/**
- * Created with JetBrains WebStorm.
- * User: Eugene Guryanov
- * Date: 03.06.13
- * Time: 21:46
- * To change this template use File | Settings | File Templates.
- */
+/** Tests different signatures that bind the same list */
+var testCase = TestCase("system.JS_BIND.List_Signatures");
+
+var items = ["foo", "bar"];
+
+var SimpleFormatter = function(){
+    this.format = function(value){
+        return {
+            value: $("<li></li>").text(value),
+            type: "unknown"
+        };
+    };
+};
+
+var SimpleView = function(){
+    this.template = "#listItemTemplate";
+    this.init = function(viewModel){
+        this.bind(viewModel).to("li");
+    };
+};
+
+testCase.prototype.setUp = function(){
+    /** We use the same markup in all tests: */
+    /*:DOC += <script id="listItemTemplate" type="text/view">
+                <li></li>
+              </script> */
+
+    /*:DOC += <ul id="listDestination"></ul> */
+
+    this.list = js.bindableList();
+};
+
+testCase.prototype.tearDown = function(){
+    this.list.setValue(items);
+
+    console.log($("#listDestination").html());
+
+    assertEquals("Rendered items count", 2, $("#listDestination li").length);
+    assertEquals("First rendered item", "foo", $("#listDestination li:eq(0)").text());
+    assertEquals("First rendered item", "bar", $("#listDestination li:eq(1)").text());
+};
+
+testCase.prototype.testSelectorAndViewClass = function(){
+    js.bind(this.list).to("#listDestination", SimpleView);
+};
+
+testCase.prototype.testConfigObjectWithSelectorAndViewClass = function(){
+    js.bind(this.list).to({
+        to: "#listDestination",
+        view: SimpleView
+    });
+};
+
+testCase.prototype.testConfigObjectWithSelectorAndFormatter = function(){
+    js.bind(this.list).to({
+        to: "#listDestination",
+        formatter: new SimpleFormatter()
+    });
+};
+
+testCase.prototype.testStaticArrayConfigObjectWithSelectorAndFormatter = function(){
+    js.bind(items).to({
+        to: "#listDestination",
+        formatter: new SimpleFormatter()
+    });
+};
+
+testCase.prototype.testConfigObjectFull = function(){
+    js.bind(this.list).to({
+        handler: "render",
+        type: "list",
+        to: "#listDestination",
+        formatter: new SimpleFormatter()
+    });
+};
+
+testCase.prototype.testSelectorAndConfigObject = function(){
+    js.bind(this.list).to(
+        "#listDestination",
+        {
+            formatter: new SimpleFormatter()
+        });
+};
+
+testCase.prototype.testSelectorViewAndConfigObject = function(){
+    js.bind(this.list).to(
+        "#listDestination",
+        SimpleView,
+        {
+            handler: "render"
+        });
+};
+

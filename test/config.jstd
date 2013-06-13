@@ -9,3 +9,4 @@ test:
   - unit/binding/*.js
   - unit/common/*.js
   - unit/views/*.js
+  - unit/jquery/*.js
