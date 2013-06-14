@@ -1,6 +1,7 @@
 /// <reference path="binding/Handling.ts"/>
 /// <reference path="binding/Contracts.ts"/>
 /// <reference path="binding/BindableManager.ts"/>
+/// <reference path="binding/BindableList.ts"/>
 /// <reference path="Common.ts"/>
 
 declare var $: any;
@@ -48,10 +49,6 @@ module JohnSmith.JQuery {
 
             var encodedHtml = $("<div/>").text(text).html();
             return this.appendHtml(encodedHtml);
-//            var result = $(encodedHtml)
-//
-//            this.target.append(result);
-//            return new JQueryElement(result);
         }
 
         public getHtml() : string {
@@ -126,104 +123,51 @@ module JohnSmith.JQuery {
         }
     }
 
-    /////////////////////////////////
-    // Configuring handler transformers
-    /////////////////////////////////
-
-    JohnSmith.Common.JS.addHandlerTransformer({
-        description: "{to: 'selector'} => {contentDestination: IElement} [Converts 'to' selector to DOM element]",
-
-        checkApplicability: function(data:any[], bindable:JohnSmith.Binding.IBindable, context:JohnSmith.Common.IElement): JohnSmith.Binding.TransformerApplicability{
-            if (data && data.length > 0 && data[0].handler === "render" && data[0].to){
-                return JohnSmith.Binding.TransformerApplicability.Applicable;
-            }
-
-            return JohnSmith.Binding.TransformerApplicability.Unknown;
-        },
-
-        transform: function(data: any[], bindable:JohnSmith.Binding.IBindable, context:JohnSmith.Common.IElement): any {
-            var elementFactory:JohnSmith.Common.IElementFactory = <JohnSmith.Common.IElementFactory> JohnSmith.Common.JS.ioc.resolve("elementFactory");
-
-            data[0].contentDestination = context == null ?
-                elementFactory.createElement(data[0].to) :
-                context.findRelative(data[0].to);
-
-            return data;
+    class JQueryTargetArgumentProcessor implements Binding.IHandlerArgumentProcessor {
+        public canProcess(
+            argument:any,
+            argumentIndex: number,
+            options: any,
+            bindable:Binding.IBindable,
+            context:JohnSmith.Common.IElement) : bool {
+            return (typeof argument == "string") && argumentIndex == 0
         }
-    }, true);
 
-    JohnSmith.Common.JS.addHandlerTransformer({
-        description: "'selector' => {to: 'selector', handler: 'render'} [Handles selector and converts it to object with 'to' property]",
-
-        checkApplicability: function(data:any[], bindable:JohnSmith.Binding.IBindable, context:JohnSmith.Common.IElement): JohnSmith.Binding.TransformerApplicability{
-            if (data && data.length > 0 && typeof data[0] == "string"){
-                return JohnSmith.Binding.TransformerApplicability.Applicable;
+        public process(
+            argument:any,
+            options: any,
+            bindable:Binding.IBindable,
+            context:JohnSmith.Common.IElement){
+            if (!options.handler) {
+                options.handler = "render";
             }
 
-            return JohnSmith.Binding.TransformerApplicability.NotApplicable;
-        },
-
-        transform: function(data: any[], bindable:JohnSmith.Binding.IBindable, context:JohnSmith.Common.IElement): any {
-            var lastDataItem = data[data.length - 1];
-            var selector = data[0];
-            if (JohnSmith.Common.TypeUtils.isObject(lastDataItem)){
-                data[0] = lastDataItem;
-                data.pop();
-            } else {
-                data[0] = {};
+            if (!options.to){
+                options.to = argument;
             }
-
-            data[0].to = selector;
-            if (!data[0].handler) {
-                data[0].handler = 'render';
-            }
-
-            return data;
         }
-    }, true);
+    }
 
-    JohnSmith.Common.JS.addHandlerTransformer({
-        description: "{handler: 'list'} => {handler: 'list', mapper: IValueToElementMapper} [Adds value to element mapper]",
-
-        checkApplicability: function(data:any[], bindable:JohnSmith.Binding.IBindable, context:JohnSmith.Common.IElement): JohnSmith.Binding.TransformerApplicability{
-            if (data && data.length > 0 && data[0].handler === "render" && data[0].type === "list"){
-                if (data[0].mapper) {
-                    return JohnSmith.Binding.TransformerApplicability.NotApplicable;
+    export class JQueryValueToElementMapper implements Binding.IValueToElementMapper {
+        public getElementFor(value:any, root:JohnSmith.Common.IElement): JohnSmith.Common.IElement {
+            var $items = (<JQueryElement> root.findRelative(".dataItem")).getTarget();
+            for (var i = 0; i < $items.length; i++){
+                var $element = $($items[i]);
+                if ($element.data("dataItem") === value){
+                    return new JQueryElement($element)
                 }
-
-                return JohnSmith.Binding.TransformerApplicability.Applicable;
             }
 
-            return JohnSmith.Binding.TransformerApplicability.Unknown;
-        },
-
-        transform: function(data: any[], bindable:JohnSmith.Binding.IBindable, context:JohnSmith.Common.IElement): any {
-            var mapper:JohnSmith.Binding.IValueToElementMapper = {
-                getElementFor: function(value:any, root:JohnSmith.Common.IElement):JohnSmith.Common.IElement {
-                    var $items = (<JQueryElement> root.findRelative(".dataItem")).getTarget();
-                    for (var i = 0; i < $items.length; i++){
-                        var $element = $($items[i]);
-                        if ($element.data("dataItem") === value){
-                            return new JQueryElement($element)
-                        }
-                    }
-
-                    return null;
-                },
-
-                attachValueToElement: function(value:any, element:JohnSmith.Common.IElement) {
-                    var $target = (<JQueryElement> element).getTarget();
-                    $target
-                        .addClass("dataItem")
-                        .data("dataItem", value);
-                }
-            };
-
-            data[0].mapper = mapper;
-
-            return data;
+            return null;
         }
-    });
+
+        public attachValueToElement(value:any, element:JohnSmith.Common.IElement): void {
+            var $target = (<JQueryElement> element).getTarget();
+            $target
+                .addClass("dataItem")
+                .data("dataItem", value);
+        }
+    }
 
     /////////////////////////////////
     // Configuring ioc dependencies
@@ -241,6 +185,9 @@ module JohnSmith.JQuery {
         }
     );
 
+    JohnSmith.Common.JS.addHandlerArgumentProcessor(new JQueryTargetArgumentProcessor());
+
     JohnSmith.Common.JS.ioc.register("markupResolver", new JQueryMarkupResolver());
+    JohnSmith.Common.JS.ioc.register("valueToElementMapper", new JQueryValueToElementMapper());
 }
 

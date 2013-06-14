@@ -1,7 +1,7 @@
 var testCase = new TestCase("unit.views.DefaultViewFactory");
 
 testCase.prototype.setUp = function(){
-    this.factory = new JohnSmith.Views.DefaultViewFactory(
+    this.factory = new JohnSmith.View.DefaultViewFactory(
         /* Set all dependencies to null because view factory does not use it directly */
         null, /* BindingManager */
         null, /* Element Factory */
@@ -46,5 +46,5 @@ testCase.prototype.createAndAssertViewIsValid = function(viewDescriptor){
 
 function assertIsView(view){
     assertNotNull("View", view);
-    assertInstanceOf("View type", JohnSmith.Views.DefaultView, view);
+    assertInstanceOf("View type", JohnSmith.View.DefaultView, view);
 }

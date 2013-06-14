@@ -6,95 +6,20 @@ module JohnSmith.Binding {
         return JohnSmith.Common.log;
     }
 
-    export interface IBindingData {
-        bindableData: any;
-        context: JohnSmith.Common.IElement;
-        handlerData: any[];
-    }
-
-    export class BindingConfig {
-        private manager: IBindableManager;
-        private bindable: any;
-        private context: JohnSmith.Common.IElement;
-
-        constructor(manager: IBindableManager, bindable: any, context: JohnSmith.Common.IElement) {
-            this.manager = manager;
-            this.bindable = bindable;
-            this.context = context;
-        }
-
-        public to(...handler: any[]):BindingConfig {
-            this.manager.bind({
-                bindableData: this.bindable,
-                handlerData: handler,
-                context: this.context
-            }).init();
-            return this;
-        }
-    }
-
-    // sets up bindings between any objects
-    export interface IBindableManager {
-        bind: (data: IBindingData) => BindingWire;
-    }
-
-    export enum TransformerApplicability {
-        NotApplicable,
-        Applicable,
-        Unknown
-    }
-
-    // Transforms handler data to canonical form.
-    export interface IHandlerDataTransformer {
-        description?: string;
-        checkApplicability: (data:any[], bindable:IBindable, context:JohnSmith.Common.IElement) => TransformerApplicability;
-        transform: (data:any[], bindable:IBindable, context:JohnSmith.Common.IElement) => any[];
-    }
-
-    // stores a combination of bindable and handler
-    export class BindingWire implements JohnSmith.Common.IDisposable {
-        private bindable: IBindable;
-        private handler: IBindableHandler;
-
-        constructor(bindable: IBindable, handler: IBindableHandler) {
-            this.bindable = bindable;
-            this.handler = handler;
-        }
-
-        // initializes the wire
-        public init() {
-            this.handler.wireWith(this.bindable);
-        }
-
-        // disposes the wire
-        public dispose() {
-            this.handler.unwireWith(this.bindable);
-            this.handler.dispose();
-        }
-
-        public getBindable():IBindable {
-            return this.bindable;
-        }
-
-        public getHandler():IBindableHandler {
-            return this.handler;
-        }
-    }
-
     // default implementation of binding manager
     export class DefaultBindingManager implements IBindableManager {
         private handlerFactories: JohnSmith.Common.ArrayList;
         private bindableFactories: JohnSmith.Common.ArrayList;
-        private handlerDataTransformers: JohnSmith.Common.IList;
+        private handlerArgumentProcessors: JohnSmith.Common.IList;
 
         constructor(
             bindableFactories:  JohnSmith.Common.ArrayList,
             handlerFactories: JohnSmith.Common.ArrayList,
-            handlerDataTransformers: JohnSmith.Common.IList) {
+            handlerArgumentProcessors: JohnSmith.Common.IList) {
 
             this.bindableFactories = bindableFactories;
             this.handlerFactories = handlerFactories;
-            this.handlerDataTransformers = handlerDataTransformers;
+            this.handlerArgumentProcessors = handlerArgumentProcessors;
         }
 
         public bind(data:IBindingData): BindingWire {
@@ -123,13 +48,28 @@ module JohnSmith.Binding {
         }
 
         private getHandler(handlerData: any[], bindable:IBindable, context: JohnSmith.Common.IElement): IBindableHandler {
-            //var lastArgument = handlerData[handlerData.length - 1];
+            var lastArgument = handlerData[handlerData.length - 1];
+            var handlerOptions: any;
+            if (this.isOptionsArgument(lastArgument)) {
+                handlerOptions = lastArgument;
+                handlerData.pop();
+            } else {
+                handlerOptions = {};
+            }
 
-            this.transformHandlerData(handlerData, bindable, context);
+            var argumentIndex = 0;
+            while (handlerData.length > 0) {
+                var argument = handlerData[0];
+                this.processHandlerArgument(argument, argumentIndex, handlerOptions, bindable, context);
+                handlerData.splice(0, 1);
+                argumentIndex++;
+            }
+
+            //this.transformHandlerData(handlerData, bindable, context);
 
             for (var i = 0; i < this.handlerFactories.count(); i++) {
                 var factory: IHandlerFactory = this.handlerFactories.getAt(i);
-                var result: IBindableHandler = factory.createHandler(handlerData[0], context);
+                var result: IBindableHandler = factory.createHandler(handlerOptions, bindable, context);
                 if (result) {
                     return result;
                 }
@@ -138,55 +78,24 @@ module JohnSmith.Binding {
             throw new Error("Could not transform object " + handlerData + " to bindable handler");
         }
 
-        private transformHandlerData(data: any[], bindable:IBindable, context: JohnSmith.Common.IElement){
-            if (!this.handlerDataTransformers){
-                return;
-                Log().warn("  no transformers defined");
-            }
-
-            var transformers: IHandlerDataTransformer[] = [];
-
-            // copy transformers to new array
-            for (var i = 0; i < this.handlerDataTransformers.count(); i++){
-                transformers.push(this.handlerDataTransformers.getAt(i));
-            }
-
-            var isTransformed = false;
-            var lastTransformersCount;
-            while(!isTransformed){
-                // do transformation iteration
-                var currentTransformerIndex = 0;
-                lastTransformersCount = transformers.length;
-                while (currentTransformerIndex < transformers.length) {
-                    var currentTransformer:IHandlerDataTransformer = transformers[currentTransformerIndex];
-                    var applicability = currentTransformer.checkApplicability(data, bindable, context);
-                    switch (applicability){
-                        case TransformerApplicability.NotApplicable:
-                            transformers.splice(currentTransformerIndex, 1);
-                            break;
-                        case TransformerApplicability.Applicable:
-                            Log().info("    apply transformer [" + (currentTransformer.description || "No Description") + "]")
-                            currentTransformer.transform(data, bindable, context);
-                            transformers.splice(currentTransformerIndex, 1);
-                            break;
-                        case TransformerApplicability.Unknown:
-                            currentTransformerIndex++;
-                            break;
-                    }
-                }
-
-                // transformation iteration complete
-
-                if (transformers.length == 0){
-                    // no more transformers to apply, finish transformation
-                    isTransformed = true;
-                }
-
-                if (lastTransformersCount == transformers.length){
-                    // no transformers were applied in the current iteration, finish transformation
-                    isTransformed = true;
+        private processHandlerArgument(argument:any, index: number, options: any, bindable:IBindable, context:JohnSmith.Common.IElement): void {
+            for (var i = 0; i < this.handlerArgumentProcessors.count(); i++){
+                var processor = this.handlerArgumentProcessors.getAt(i);
+                if (processor.canProcess(argument, index, options, bindable, context)) {
+                    processor.process(argument, options, bindable, context);
+                    return;
                 }
             }
+
+            throw new Error("Could not process argument " + argument);
+        }
+
+        /**
+         * Checks if the value is options object.
+         * @param value
+         */
+        private isOptionsArgument(value: any): bool {
+           return JohnSmith.Common.TypeUtils.isObject(value);
         }
     }
 
@@ -202,7 +111,7 @@ module JohnSmith.Binding {
 
     var bindableFactories:JohnSmith.Common.ArrayList = new JohnSmith.Common.ArrayList();
     var handlerFactories:JohnSmith.Common.ArrayList = new Common.ArrayList();
-    var transformersChain:JohnSmith.Common.IList = new JohnSmith.Common.ArrayList();
+    var handlerArgumentProcessors:JohnSmith.Common.IList = new JohnSmith.Common.ArrayList();
 
     JohnSmith.Common.JS.getBindableFactories = function():JohnSmith.Common.IList {
         return bindableFactories;
@@ -210,10 +119,6 @@ module JohnSmith.Binding {
 
     JohnSmith.Common.JS.getHandlerFactories = function():JohnSmith.Common.IList {
         return handlerFactories;
-    }
-
-    JohnSmith.Common.JS.getHandlerDataTransformers = function():JohnSmith.Common.IList {
-        return transformersChain;
     }
 
     JohnSmith.Common.JS.addBindableFactory = function(factory: IBindableFactory) {
@@ -224,12 +129,8 @@ module JohnSmith.Binding {
         handlerFactories.insertAt(0, transformer);
     }
 
-    JohnSmith.Common.JS.addHandlerTransformer = function(transformer: IHandlerDataTransformer, isImportant:bool = false){
-        if (isImportant) {
-            transformersChain.insertAt(0, transformer);
-        } else {
-            transformersChain.add(transformer);
-        }
+    JohnSmith.Common.JS.addHandlerArgumentProcessor = function(processor){
+        handlerArgumentProcessors.add(processor);
     }
 
     JohnSmith.Common.JS.addBindableFactory(new DefaultBindableFactory());
@@ -237,14 +138,14 @@ module JohnSmith.Binding {
     JohnSmith.Common.JS.addHandlerFactory({
         createHandler: function (handler: any, context: JohnSmith.Common.IElement): IBindableHandler {
             if (handler && handler.wireWith && handler.unwireWith) {
-                return handler;
+                return <IBindableHandler> handler;
             }
 
             return null;
         }
     });
 
-    var bindingManager = new DefaultBindingManager(bindableFactories, handlerFactories, transformersChain);
+    var bindingManager = new DefaultBindingManager(bindableFactories, handlerFactories, handlerArgumentProcessors);
 
     JohnSmith.Common.JS.ioc.register("bindingManager", bindingManager);
 

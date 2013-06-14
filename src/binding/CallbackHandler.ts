@@ -2,6 +2,8 @@
 /// <reference path="BindableManager.ts"/>
 
 module JohnSmith.Binding {
+    var CALLBACK_HANDLER_KEY = "callback";
+
     export class CallbackHandler implements IBindableHandler, IBindableListener {
         private callback: (value:any, oldValue:any, changeType: DataChangeReason) => void;
 
@@ -29,6 +31,22 @@ module JohnSmith.Binding {
         }
     }
 
+    class CallbackArgumentProcessor implements IHandlerArgumentProcessor {
+        public canProcess(argument:any, argumentIndex: number, options: any, bindable:IBindable, context:JohnSmith.Common.IElement):bool{
+            return argumentIndex == 0 &&
+                (options.handler == null || options.handler == CALLBACK_HANDLER_KEY) &&
+                (options.callback == null) &&
+                JohnSmith.Common.TypeUtils.isFunction(argument);
+        }
+
+        public process(argument:any, options: any, bindable:IBindable, context:JohnSmith.Common.IElement){
+            options.handler = "callback";
+            options.callback = argument;
+        }
+    }
+
+    JohnSmith.Common.JS.addHandlerArgumentProcessor(new CallbackArgumentProcessor());
+
     JohnSmith.Common.JS.addHandlerFactory({
         createHandler: function (data: any, context: Common.IElement): IBindableHandler {
             if (data && data.handler === "callback") {
@@ -36,30 +54,6 @@ module JohnSmith.Binding {
             }
 
             return null;
-        }
-    });
-
-    JohnSmith.Common.JS.addHandlerTransformer({
-        description: "function => {handler: 'callback'}",
-
-        checkApplicability: function(data:any[], bindable:IBindable, context:JohnSmith.Common.IElement): TransformerApplicability {
-            if (data && data.length > 0){
-                var firstArgument = data[0];
-                if (JohnSmith.Common.TypeUtils.isFunction(firstArgument)){
-                    return TransformerApplicability.Applicable;
-                }
-            }
-
-            return TransformerApplicability.NotApplicable;
-        },
-
-        transform: function(data: any[], bindable:IBindable, context: JohnSmith.Common.IElement): any{
-            data[0] = {
-                handler: "callback",
-                callback: data[0]
-            };
-
-            return data;
         }
     });
 }

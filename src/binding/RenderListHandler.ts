@@ -159,28 +159,44 @@ module JohnSmith.Binding {
         }
     }
 
-    export class RenderListFactory implements IHandlerFactory {
-        public createHandler(handlerData: any, context: JohnSmith.Common.IElement): IBindableHandler {
+    export class RenderListFactory extends RenderHandlerFactoryBase implements IHandlerFactory {
+        private _mapper: IValueToElementMapper;
+
+        constructor(
+            destinationFactory: Common.IElementFactory,
+            markupResolver: Common.IMarkupResolver,
+            viewFactory: View.IViewFactory,
+            mapper: IValueToElementMapper){
+
+            super(destinationFactory, markupResolver, viewFactory);
+            this._mapper = mapper;
+        }
+
+        public createHandler(handlerData: any, bindable:IBindable, context: Common.IElement): IBindableHandler {
             if (!handlerData) {
                 return null;
             }
 
             var options: RenderListOptions = handlerData;
-            var validOptions = options.handler === "render" && options.type === "list";
-            if (!validOptions) {
+            if (options.handler && options.handler !== "render"){
                 return null;
             }
 
-            if (!options.contentDestination) {
-                throw new Error("Required option 'contentDestination' is not set!");
+            if (options.type && options.type !== "list") {
+                return null;
             }
 
-            if (!options.renderer) {
-                throw new Error("Required option 'renderer' is not set!")
+            if (!options.type) {
+                if (!this.isList(bindable)) {
+                    return null;
+                }
             }
+
+            this.fillContentDestination(options, context);
+            this.fillRenderer(options);
 
             if (!options.mapper) {
-                throw new Error("Required option 'mapper' is not set!")
+                options.mapper = this._mapper;
             }
 
             if (options.selectedItem){
@@ -210,35 +226,17 @@ module JohnSmith.Binding {
         }
     }
 
-    JohnSmith.Common.JS.addHandlerFactory(new RenderListFactory());
-
-    JohnSmith.Common.JS.addHandlerTransformer({
-        description: "{handler: 'render'} => {handler: 'render', type: 'list'} [Sets type to 'list']",
-
-        checkApplicability: function(data:any[], bindable:IBindable, context:JohnSmith.Common.IElement): TransformerApplicability{
-            if (data && data.length > 0 && data[0].handler === "render"){
-                if (data[0].type) {
-                    return TransformerApplicability.NotApplicable;
-                }
-
-                if (bindable instanceof BindableList){
-                    return TransformerApplicability.Applicable;
-                } else if (bindable){
-                    var value = bindable.getValue();
-                    if (value instanceof Array){
-                        return TransformerApplicability.Applicable;
-                    }
-                }
-
-                return TransformerApplicability.NotApplicable;
-            }
-
-            return TransformerApplicability.Unknown;
-        },
-
-        transform: function(data: any[], bindable:IBindable, context: JohnSmith.Common.IElement): any{
-            data[0].type = 'list';
-            return data;
+    JohnSmith.Common.JS.ioc.withRegistered(
+        "elementFactory",
+        "markupResolver",
+        "valueToElementMapper",
+        "viewFactory",
+        function(
+            destinationFactory:Common.IElementFactory,
+            markupResolver:Common.IMarkupResolver,
+            mapper:IValueToElementMapper,
+            viewFactory: View.IViewFactory){
+            JohnSmith.Common.JS.addHandlerFactory(new RenderListFactory(destinationFactory, markupResolver, viewFactory, mapper));
         }
-    });
+    );
 }

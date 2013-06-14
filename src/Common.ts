@@ -204,58 +204,132 @@ module JohnSmith.Common {
     // Ioc
     /////////////////////////////////
 
-    interface IDependency {
-        target: any;
-        provider: (container: IContainer) => any;
+    interface IDefinition {
+        key?: string;
+        dependencies: string[];
+        factoryCallback: () => any;
+    }
+
+    interface IDependencyCallback {
+        keys: any[];
+        callback: () => any;
     }
 
     export interface IContainer {
-        resolve(key:string);
+        resolve(key:string):any;
+
         register(key:string, service: any);
+        registerWithDependencies(key:string, createCallback: () => any, ...dependencies: string[]);
+
+        withRegistered(...args: any[]);
+        clear();
     }
 
     class Container implements IContainer {
-        private items: IDependency[];
+        private _resolvedDependencies : any;
+        private _definitions: IDefinition[];
 
         constructor(){
-            this.items = [];
+            this.clear();
+        }
+
+        public has(key:string): bool {
+            return (this._resolvedDependencies[key] != null);
         }
 
         public resolve(key:string): any{
-            var dependency = this[key];
+            var dependency = this._resolvedDependencies[key];
 
             if (!dependency){
                 return null;
             }
 
-            if (!dependency.target){
-                var target = dependency.provider.call(this, this);
-                dependency.target = target;
-            }
-
-            return dependency.target;
+            return dependency;
         }
 
-        public register(key:string, service: any): void{
-            var dependency:IDependency;
+        public register(key:string, service: any): void {
+            this._resolvedDependencies[key] = service;
+            this.checkCallbacks();
+        }
 
-            if (TypeUtils.isFunction(service)){
-                dependency = {
-                    target: null,
-                    provider: service
-                };
-            } else {
-                dependency = {
-                    target: service,
-                    provider: null
-                };
+        public registerWithDependencies(key:string, createCallback: () => any, ...dependencies: string[]) {
+            this._definitions.push({
+                key: key,
+                dependencies: dependencies,
+                factoryCallback: createCallback
+            });
+
+            this.checkCallbacks();
+        }
+
+        public withRegistered(...args: any[]){
+            var callback = args[args.length - 1];
+            args.pop();
+
+            this._definitions.push({
+                dependencies: args,
+                factoryCallback: <() => any> callback
+            });
+
+            this.checkCallbacks();
+        }
+
+        public clear() {
+            this._resolvedDependencies = {};
+            this._definitions = [];
+        }
+
+        private checkCallbacks(){
+            var isProcessed = false;
+            var index = 0;
+            var resolved = {};
+
+            do {
+                if (index >= this._definitions.length) {
+                    isProcessed = true;
+                }
+                if (!isProcessed) {
+                    var definition = this._definitions[index];
+                    if (this.processCallback(definition, resolved)) {
+                        this._definitions.splice(index, 1);
+                    } else {
+                        index++;
+                    }
+                }
+            } while (!isProcessed);
+
+            for (var key in resolved){
+                this.register(key, resolved[key]);
+            }
+        }
+
+        private processCallback(definition: IDefinition, resolved: any) : bool {
+            var dependencies = [];
+
+            for (var j = 0; j < definition.dependencies.length; j++) {
+                var key = definition.dependencies[j];
+                if (this.has(key)) {
+                    var dependency = this.resolve(key);
+                    dependencies.push(dependency);
+                } else {
+                    return false;
+                }
             }
 
-            this[key] = dependency;
+            var resolvedService = definition.factoryCallback.apply(this, dependencies);
+            if (resolvedService && definition.key) {
+                resolved[definition.key] = resolvedService;
+            }
+
+            return true;
         }
     }
 
     var ioc:IContainer = new Container();
 
     JS.ioc = ioc;
+
+    JS.createIocContainer = function(){
+        return new Container();
+    }
 }

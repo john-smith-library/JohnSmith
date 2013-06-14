@@ -1,3 +1,22 @@
-<h2>EXAMPLE TITLE</h2>
+<p>
+    If you need to create a selectable list when the easies way would be just adding this
+    option to binding configuration:
+</p>
 
-<p>EXAMPLE DESCRIPTION</p>
+<pre><code class="javascript">{ selectable: true }</code></pre>
+
+<p>
+    After this property is set, JohnSmith will watch for clicks on list items and put selected
+    value to <code>list.selectedItem()</code>
+</p>
+
+<p>
+    <code>selectedItem()</code> method returns a regular bindable value, so you can wire it
+    to UI as if was created by <code>js.bindableValue()</code>.
+</p>
+
+<!--<p>-->
+    <!--The demonstrated approach is suitable if you want to get selectable list functionality quickly-->
+    <!--but it's not really following MVVM pattern because bindable handlers interact with bindable values-->
+    <!--explicitly. Next example demonstrates extended approach that is more concern-separation-friendly.-->
+<!--</p>-->

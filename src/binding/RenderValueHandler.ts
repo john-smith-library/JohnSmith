@@ -1,4 +1,5 @@
 /// <reference path="../Common.ts"/>
+/// <reference path="../view/Integration.ts"/>
 /// <reference path="Contracts.ts"/>
 /// <reference path="Handling.ts"/>
 /// <reference path="BindableManager.ts"/>
@@ -47,25 +48,95 @@ module JohnSmith.Binding {
         }
     }
 
-    export class RenderValueFactory implements IHandlerFactory {
-        public createHandler(handlerData: any, context: JohnSmith.Common.IElement): IBindableHandler {
+    /**
+     * A base class for rendering-related handlers.
+     * Contains a few handy util methods.
+     */
+    export class RenderHandlerFactoryBase {
+        private _destinationFactory: Common.IElementFactory;
+        private _markupResolver: Common.IMarkupResolver;
+        private _viewFactory: View.IViewFactory;
+
+        constructor(destinationFactory: Common.IElementFactory, markupResolver: Common.IMarkupResolver, viewFactory: View.IViewFactory){
+            this._destinationFactory = destinationFactory;
+            this._markupResolver = markupResolver;
+            this._viewFactory = viewFactory;
+        }
+
+        public fillContentDestination(options:RenderHandlerOptions, context:Common.IElement){
+            if (!options.contentDestination) {
+                options.contentDestination = context == null ?
+                    this._destinationFactory.createElement(options.to) :
+                    context.findRelative(options.to);
+            }
+        }
+
+        public fillRenderer(options:RenderHandlerOptions){
+            if (!options.renderer) {
+                /** try to resolve view first */
+                if (options.view) {
+                    options.renderer = new View.ViewValueRenderer(this._viewFactory, options.view);
+                } else {
+                    /** use default renderer if no view in options */
+                    if (!options.formatter) {
+                        var encode = true;
+                        if (options.encode !== undefined){
+                            encode = options.encode;
+                        }
+
+                        var defaultValueType = encode ? Common.ValueType.text : Common.ValueType.html;
+                        options.formatter =  new DefaultFormatter(defaultValueType);
+                    }
+
+                    options.renderer = new FormatterBasedRenderer(options.formatter, this._markupResolver);
+                }
+            }
+        }
+
+        /**
+         * Checks id the bindable stores an array.
+         */
+        public isList(bindable:IBindable):bool {
+            if (bindable instanceof BindableList){
+                return true;
+            } else if (bindable){
+                var value = bindable.getValue();
+                if (value instanceof Array){
+                    return true;
+                }
+            }
+
+            return false;
+        }
+    }
+
+    export class RenderValueFactory extends RenderHandlerFactoryBase implements IHandlerFactory {
+        constructor(destinationFactory: Common.IElementFactory, markupResolver: Common.IMarkupResolver, viewFactory: View.IViewFactory){
+            super(destinationFactory, markupResolver, viewFactory);
+        }
+
+        public createHandler(handlerData: any, bindable:IBindable, context: Common.IElement): IBindableHandler {
             if (!handlerData) {
                 return null;
             }
 
             var options: RenderHandlerOptions = handlerData;
-            var validOptions = options.handler === "render" && options.type === "value";
-            if (!validOptions) {
+            if (options.handler && options.handler !== "render"){
                 return null;
             }
 
-            if (!options.contentDestination) {
-                throw new Error("Required option 'contentDestination' is not set!");
+            if (options.type && options.type !== "value") {
+                return null;
             }
 
-            if (!options.renderer) {
-                throw new Error("Required option 'renderer' is not set!")
+            if (!options.type) {
+                if (this.isList(bindable)) {
+                    return null;
+                }
             }
+
+            this.fillContentDestination(options, context);
+            this.fillRenderer(options);
 
             var handler = new RenderValueHandler(
                 options.contentDestination,
@@ -101,149 +172,36 @@ module JohnSmith.Binding {
         }
     }
 
-    JohnSmith.Common.JS.addHandlerFactory(new RenderValueFactory());
-
-    JohnSmith.Common.JS.addHandlerTransformer({
-        description: "{} => {handler: 'render'} [Sets handler to 'render' if it is not set]",
-
-        checkApplicability: function(data:any[], bindable:IBindable, context:JohnSmith.Common.IElement): TransformerApplicability{
-            if (data && data.length > 0) {
-                if (data[0].handler) {
-                    return TransformerApplicability.NotApplicable;
-                }
-
-                if (typeof data[0] === "object") {
-                    return TransformerApplicability.Applicable;
-                }
-            }
-
-            return TransformerApplicability.Unknown;
-        },
-
-        transform: function(data: any[], bindable:IBindable, context: JohnSmith.Common.IElement): any{
-            data[0].handler = "render";
-            return data;
+    JohnSmith.Common.JS.ioc.withRegistered(
+        "elementFactory",
+        "markupResolver",
+        "viewFactory",
+        function(destinationFactory:Common.IElementFactory, markupResolver:Common.IMarkupResolver, viewFactory: View.IViewFactory){
+            JohnSmith.Common.JS.addHandlerFactory(new RenderValueFactory(destinationFactory, markupResolver, viewFactory));
         }
-    });
+    );
 
-    JohnSmith.Common.JS.addHandlerTransformer({
-        description: "{handler: 'render'} => {handler: 'render', type: 'value'} [Sets type to 'value']",
+    class FormatterBasedRenderer implements IValueRenderer {
+        private _formatter: IValueFormatter;
+        private _markupResolver: Common.IMarkupResolver;
 
-        checkApplicability: function(data:any[], bindable:IBindable, context:JohnSmith.Common.IElement): TransformerApplicability{
-            if (data && data.length > 0 && data[0].handler === "render"){
-                if (data[0].type) {
-                    return TransformerApplicability.NotApplicable;
-                }
-
-                if (bindable instanceof BindableList){
-                    return TransformerApplicability.NotApplicable;
-                } else if (bindable){
-                    var value = bindable.getValue();
-                    if (value instanceof Array){
-                        return TransformerApplicability.NotApplicable;
-                    }
-                }
-
-                return TransformerApplicability.Applicable;
-            }
-
-            return TransformerApplicability.Unknown;
-        },
-
-        transform: function(data: any[], bindable:IBindable, context: JohnSmith.Common.IElement): any{
-            data[0].type = 'value';
-            return data;
+        constructor(formatter: IValueFormatter, markupResolver: Common.IMarkupResolver){
+            this._formatter = formatter;
+            this._markupResolver = markupResolver;
         }
-    });
 
-    JohnSmith.Common.JS.addHandlerTransformer({
-        description: "{handler: 'render'} => {formatter: IValueFormatter} [Sets default formatter]",
-
-        checkApplicability: function(data:any[], bindable:IBindable, context:JohnSmith.Common.IElement): TransformerApplicability {
-            if (data && data.length > 0){
-                if (data[0].renderer || data[0].formatter) {
-                    return TransformerApplicability.NotApplicable;
-                }
-
-                if (data[0].handler === "render"){
-                    return TransformerApplicability.Applicable;
-                }
+        public render(value: any, destination: JohnSmith.Common.IElement): Common.IElement {
+            var formattedValue = this._formatter.format(value);
+            if (formattedValue.type === Common.ValueType.text) {
+                return destination.appendText(formattedValue.value);
+            } else if (formattedValue.type === Common.ValueType.html) {
+                return destination.appendHtml(formattedValue.value);
+            } else if (formattedValue.type === Common.ValueType.unknown) {
+                var markup = this._markupResolver.resolve(formattedValue.value);
+                return destination.appendHtml(markup);
+            } else {
+                throw new Error("Unknown value type: " + formattedValue.type);
             }
-
-            return TransformerApplicability.Unknown;
-        },
-
-        transform: function(data: any[], bindable:IBindable, context: JohnSmith.Common.IElement): any{
-            var encode = true;
-            if (data[0].encode !== undefined){
-                encode = data[0].encode;
-            }
-
-            var defaultValueType = encode ? Common.ValueType.text : Common.ValueType.html;
-            data[0].formatter =  new DefaultFormatter(defaultValueType);
-            return data;
         }
-    });
-
-    /** Adds renderer resolver */
-    JohnSmith.Common.JS.addHandlerTransformer({
-        description: "{formatter: IValueFormatter} => {renderer: IValueRenderer} [Converts value formatter to value renderer]",
-
-        checkApplicability: function(data:any[], bindable:IBindable, context:JohnSmith.Common.IElement): TransformerApplicability {
-            if (data && data.length > 0){
-                if (data[0].renderer) {
-                    return TransformerApplicability.NotApplicable;
-                }
-
-                if (data[0].handler === "render" && data[0].formatter){
-                    return TransformerApplicability.Applicable;
-                }
-            }
-
-            return TransformerApplicability.Unknown;
-        },
-
-        transform: function(data: any[], bindable:IBindable, context: Common.IElement): any{
-            // get formatter from input array
-            var formatter = <Binding.IValueFormatter> data[0].formatter;
-
-            // put renderer to input array
-            data[0].renderer =  {
-                render: function(value: any, destination: JohnSmith.Common.IElement) : Common.IElement {
-                    var formattedValue = formatter.format(value);
-                    var result:Common.IElement = null;
-                    if (formattedValue.type === Common.ValueType.text) {
-                        result = destination.appendText(formattedValue.value);
-                    } else if (formattedValue.type === Common.ValueType.html) {
-                        result = destination.appendHtml(formattedValue.value);
-                    } else if (formattedValue.type === Common.ValueType.unknown) {
-                        var markup = Common.JS.ioc.resolve("markupResolver").resolve(formattedValue.value);
-                        result = destination.appendHtml(markup);
-                    } else {
-                        throw new Error("Unknown value type: " + formattedValue.type);
-                    }
-
-                    JohnSmith.Common.JS.event.bus.trigger(
-                        "valueRendered",
-                        {
-                            originalValue: value,
-                            formattedValue: formattedValue,
-                            root: destination,
-                            destination: destination
-                        });
-
-                    return result;
-                }
-            }
-
-            // if formatter could be disposed, add dispose method to renderer
-            if (formatter.dispose) {
-                data[0].renderer.dispose = function(){
-                    formatter.dispose;
-                }
-            }
-
-            return data;
-        }
-    });
+    }
 }

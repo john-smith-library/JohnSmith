@@ -1,5 +1,6 @@
 /// <reference path="../Common.ts"/>
 /// <reference path="BindableValue.ts"/>
+/// <reference path="BindableList.ts"/>
 
 module JohnSmith.Binding {
     /** Represents string value information */
@@ -16,7 +17,11 @@ module JohnSmith.Binding {
     export interface RenderHandlerOptions extends HandlerOptions {
         contentDestination?: JohnSmith.Common.IElement;
         renderer?: IValueRenderer;
+        formatter?: IValueFormatter;
+        view?: any;
         type?: string;
+        to?: string;
+        encode: bool;
     }
 
     export interface RenderListOptions extends RenderHandlerOptions {

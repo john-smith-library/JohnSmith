@@ -1,5 +1,6 @@
 /// <reference path="Common.ts"/>
-/// <reference path="View.ts"/>
+/// <reference path="view/Contracts.ts"/>
+/// <reference path="view/Integration.ts"/>
 /// <reference path="JQuery.ts"/>
 
 // Replace no-op logger with console-based implementation
@@ -42,10 +43,10 @@ log.info("========================================================== ");
 log.info("  Configuration details:");
 log.info("    Handler data transformers:");
 
-var handlerDataTransformers = JohnSmith.Common.JS.getHandlerDataTransformers();
-for (var i = 0; i < handlerDataTransformers.count(); i++){
-    log.info("      - [" + i + "] " + (handlerDataTransformers.getAt(i).description || "No description"));
-}
+//var handlerDataTransformers = JohnSmith.Common.JS.getHandlerDataTransformers();
+//for (var i = 0; i < handlerDataTransformers.count(); i++){
+//    log.info("      - [" + i + "] " + (handlerDataTransformers.getAt(i).description || "No description"));
+//}
 
 log.warn("You are using debug version of JohnSmith. Do not use this version in production code.");
 
