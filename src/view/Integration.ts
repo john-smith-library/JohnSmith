@@ -32,9 +32,6 @@ module JohnSmith.View {
                 var viewFactory = this._viewFactory;
                 viewFactory.resolve(argument, null);
                 options.view = argument;
-//                options.renderer = new ViewValueRenderer(function(viewModel){
-//                    return viewFactory.resolve(argument, viewModel);
-//                });
             } catch(Error) {
             }
         }

@@ -3,12 +3,6 @@
 /// <reference path="BindableList.ts"/>
 
 module JohnSmith.Binding {
-//    /** Represents string value information */
-//    export interface IFormattedValue {
-//        value: string;
-//        type: string;
-//    }
-
     export interface IValueToElementMapper {
         getElementFor(value:any, root:JohnSmith.Common.IElement):JohnSmith.Common.IElement;
         attachValueToElement(value:any, element:JohnSmith.Common.IElement);
@@ -46,7 +40,9 @@ module JohnSmith.Binding {
         dispose?: () => void;
     }
 
-    // Renders value to DOM element.
+    /**
+     * Renders value to DOM element.
+     */
     export interface IValueRenderer {
         render: (value: any, destination: JohnSmith.Common.IElement) => JohnSmith.Common.IElement;
         dispose?: () => void;
