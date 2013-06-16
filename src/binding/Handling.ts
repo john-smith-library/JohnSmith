@@ -3,11 +3,11 @@
 /// <reference path="BindableList.ts"/>
 
 module JohnSmith.Binding {
-    /** Represents string value information */
-    export interface IFormattedValue {
-        value: string;
-        type: string;
-    }
+//    /** Represents string value information */
+//    export interface IFormattedValue {
+//        value: string;
+//        type: string;
+//    }
 
     export interface IValueToElementMapper {
         getElementFor(value:any, root:JohnSmith.Common.IElement):JohnSmith.Common.IElement;
@@ -18,6 +18,7 @@ module JohnSmith.Binding {
         contentDestination?: JohnSmith.Common.IElement;
         renderer?: IValueRenderer;
         formatter?: IValueFormatter;
+        valueType?: string;
         view?: any;
         type?: string;
         to?: string;
@@ -37,9 +38,11 @@ module JohnSmith.Binding {
         setSelectedCallback: (selectedItem: any) => void;
     }
 
-    // Converts a value to string representation.
+    /**
+     * Converts a value to string representation.
+     */
     export interface IValueFormatter {
-        format: (value: any) => IFormattedValue;
+        format: (value: any) => string;
         dispose?: () => void;
     }
 

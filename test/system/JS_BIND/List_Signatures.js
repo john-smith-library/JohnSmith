@@ -5,10 +5,7 @@ var items = ["foo", "bar"];
 
 var SimpleFormatter = function(){
     this.format = function(value){
-        return {
-            value: $("<li></li>").text(value),
-            type: "unknown"
-        };
+        return $("<li></li>").text(value);
     };
 };
 
@@ -54,6 +51,7 @@ testCase.prototype.testConfigObjectWithSelectorAndViewClass = function(){
 testCase.prototype.testConfigObjectWithSelectorAndFormatter = function(){
     js.bind(this.list).to({
         to: "#listDestination",
+        valueType: "unknown",
         formatter: new SimpleFormatter()
     });
 };
@@ -61,6 +59,7 @@ testCase.prototype.testConfigObjectWithSelectorAndFormatter = function(){
 testCase.prototype.testStaticArrayConfigObjectWithSelectorAndFormatter = function(){
     js.bind(items).to({
         to: "#listDestination",
+        valueType: "unknown",
         formatter: new SimpleFormatter()
     });
 };
@@ -69,6 +68,7 @@ testCase.prototype.testConfigObjectFull = function(){
     js.bind(this.list).to({
         handler: "render",
         type: "list",
+        valueType: "unknown",
         to: "#listDestination",
         formatter: new SimpleFormatter()
     });
@@ -78,6 +78,7 @@ testCase.prototype.testSelectorAndConfigObject = function(){
     js.bind(this.list).to(
         "#listDestination",
         {
+            valueType: "unknown",
             formatter: new SimpleFormatter()
         });
 };

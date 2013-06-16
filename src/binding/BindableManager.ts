@@ -65,8 +65,6 @@ module JohnSmith.Binding {
                 argumentIndex++;
             }
 
-            //this.transformHandlerData(handlerData, bindable, context);
-
             for (var i = 0; i < this.handlerFactories.count(); i++) {
                 var factory: IHandlerFactory = this.handlerFactories.getAt(i);
                 var result: IBindableHandler = factory.createHandler(handlerOptions, bindable, context);

@@ -2,6 +2,7 @@
 /// <reference path="../view/Integration.ts"/>
 /// <reference path="Contracts.ts"/>
 /// <reference path="Handling.ts"/>
+/// <reference path="Renderers.ts"/>
 /// <reference path="BindableManager.ts"/>
 /// <reference path="BindableList.ts"/>
 
@@ -78,18 +79,38 @@ module JohnSmith.Binding {
                     options.renderer = new View.ViewValueRenderer(this._viewFactory, options.view);
                 } else {
                     /** use default renderer if no view in options */
-                    if (!options.formatter) {
+                    if (!options.valueType) {
                         var encode = true;
                         if (options.encode !== undefined){
                             encode = options.encode;
                         }
 
-                        var defaultValueType = encode ? Common.ValueType.text : Common.ValueType.html;
-                        options.formatter =  new DefaultFormatter(defaultValueType);
+                        options.valueType = encode ? Common.ValueType.text : Common.ValueType.html;
                     }
 
-                    options.renderer = new FormatterBasedRenderer(options.formatter, this._markupResolver);
+                    if (!options.formatter) {
+                        options.formatter =  new DefaultFormatter();
+                    }
+
+                    options.renderer = this.getRenderer(options);
                 }
+            }
+        }
+
+        private getRenderer(options:RenderHandlerOptions) : IValueRenderer{
+            switch (options.valueType) {
+                case Common.ValueType.text:
+                    return new TextRenderer(options.formatter);
+                case Common.ValueType.html:
+                    return new HtmlRenderer(options.formatter);
+                case Common.ValueType.inputValue:
+                    return new InputValueRenderer(options.formatter);
+                case Common.ValueType.checkedAttribute:
+                    return new CheckedAttributeRenderer();
+                case Common.ValueType.unknown:
+                    return new ResolvableMarkupRenderer(options.formatter, this._markupResolver);
+                default:
+                    throw new Error("Unknown value type: " + options.valueType);
             }
         }
 
@@ -146,62 +167,68 @@ module JohnSmith.Binding {
         }
     }
 
-    export class FormElementValueRenderer implements IValueRenderer {
-        public render(value: any, destination: JohnSmith.Common.IElement) : JohnSmith.Common.IElement {
-            var currentValue = destination.getValue();
-            if (currentValue !== value){
-                destination.setValue(value);
-            }
-
-            return destination;
-        }
-    }
-
     export class DefaultFormatter implements IValueFormatter {
-        private _defaultValueType: string;
-
-        constructor(defaultValueType: string){
-            this._defaultValueType = defaultValueType;
-        }
-
-        public format(value: any): IFormattedValue {
-            return {
-                value: value.toString(),
-                type: this._defaultValueType
-            };
+        public format(value: any): string {
+            return value.toString();
         }
     }
 
     JohnSmith.Common.JS.ioc.withRegistered(
-        "elementFactory",
-        "markupResolver",
-        "viewFactory",
         function(destinationFactory:Common.IElementFactory, markupResolver:Common.IMarkupResolver, viewFactory: View.IViewFactory){
             JohnSmith.Common.JS.addHandlerFactory(new RenderValueFactory(destinationFactory, markupResolver, viewFactory));
-        }
-    );
+        },
+        "elementFactory",
+        "markupResolver",
+        "viewFactory");
 
-    class FormatterBasedRenderer implements IValueRenderer {
-        private _formatter: IValueFormatter;
-        private _markupResolver: Common.IMarkupResolver;
 
-        constructor(formatter: IValueFormatter, markupResolver: Common.IMarkupResolver){
-            this._formatter = formatter;
-            this._markupResolver = markupResolver;
-        }
 
-        public render(value: any, destination: JohnSmith.Common.IElement): Common.IElement {
-            var formattedValue = this._formatter.format(value);
-            if (formattedValue.type === Common.ValueType.text) {
-                return destination.appendText(formattedValue.value);
-            } else if (formattedValue.type === Common.ValueType.html) {
-                return destination.appendHtml(formattedValue.value);
-            } else if (formattedValue.type === Common.ValueType.unknown) {
-                var markup = this._markupResolver.resolve(formattedValue.value);
-                return destination.appendHtml(markup);
-            } else {
-                throw new Error("Unknown value type: " + formattedValue.type);
-            }
-        }
-    }
+//    export class TextValueRenderer implements IValueRenderer {
+//        public render(value: any, destination: JohnSmith.Common.IElement) : JohnSmith.Common.IElement {
+//            return destination.appendText(value);
+//        }
+//    }
+//
+//    export class HtmlValueRenderer implements IValueRenderer {
+//        public render(value: any, destination: JohnSmith.Common.IElement) : JohnSmith.Common.IElement {
+//            return destination.appendHtml(value);
+//        }
+//    }
+//
+//    export class GenericHtmlValueRenderer implements IValueRenderer {
+//        private _markupResolver: Common.IMarkupResolver;
+//
+//        constructor(markupResolver: Common.IMarkupResolver){
+//            this._markupResolver = markupResolver;
+//        }
+//
+//        public render(value: any, destination: JohnSmith.Common.IElement) : JohnSmith.Common.IElement {
+//            var markup = this._markupResolver.resolve(value);
+//            return destination.appendHtml(markup);
+//        }
+//    }
+
+//    class FormatterBasedRenderer implements IValueRenderer {
+//        private _formatter: IValueFormatter;
+//        private _markupResolver: Common.IMarkupResolver;
+//
+//        constructor(formatter: IValueFormatter, markupResolver: Common.IMarkupResolver){
+//            this._formatter = formatter;
+//            this._markupResolver = markupResolver;
+//        }
+//
+//        public render(value: any, destination: JohnSmith.Common.IElement): Common.IElement {
+//            var formattedValue = this._formatter.format(value);
+//            if (formattedValue.type === Common.ValueType.text) {
+//                return destination.appendText(formattedValue.value);
+//            } else if (formattedValue.type === Common.ValueType.html) {
+//                return destination.appendHtml(formattedValue.value);
+//            } else if (formattedValue.type === Common.ValueType.unknown) {
+//                var markup = this._markupResolver.resolve(formattedValue.value);
+//                return destination.appendHtml(markup);
+//            } else {
+//                throw new Error("Unknown value type: " + formattedValue.type);
+//            }
+//        }
+//    }
 }

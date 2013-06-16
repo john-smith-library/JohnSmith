@@ -99,6 +99,14 @@ module JohnSmith.JQuery {
         public setValue(value: string) : string{
             return this.target.val(value);
         }
+
+        public getAttribute(attribute: string) {
+            return this.target.attr(attribute);
+        }
+
+        public setAttribute(attribute: string, value: string) {
+            this.target.attr(attribute, value);
+        }
     }
 
     export class JQueryMarkupResolver implements JohnSmith.Common.IMarkupResolver {

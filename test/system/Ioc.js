@@ -33,6 +33,24 @@ testCase.prototype.testRegister_WithDependencies_CanResolve = function(){
     assertEquals("Resolved service", foo, resolvedFoo);
 };
 
+testCase.prototype.testRegister_WithPreRegisteredDependencies_CanResolve = function(){
+    var foo = "foo";
+
+    this.ioc.register("fooDep", "fooDepValue");
+
+    this.ioc.registerWithDependencies(
+        "foo",
+        function(fooDep){
+            return foo;
+        },
+        "fooDep");
+
+    var resolvedFoo = this.ioc.resolve("foo");
+
+    assertNotNull("Resolved service", resolvedFoo);
+    assertEquals("Resolved service", foo, resolvedFoo);
+};
+
 testCase.prototype.testRegister_WithDependencies_ShouldPassDependenciesToCallback = function(){
     var foo = "foo";
 
@@ -59,13 +77,13 @@ testCase.prototype.test_CallbackRegisteredBeforeDependencies_ShouldCallCallback 
     var callbackCalled = false;
 
     this.ioc.withRegistered(
-        "foo",
-        "bar",
         function(foo, bar){
             callbackCalled = true;
             assertEquals("Foo in callback", "fooValue", foo);
             assertEquals("Bar in callback", "barValue", bar);
-        });
+        },
+        "foo",
+        "bar");
 
     this.ioc.register("foo", "fooValue");
     this.ioc.register("bar", "barValue");

@@ -85,10 +85,10 @@ module JohnSmith.View {
     )
 
     JohnSmith.Common.JS.ioc.withRegistered(
-        "viewFactory",
         function(viewFactory:IViewFactory){
             JohnSmith.Common.JS.addHandlerArgumentProcessor(new ViewArgumentProcessor(viewFactory));
-        });
+        },
+        "viewFactory");
 
     JohnSmith.Common.JS.createView = function(viewDescriptor: any, viewModel:any): View.IView{
         var viewFactory = JohnSmith.Common.JS.ioc.resolve("viewFactory");

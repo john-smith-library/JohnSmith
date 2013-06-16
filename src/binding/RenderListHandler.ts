@@ -227,16 +227,15 @@ module JohnSmith.Binding {
     }
 
     JohnSmith.Common.JS.ioc.withRegistered(
-        "elementFactory",
-        "markupResolver",
-        "valueToElementMapper",
-        "viewFactory",
         function(
             destinationFactory:Common.IElementFactory,
             markupResolver:Common.IMarkupResolver,
             mapper:IValueToElementMapper,
             viewFactory: View.IViewFactory){
             JohnSmith.Common.JS.addHandlerFactory(new RenderListFactory(destinationFactory, markupResolver, viewFactory, mapper));
-        }
-    );
+        },
+        "elementFactory",
+        "markupResolver",
+        "valueToElementMapper",
+        "viewFactory");
 }

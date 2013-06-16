@@ -159,6 +159,12 @@ module JohnSmith.Common {
         /** The value contains plain text */
         public static text = "text";
 
+        /** The value contains form field */
+        public static inputValue = "inputValue";
+
+        /** The value contains true or false  */
+        public static checkedAttribute = "checkedAttribute";
+
         /** The value contains prepared html */
         public static html = "html";
 
@@ -183,6 +189,9 @@ module JohnSmith.Common {
 
         getValue: () => string;
         setValue(value: string);
+
+        getAttribute(attribute: string);
+        setAttribute(attribute: string, value: string);
 
         attachClickHandler: (callback: () => void) => void;
     }
@@ -216,12 +225,34 @@ module JohnSmith.Common {
     }
 
     export interface IContainer {
+        /**
+         * Resolves a dependency
+         * @param {string} key Dependency key
+         */
         resolve(key:string):any;
 
+        /**
+         * Registers an object as a dependency.
+         * @param key Current object key
+         * @param service Current dependency object
+         */
         register(key:string, service: any);
+
+        /**
+         * Registers a dependency that depends on another object(s).
+         * The object will be constructed as soon as all the dependencies are ready.
+         * @param {string} key Current object key
+         * @param createCallback A function that constructs current object.
+         * Resolved dependencies will be passed as arguments tho this function.
+         * @param {...string} dependencies Key of dependency
+         */
         registerWithDependencies(key:string, createCallback: () => any, ...dependencies: string[]);
 
-        withRegistered(...args: any[]);
+        withRegistered(callback: ()=> void, ...args: any[]);
+
+        /**
+         * Removes all dependencies.
+         */
         clear();
     }
 
@@ -262,10 +293,7 @@ module JohnSmith.Common {
             this.checkCallbacks();
         }
 
-        public withRegistered(...args: any[]){
-            var callback = args[args.length - 1];
-            args.pop();
-
+        public withRegistered(callback: ()=> void, ...args: any[]){
             this._definitions.push({
                 dependencies: args,
                 factoryCallback: <() => any> callback

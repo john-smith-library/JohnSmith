@@ -18,6 +18,7 @@
         <item url="file://$PROJECT_DIR$/src/JQuery.js" />
         <item url="file://$PROJECT_DIR$/src/binding/StateTransitionHandler.js" />
         <item url="file://$PROJECT_DIR$/src/view/Integration.js" />
+        <item url="file://$PROJECT_DIR$/src/binding/Renderers.js" />
         <item url="file://$PROJECT_DIR$/src/binding/RenderHandlersFactory.js" />
         <item url="file://$PROJECT_DIR$/src/Debug.js" />
       </sourceFilesUrls>
@@ -41,6 +42,7 @@
       <root url="file://$PROJECT_DIR$/src/Binding.js" />
       <root url="file://$PROJECT_DIR$/src/binding/ChangeValueHandler.js" />
       <root url="file://$PROJECT_DIR$/src/View.js" />
+      <root url="file://$PROJECT_DIR$/src/binding/RenderHandlersFactory.js" />
       <root url="file://$PROJECT_DIR$/src/view/Contracts.js" />
       <root url="file://$PROJECT_DIR$/src/binding/BindableValue.js" />
       <root url="file://$PROJECT_DIR$/src/view/DefaultViewFactory.js" />
@@ -58,6 +60,7 @@
       <root url="file://$PROJECT_DIR$/src/view/Integration.js" />
       <root url="file://$PROJECT_DIR$/src/binding/StateTransitionHandler.js" />
       <root url="file://$PROJECT_DIR$/src/binding/RenderHandlersFactory.js" />
+      <root url="file://$PROJECT_DIR$/src/binding/Renderers.js" />
       <root url="file://$PROJECT_DIR$/src/Debug.js" />
     </CLASSES>
     <SOURCES />

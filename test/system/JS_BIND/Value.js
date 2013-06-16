@@ -38,10 +38,7 @@ testCase.prototype.testCustomFormatterShouldRenderValue = function(){
         to: "#testDynamicBinding .value",
         formatter: {
             format: function(value) {
-                return {
-                    value: (value || "").toUpperCase(),
-                    type: "text"
-                };
+                return (value || "").toUpperCase();
             }
         }
     });
@@ -54,14 +51,12 @@ testCase.prototype.testCustomFormatterShouldRenderValue = function(){
 testCase.prototype.testCustomFormatterReturnsJQueryObjectShouldRenderValue = function(){
     js.bind(this.foo).to({
         to: "#testDynamicBinding",
+        valueType: "unknown",
         formatter: {
             format: function(value) {
-                return {
-                    value: $("<span></span>")
+                return $("<span></span>")
                         .css("color", "black")
-                        .text((value || "").toString()),
-                    type: "unknown"
-                };
+                        .text((value || "").toString());
             }
         }
     });
