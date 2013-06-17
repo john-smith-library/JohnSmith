@@ -1,11 +1,13 @@
 load:
   - ../libs/jquery-2.0.0.js
+  - ../libs/sinon-1.7.1.js
   - ../out/john-smith.debug.js
 
 test:
   - system/*.js
   - system/JS_CREATE_VIEW/*.js
   - system/JS_BIND/*.js
+  - system/JS_ON/*.js
   - unit/binding/*.js
   - unit/common/*.js
   - unit/views/*.js

@@ -79,8 +79,8 @@ module JohnSmith.Binding {
         private processHandlerArgument(argument:any, index: number, options: any, bindable:IBindable, context:JohnSmith.Common.IElement): void {
             for (var i = 0; i < this.handlerArgumentProcessors.count(); i++){
                 var processor = this.handlerArgumentProcessors.getAt(i);
-                if (processor.canProcess(argument, index, options, bindable, context)) {
-                    processor.process(argument, options, bindable, context);
+                if (processor.canProcess(argument, index, options, context)) {
+                    processor.process(argument, options, context);
                     return;
                 }
             }

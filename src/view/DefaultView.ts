@@ -1,5 +1,6 @@
 /// <reference path="../Common.ts"/>
 /// <reference path="../binding/Contracts.ts"/>
+/// <reference path="../command/Contracts.ts"/>
 /// <reference path="Contracts.ts"/>
 
 module JohnSmith.View {
@@ -13,6 +14,7 @@ module JohnSmith.View {
         /** Read only fields */
         private elementFactory: Common.IElementFactory;
         private bindableManager: Binding.IBindableManager;
+        private commandManager: Command.ICommandManager;
         private eventBus: Common.IEventBus;
         private viewModel:IViewModel;
         private data:IViewData;
@@ -25,6 +27,7 @@ module JohnSmith.View {
 
         constructor (
             bindableManager: Binding.IBindableManager,
+            commandManager: Command.ICommandManager,
             elementFactory: Common.IElementFactory,
             viewData: IViewData,
             viewModel:IViewModel,
@@ -33,6 +36,7 @@ module JohnSmith.View {
             markupResolver: Common.IMarkupResolver){
 
             this.bindableManager = bindableManager;
+            this.commandManager = commandManager;
             this.elementFactory = elementFactory;
             this.data = viewData;
             this.viewModel = viewModel;
@@ -92,6 +96,14 @@ module JohnSmith.View {
                 bindable,
                 this.rootElement
             )
+        }
+
+        public on(...causeArguments: any[]){
+            return new Command.CommandConfig(
+                causeArguments,
+                this.commandManager,
+                this.getRootElement(),
+                this.viewModel);
         }
 
         public getRootElement() : JohnSmith.Common.IElement {

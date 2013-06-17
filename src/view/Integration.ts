@@ -1,4 +1,5 @@
 /// <reference path="../Common.ts"/>
+/// <reference path="../command/Contracts.ts"/>
 /// <reference path="../binding/Contracts.ts"/>
 /// <reference path="../binding/Handling.ts"/>
 /// <reference path="../binding/BindableManager.ts"/>
@@ -6,7 +7,7 @@
 /// <reference path="DefaultViewFactory.ts"/>
 
 module JohnSmith.View {
-    export class ViewArgumentProcessor implements Binding.IHandlerArgumentProcessor {
+    export class ViewArgumentProcessor implements Common.IHandlerArgumentProcessor {
         private _viewFactory: IViewFactory;
 
         constructor(viewFactory: IViewFactory){
@@ -17,7 +18,7 @@ module JohnSmith.View {
             argument:any,
             argumentIndex: number,
             options: any,
-            bindable:Binding.IBindable,
+            /*bindable:Binding.IBindable,*/
             context:JohnSmith.Common.IElement) : bool{
             return argumentIndex === 1 && (!options.view)
         }
@@ -25,7 +26,7 @@ module JohnSmith.View {
         public process(
             argument:any,
             options: any,
-            bindable:Binding.IBindable,
+            /*bindable:Binding.IBindable,*/
             context:JohnSmith.Common.IElement){
 
             try {
@@ -72,11 +73,13 @@ module JohnSmith.View {
     JohnSmith.Common.JS.ioc.registerWithDependencies(
         "viewFactory",
         function(bindableManager: Binding.IBindableManager,
+                 commandManager: Command.ICommandManager,
                  elementFactory: Common.IElementFactory,
                  markupResolver: Common.IMarkupResolver){
-            return new DefaultViewFactory(bindableManager, elementFactory, JohnSmith.Common.JS.event.bus, markupResolver);
+            return new DefaultViewFactory(bindableManager, commandManager, elementFactory, JohnSmith.Common.JS.event.bus, markupResolver);
         },
         "bindingManager",
+        "commandManager",
         "elementFactory",
         "markupResolver"
     )

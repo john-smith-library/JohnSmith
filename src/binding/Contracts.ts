@@ -78,14 +78,6 @@ module JohnSmith.Binding {
         }
     }
 
-    /**
-     * Process an argument passed to BindableManager as handler data.
-     */
-    export interface IHandlerArgumentProcessor {
-        canProcess(argument:any, argumentIndex: number, options: any, bindable:IBindable, context:JohnSmith.Common.IElement) : bool;
-        process(argument:any, options: any, bindable:IBindable, context:JohnSmith.Common.IElement);
-    }
-
     // sets up bindings between any objects
     export interface IBindableManager {
         bind: (data: IBindingData) => BindingWire;

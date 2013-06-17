@@ -29,6 +29,14 @@ module JohnSmith.Common {
         }
     }
 
+    /**
+     * Process an argument passed to BindableManager as handler data.
+     */
+    export interface IHandlerArgumentProcessor {
+        canProcess(argument:any, argumentIndex: number, options: any, /*bindable:IBindable,*/ context:JohnSmith.Common.IElement) : bool;
+        process(argument:any, options: any, /*bindable:IBindable,*/ context:JohnSmith.Common.IElement);
+    }
+
     /////////////////////////////////
     // Collections
     /////////////////////////////////

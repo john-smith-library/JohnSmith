@@ -1,5 +1,6 @@
 /// <reference path="../Common.ts"/>
 /// <reference path="../binding/Contracts.ts"/>
+/// <reference path="../command/Contracts.ts"/>
 /// <reference path="Contracts.ts"/>
 /// <reference path="DefaultView.ts"/>
 
@@ -10,16 +11,19 @@ module JohnSmith.View {
     export class DefaultViewFactory implements IViewFactory {
         private elementFactory:JohnSmith.Common.IElementFactory;
         private bindableManager:JohnSmith.Binding.IBindableManager;
+        private commandManager: Command.ICommandManager;
         private eventBus:JohnSmith.Common.IEventBus;
         private markupResolver:JohnSmith.Common.IMarkupResolver;
 
         constructor (
             bindableManager:JohnSmith.Binding.IBindableManager,
+            commandManager: Command.ICommandManager,
             elementFactory:JohnSmith.Common.IElementFactory,
             eventBus:JohnSmith.Common.IEventBus,
             markupResolver:JohnSmith.Common.IMarkupResolver){
 
             this.bindableManager = bindableManager;
+            this.commandManager = commandManager;
             this.elementFactory = elementFactory;
             this.eventBus = eventBus;
             this.markupResolver = markupResolver;
@@ -38,6 +42,7 @@ module JohnSmith.View {
             if (dataDescriptor.template){
                 return new DefaultView(
                     this.bindableManager,
+                    this.commandManager,
                     this.elementFactory,
                     <IViewData> dataDescriptor,
                     viewModel,
