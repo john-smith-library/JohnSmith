@@ -1,5 +1,6 @@
 /// <reference path="../Common.ts"/>
 /// <reference path="Contracts.ts"/>
+/// <reference path="StaticBindableValue.ts"/>
 
 module JohnSmith.Binding {
     var Log = function(){
@@ -132,6 +133,7 @@ module JohnSmith.Binding {
     }
 
     JohnSmith.Common.JS.addBindableFactory(new DefaultBindableFactory());
+    JohnSmith.Common.JS.addBindableFactory(new StaticBindableFactory());
 
     JohnSmith.Common.JS.addHandlerFactory({
         createHandler: function (handler: any, context: JohnSmith.Common.IElement): IBindableHandler {

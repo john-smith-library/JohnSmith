@@ -23,11 +23,11 @@ module JohnSmith.Binding {
         }
     }
 
-    class StaticBindableFactory implements IBindableFactory {
+    export class StaticBindableFactory implements IBindableFactory {
         public createBindable(bindable: any): IBindable {
             return new StaticBindableValue(bindable);
         }
     }
 
-    JohnSmith.Common.JS.addBindableFactory(new StaticBindableFactory());
+
 }
