@@ -89,7 +89,7 @@ function stepMinify(){
     if (properties.outMinFileName){
         console.log("Generating minimised file " + properties.outMinFileName + "...");
         exec(
-            "ccjs " + properties.outFileName + " > " + properties.outMinFileName,
+            "ccjs " + properties.outFileName + " > " + properties.outMinFileName + "  --language_in=ECMASCRIPT5_STRICT",
             function (error, stdout, stderr) {
                 if (stdout) {
                     console.log(stdout);
