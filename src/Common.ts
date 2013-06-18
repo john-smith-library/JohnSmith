@@ -32,9 +32,57 @@ module JohnSmith.Common {
     /**
      * Process an argument passed to BindableManager as handler data.
      */
-    export interface IHandlerArgumentProcessor {
-        canProcess(argument:any, argumentIndex: number, options: any, /*bindable:IBindable,*/ context:JohnSmith.Common.IElement) : bool;
-        process(argument:any, options: any, /*bindable:IBindable,*/ context:JohnSmith.Common.IElement);
+    export interface IArgumentProcessor {
+        canProcess(argument:any, argumentIndex: number, options: any, context: IElement) : bool;
+        process(argument:any, options: any, context: IElement);
+    }
+
+    export class ArgumentProcessorsBasedHandler {
+        private _processors: IArgumentProcessor[];
+
+        constructor(processors: IArgumentProcessor[]){
+            this._processors = processors;
+        }
+
+        public processArguments(args: any[], context:IElement): any {
+            var lastArgument = args[args.length - 1];
+            var options: any;
+            if (this.isOptionsArgument(lastArgument)) {
+                options = lastArgument;
+                args.pop();
+            } else {
+                options = {};
+            }
+
+            var argumentIndex = 0;
+            while (args.length > 0) {
+                var argument = args[0];
+                this.processHandlerArgument(argument, argumentIndex, options, context);
+                args.splice(0, 1);
+                argumentIndex++;
+            }
+
+            return options;
+        }
+
+        private processHandlerArgument(argument:any, index: number, options: any, context:IElement): void {
+            for (var i = 0; i < this._processors.length; i++){
+                var processor = this._processors[i];
+                if (processor.canProcess(argument, index, options, context)) {
+                    processor.process(argument, options, context);
+                    return;
+                }
+            }
+
+            throw new Error("Could not process argument " + argument);
+        }
+
+        /**
+         * @protected
+         */
+        public isOptionsArgument(value: any): bool {
+            return JohnSmith.Common.TypeUtils.isObject(value);
+        }
     }
 
     /////////////////////////////////
@@ -201,6 +249,8 @@ module JohnSmith.Common {
         getAttribute(attribute: string);
         setAttribute(attribute: string, value: string);
 
+        attachEventHandler(event: string, callback: (target:IElement) => void);
+        // [OBSOLETE]
         attachClickHandler: (callback: () => void) => void;
     }
 

@@ -28,6 +28,4 @@ module JohnSmith.Binding {
             return new StaticBindableValue(bindable);
         }
     }
-
-
 }

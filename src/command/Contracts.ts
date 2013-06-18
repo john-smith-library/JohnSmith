@@ -9,10 +9,6 @@ module JohnSmith.Command {
         wireWith(command:ICommand):void;
     }
 
-    export interface ICommandCauseFactory {
-        create(options:any, context:Common.IElement, commandContext: any):ICommandCause;
-    }
-
     export interface ICommandBindingData {
         command: any;
         commandContext?: any;

@@ -7,7 +7,7 @@
 /// <reference path="DefaultViewFactory.ts"/>
 
 module JohnSmith.View {
-    export class ViewArgumentProcessor implements Common.IHandlerArgumentProcessor {
+    export class ViewArgumentProcessor implements JohnSmith.Common.IArgumentProcessor {
         private _viewFactory: IViewFactory;
 
         constructor(viewFactory: IViewFactory){
@@ -18,7 +18,6 @@ module JohnSmith.View {
             argument:any,
             argumentIndex: number,
             options: any,
-            /*bindable:Binding.IBindable,*/
             context:JohnSmith.Common.IElement) : bool{
             return argumentIndex === 1 && (!options.view)
         }
@@ -26,7 +25,6 @@ module JohnSmith.View {
         public process(
             argument:any,
             options: any,
-            /*bindable:Binding.IBindable,*/
             context:JohnSmith.Common.IElement){
 
             try {

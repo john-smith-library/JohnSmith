@@ -31,7 +31,7 @@ module JohnSmith.Binding {
         }
     }
 
-    class CallbackArgumentProcessor implements Common.IHandlerArgumentProcessor {
+    class CallbackArgumentProcessor implements JohnSmith.Common.IArgumentProcessor {
         public canProcess(argument:any, argumentIndex: number, options: any, /*bindable:IBindable,*/ context:JohnSmith.Common.IElement):bool{
             return argumentIndex == 0 &&
                 (options.handler == null || options.handler == CALLBACK_HANDLER_KEY) &&

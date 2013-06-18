@@ -8,19 +8,19 @@ module JohnSmith.Binding {
     }
 
     // default implementation of binding manager
-    export class DefaultBindingManager implements IBindableManager {
+    export class DefaultBindingManager extends Common.ArgumentProcessorsBasedHandler implements IBindableManager {
         private handlerFactories: JohnSmith.Common.ArrayList;
         private bindableFactories: JohnSmith.Common.ArrayList;
-        private handlerArgumentProcessors: JohnSmith.Common.IList;
 
         constructor(
             bindableFactories:  JohnSmith.Common.ArrayList,
             handlerFactories: JohnSmith.Common.ArrayList,
-            handlerArgumentProcessors: JohnSmith.Common.IList) {
+            handlerArgumentProcessors: Common.IArgumentProcessor[]) {
+
+            super(handlerArgumentProcessors);
 
             this.bindableFactories = bindableFactories;
             this.handlerFactories = handlerFactories;
-            this.handlerArgumentProcessors = handlerArgumentProcessors;
         }
 
         public bind(data:IBindingData): BindingWire {
@@ -49,52 +49,16 @@ module JohnSmith.Binding {
         }
 
         private getHandler(handlerData: any[], bindable:IBindable, context: JohnSmith.Common.IElement): IBindableHandler {
-            var lastArgument = handlerData[handlerData.length - 1];
-            var handlerOptions: any;
-            if (this.isOptionsArgument(lastArgument)) {
-                handlerOptions = lastArgument;
-                handlerData.pop();
-            } else {
-                handlerOptions = {};
-            }
-
-            var argumentIndex = 0;
-            while (handlerData.length > 0) {
-                var argument = handlerData[0];
-                this.processHandlerArgument(argument, argumentIndex, handlerOptions, bindable, context);
-                handlerData.splice(0, 1);
-                argumentIndex++;
-            }
-
+            var options = this.processArguments(handlerData, context);
             for (var i = 0; i < this.handlerFactories.count(); i++) {
                 var factory: IHandlerFactory = this.handlerFactories.getAt(i);
-                var result: IBindableHandler = factory.createHandler(handlerOptions, bindable, context);
+                var result: IBindableHandler = factory.createHandler(options, bindable, context);
                 if (result) {
                     return result;
                 }
             }
 
             throw new Error("Could not transform object " + handlerData + " to bindable handler");
-        }
-
-        private processHandlerArgument(argument:any, index: number, options: any, bindable:IBindable, context:JohnSmith.Common.IElement): void {
-            for (var i = 0; i < this.handlerArgumentProcessors.count(); i++){
-                var processor = this.handlerArgumentProcessors.getAt(i);
-                if (processor.canProcess(argument, index, options, context)) {
-                    processor.process(argument, options, context);
-                    return;
-                }
-            }
-
-            throw new Error("Could not process argument " + argument);
-        }
-
-        /**
-         * Checks if the value is options object.
-         * @param value
-         */
-        private isOptionsArgument(value: any): bool {
-           return JohnSmith.Common.TypeUtils.isObject(value);
         }
     }
 
@@ -110,7 +74,7 @@ module JohnSmith.Binding {
 
     var bindableFactories:JohnSmith.Common.ArrayList = new JohnSmith.Common.ArrayList();
     var handlerFactories:JohnSmith.Common.ArrayList = new Common.ArrayList();
-    var handlerArgumentProcessors:JohnSmith.Common.IList = new JohnSmith.Common.ArrayList();
+    var handlerArgumentProcessors:Common.IArgumentProcessor[] = [];
 
     JohnSmith.Common.JS.getBindableFactories = function():JohnSmith.Common.IList {
         return bindableFactories;
@@ -129,7 +93,7 @@ module JohnSmith.Binding {
     }
 
     JohnSmith.Common.JS.addHandlerArgumentProcessor = function(processor){
-        handlerArgumentProcessors.add(processor);
+        handlerArgumentProcessors.push(processor);
     }
 
     JohnSmith.Common.JS.addBindableFactory(new DefaultBindableFactory());

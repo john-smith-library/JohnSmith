@@ -2,25 +2,41 @@
 /// <reference path="Contracts.ts"/>
 
 module JohnSmith.Command {
-    class FunctionCommand implements ICommand {
-        private _callback: () => void;
+    export class EventCommandCause implements Command.ICommandCause {
+        private _targetElement:Common.IElement;
+        private _event:string;
+        private _commandContext:any;
 
-        constructor(callback: () => void) {
-            this._callback = callback;
+        constructor(targetElement:Common.IElement, event:string, commandContext:any){
+            this._targetElement = targetElement;
+            this._event = event;
+            this._commandContext = commandContext;
         }
 
-        public execute(data: any[]):void {
-            this._callback.call(this, data);
+        public wireWith(command:Command.ICommand):void {
+            var context = this._commandContext;
+            this._targetElement.attachEventHandler(
+                this._event,
+                function(target: Common.IElement) {
+                    command.execute.call(context);
+                });
+        }
+
+        public dispose(): void {
         }
     }
 
-    export class DefaultCommandManager implements ICommandManager {
-        private _argumentProcessors: Common.IHandlerArgumentProcessor[];
-        private _factories: ICommandCauseFactory[];
+    interface CommandCauseOptions {
+        to?: string;
+        event?: string;
+    }
 
-        constructor(argumentProcessors: Common.IHandlerArgumentProcessor[], factories: ICommandCauseFactory[]){
-            this._argumentProcessors = argumentProcessors;
-            this._factories = factories;
+    export class DefaultCommandManager extends Common.ArgumentProcessorsBasedHandler implements ICommandManager {
+        private _elementFactory: Common.IElementFactory;
+
+        constructor(argumentProcessors: JohnSmith.Common.IArgumentProcessor[], elementFactory: Common.IElementFactory){
+            super(argumentProcessors);
+            this._elementFactory = elementFactory;
         }
 
         public setUpBinding(data:ICommandBindingData): CommandWire {
@@ -50,52 +66,25 @@ module JohnSmith.Command {
         }
 
         private getCause(causeData: any[], context:Common.IElement, commandContext: any) : ICommandCause {
-            // todo extract to superclass --->
-            var lastArgument = causeData[causeData.length - 1];
-            var handlerOptions: any;
-            if (this.isOptionsArgument(lastArgument)) {
-                handlerOptions = lastArgument;
-                causeData.pop();
-            } else {
-                handlerOptions = {};
-            }
-
-            var argumentIndex = 0;
-            while (causeData.length > 0) {
-                var argument = causeData[0];
-                this.processHandlerArgument(argument, argumentIndex, handlerOptions, context);
-                causeData.splice(0, 1);
-                argumentIndex++;
-            }
-            // <----------------
-
-            for (var i = 0; i < this._factories.length; i++) {
-                var factory: ICommandCauseFactory = this._factories[i];
-                var result: ICommandCause = factory.create(handlerOptions, context, commandContext);
-                if (result) {
-                    return result;
-                }
-            }
-
-            throw new Error("Could not transform arguments to command cause");
+            var options = this.processArguments(causeData, context);
+            return this.getCauseByOptions(options, context, commandContext);
         }
 
-        // todo extract to superclass
-        private processHandlerArgument(argument:any, index: number, options: any, context:Common.IElement): void {
-            for (var i = 0; i < this._argumentProcessors.length; i++){
-                var processor = this._argumentProcessors[i];
-                if (processor.canProcess(argument, index, options, context)) {
-                    processor.process(argument, options, context);
-                    return;
-                }
+        private getCauseByOptions(commandCauseOptions: any, context:Common.IElement, commandContext: any):ICommandCause {
+            var options:CommandCauseOptions = commandCauseOptions;
+            if (!options.to) {
+                throw new Error("Required option 'to' is not set!");
             }
 
-            throw new Error("Could not process argument " + argument);
-        }
+            if (!options.event) {
+                throw new Error("Required option 'event' is not set!");
+            }
 
-        // todo extract to superclass
-        private isOptionsArgument(value: any): bool {
-            return JohnSmith.Common.TypeUtils.isObject(value);
+            var target = context == null ?
+                this._elementFactory.createElement(options.to) :
+                context.findRelative(options.to);
+
+            return new EventCommandCause(target, options.event, commandContext);
         }
     }
 }

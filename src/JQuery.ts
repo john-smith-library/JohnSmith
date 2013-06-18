@@ -1,3 +1,4 @@
+/// <reference path="../libs/jquery.d.ts"/>
 /// <reference path="binding/Handling.ts"/>
 /// <reference path="binding/Contracts.ts"/>
 /// <reference path="binding/BindableManager.ts"/>
@@ -5,9 +6,6 @@
 /// <reference path="command/Contracts.ts"/>
 /// <reference path="command/Integration.ts"/>
 /// <reference path="Common.ts"/>
-
-declare var $: any;
-declare var jQuery: any;
 
 module JohnSmith.JQuery {
     class JQueryElement implements JohnSmith.Common.IElement {
@@ -94,6 +92,13 @@ module JohnSmith.JQuery {
             this.target.click(callback);
         }
 
+        public attachEventHandler(event: string, callback: (target:Common.IElement) => void){
+            this.target.on(event, function(){
+                callback(new JQueryElement($(this)));
+                return false;
+            });
+        }
+
         public getValue() : string {
             return this.target.val();
         }
@@ -133,12 +138,11 @@ module JohnSmith.JQuery {
         }
     }
 
-    class JQueryTargetArgumentProcessor implements Common.IHandlerArgumentProcessor {
+    class JQueryTargetArgumentProcessor implements JohnSmith.Common.IArgumentProcessor {
         public canProcess(
             argument:any,
             argumentIndex: number,
             options: any,
-            /*bindable:Binding.IBindable,*/
             context:JohnSmith.Common.IElement) : bool {
             return (typeof argument == "string") && argumentIndex == 0
         }
@@ -146,11 +150,7 @@ module JohnSmith.JQuery {
         public process(
             argument:any,
             options: any,
-            /*bindable:Binding.IBindable,*/
             context:JohnSmith.Common.IElement){
-//            if (!options.handler) {
-//                options.handler = "render";
-//            }
 
             if (!options.to){
                 options.to = argument;
@@ -179,45 +179,6 @@ module JohnSmith.JQuery {
         }
     }
 
-    class JQueryEventCommandCause implements Command.ICommandCause {
-        private _targetElement:Common.IElement;
-        private _event:string;
-        private _commandContext:any;
-
-        constructor(targetElement:Common.IElement, event:string, commandContext:any){
-            this._targetElement = targetElement;
-            this._event = event;
-            this._commandContext = commandContext;
-        }
-
-        public wireWith(command:Command.ICommand):void {
-            var target = (<JQueryElement> this._targetElement).getTarget();
-            var context = this._commandContext;
-            target.on(this._event, function(){
-                command.execute.call(context);
-            });
-        }
-
-        public dispose(): void {
-        }
-    }
-
-    class JQueryEventCommandCauseFactory implements Command.ICommandCauseFactory {
-        private _elementFactory: Common.IElementFactory;
-
-        constructor(elementFactory: Common.IElementFactory){
-            this._elementFactory = elementFactory;
-        }
-
-        public create(options:any, context:Common.IElement, commandContext: any): Command.ICommandCause {
-            var destination = context == null ?
-                this._elementFactory.createElement(options.to) :
-                context.findRelative(options.to);
-
-            return new JQueryEventCommandCause(destination, options.event, commandContext);
-        }
-    }
-
     /////////////////////////////////
     // Configuring ioc dependencies
     /////////////////////////////////
@@ -236,8 +197,6 @@ module JohnSmith.JQuery {
 
     JohnSmith.Common.JS.addHandlerArgumentProcessor(new JQueryTargetArgumentProcessor());
     JohnSmith.Common.JS.addCommandCauseArgumentProcessor(new JQueryTargetArgumentProcessor());
-    JohnSmith.Common.JS.addCommandCauseFactory(new JQueryEventCommandCauseFactory(JohnSmith.Common.JS.ioc.resolve("elementFactory")));
-
     JohnSmith.Common.JS.ioc.register("markupResolver", new JQueryMarkupResolver());
     JohnSmith.Common.JS.ioc.register("valueToElementMapper", new JQueryValueToElementMapper());
 }
