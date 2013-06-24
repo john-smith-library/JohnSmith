@@ -1,4 +1,5 @@
 /// <reference path="../Common.ts"/>
+/// <reference path="../Fetchers.ts"/>
 /// <reference path="Contracts.ts"/>
 
 module JohnSmith.Command {
@@ -33,28 +34,36 @@ module JohnSmith.Command {
         }
     }
 
-//    class FetcherToArgumentFetcherAdapter {
-//
+    class FetcherToArgumentFetcherAdapter implements ICommandArgumentsFetcher {
+        private _fetcher: Fetchers.IFetcher;
+
+        constructor(fetcher: Fetchers.IFetcher){
+            this._fetcher = fetcher;
+        }
+
+        public fetch(target:Common.IElement): any[] {
+            return [this._fetcher.valueFromElement(target)];
+        }
+    }
+
+//    // todo [OBSOLETE]
+//    class ValueCommandArgumentFetcher implements ICommandArgumentsFetcher {
+//        public fetch(target:Common.IElement): any[] {
+//            return [target.getValue()];
+//        }
 //    }
-
-    // todo [OBSOLETE]
-    class ValueCommandArgumentFetcher implements ICommandArgumentsFetcher {
-        public fetch(target:Common.IElement): any[] {
-            return [target.getValue()];
-        }
-    }
-
-    // todo [OBSOLETE]
-    class CheckedAttributeArgumentFetcher implements ICommandArgumentsFetcher {
-        public fetch(target:Common.IElement): any[] {
-            var isChecked = false;
-            if (target.getAttribute("checked")){
-                isChecked = true;
-            }
-
-            return [isChecked];
-        }
-    }
+//
+//    // todo [OBSOLETE]
+//    class CheckedAttributeArgumentFetcher implements ICommandArgumentsFetcher {
+//        public fetch(target:Common.IElement): any[] {
+//            var isChecked = false;
+//            if (target.getAttribute("checked")){
+//                isChecked = true;
+//            }
+//
+//            return [isChecked];
+//        }
+//    }
 
     interface CommandCauseOptions {
         to?: string;
@@ -65,10 +74,12 @@ module JohnSmith.Command {
 
     export class DefaultCommandManager extends Common.ArgumentProcessorsBasedHandler implements ICommandManager {
         private _elementFactory: Common.IElementFactory;
+        private _fetcherFactory: Fetchers.IFetcherFactory;
 
-        constructor(argumentProcessors: JohnSmith.Common.IArgumentProcessor[], elementFactory: Common.IElementFactory){
+        constructor(argumentProcessors: JohnSmith.Common.IArgumentProcessor[], elementFactory: Common.IElementFactory, fetcherFactory: Fetchers.IFetcherFactory){
             super(argumentProcessors);
             this._elementFactory = elementFactory;
+            this._fetcherFactory = fetcherFactory;
         }
 
         public setUpBinding(data:ICommandBindingData): CommandWire {
@@ -113,13 +124,18 @@ module JohnSmith.Command {
             }
 
             if (!options.argumentsFetcher) {
-                if (options.fetch === "value") {
-                    options.argumentsFetcher = new ValueCommandArgumentFetcher();
-                } else if (options.fetch === "checkedAttribute") {
-                    options.argumentsFetcher = new CheckedAttributeArgumentFetcher();
-                } else {
-                    options.argumentsFetcher = null;
+                if (options.fetch) {
+                    var fetcher = this._fetcherFactory.getByKey(options.fetch);
+                    options.argumentsFetcher = new FetcherToArgumentFetcherAdapter(fetcher);
                 }
+
+//                if (options.fetch === "value") {
+//                    options.argumentsFetcher = new ValueCommandArgumentFetcher();
+//                } else if (options.fetch === "checkedAttribute") {
+//                    options.argumentsFetcher = new CheckedAttributeArgumentFetcher();
+//                } else {
+//                    options.argumentsFetcher = null;
+//                }
             }
 
             var target = context == null ?

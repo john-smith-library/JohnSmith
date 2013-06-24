@@ -1,4 +1,5 @@
 /// <reference path="../Common.ts"/>
+/// <reference path="../Fetchers.ts"/>
 /// <reference path="Contracts.ts"/>
 /// <reference path="CommandManager.ts"/>
 
@@ -17,10 +18,11 @@ module JohnSmith.Command {
 
     Common.JS.ioc.registerWithDependencies(
         "commandManager",
-        function(elementFactory: Common.IElementFactory){
-            return new DefaultCommandManager(commandCauseArgumentProcessors, elementFactory);
+        function(elementFactory: Common.IElementFactory, fetcherFactory: Fetchers.IFetcherFactory){
+            return new DefaultCommandManager(commandCauseArgumentProcessors, elementFactory, fetcherFactory);
         },
-        "elementFactory");
+        "elementFactory",
+        "fetcherFactory");
 
     Common.JS.on = function (...causeData: any[]){
         var commandManager = Common.JS.ioc.resolve("commandManager");
