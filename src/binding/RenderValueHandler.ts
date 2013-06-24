@@ -1,4 +1,5 @@
 /// <reference path="../Common.ts"/>
+/// <reference path="../Fetchers.ts"/>
 /// <reference path="../view/Integration.ts"/>
 /// <reference path="Contracts.ts"/>
 /// <reference path="Handling.ts"/>
@@ -57,11 +58,13 @@ module JohnSmith.Binding {
         private _destinationFactory: Common.IElementFactory;
         private _markupResolver: Common.IMarkupResolver;
         private _viewFactory: View.IViewFactory;
+        private _fetcherFactory: Fetchers.IFetcherFactory;
 
-        constructor(destinationFactory: Common.IElementFactory, markupResolver: Common.IMarkupResolver, viewFactory: View.IViewFactory){
+        constructor(destinationFactory: Common.IElementFactory, markupResolver: Common.IMarkupResolver, viewFactory: View.IViewFactory, fetcherFactory: Fetchers.IFetcherFactory){
             this._destinationFactory = destinationFactory;
             this._markupResolver = markupResolver;
             this._viewFactory = viewFactory;
+            this._fetcherFactory = fetcherFactory;
         }
 
         public fillContentDestination(options:RenderHandlerOptions, context:Common.IElement){
@@ -98,15 +101,24 @@ module JohnSmith.Binding {
         }
 
         private getRenderer(options:RenderHandlerOptions) : IValueRenderer{
+            if (options.fetch) {
+                var fetcher = this._fetcherFactory.getByKey(options.fetch);
+                if (!fetcher) {
+                    throw new Error("Fetcher " + options.fetch + " not found");
+                }
+
+                return new FetcherToRendererAdapter(fetcher);
+            }
+
             switch (options.valueType) {
                 case Common.ValueType.text:
                     return new TextRenderer(options.formatter);
                 case Common.ValueType.html:
                     return new HtmlRenderer(options.formatter);
-                case Common.ValueType.inputValue:
-                    return new InputValueRenderer(options.formatter);
-                case Common.ValueType.checkedAttribute:
-                    return new CheckedAttributeRenderer();
+//                case Common.ValueType.inputValue:
+//                    return new InputValueRenderer(options.formatter);
+//                case Common.ValueType.checkedAttribute:
+//                    return new CheckedAttributeRenderer();
                 case Common.ValueType.unknown:
                     return new ResolvableMarkupRenderer(options.formatter, this._markupResolver);
                 default:
@@ -132,8 +144,13 @@ module JohnSmith.Binding {
     }
 
     export class RenderValueFactory extends RenderHandlerFactoryBase implements IHandlerFactory {
-        constructor(destinationFactory: Common.IElementFactory, markupResolver: Common.IMarkupResolver, viewFactory: View.IViewFactory){
-            super(destinationFactory, markupResolver, viewFactory);
+        constructor(
+            destinationFactory: Common.IElementFactory,
+            markupResolver: Common.IMarkupResolver,
+            viewFactory: View.IViewFactory,
+            fetcherFactory: Fetchers.IFetcherFactory) {
+
+            super(destinationFactory, markupResolver, viewFactory, fetcherFactory);
         }
 
         public createHandler(handlerData: any, bindable:IBindable, context: Common.IElement): IBindableHandler {
@@ -174,10 +191,15 @@ module JohnSmith.Binding {
     }
 
     JohnSmith.Common.JS.ioc.withRegistered(
-        function(destinationFactory:Common.IElementFactory, markupResolver:Common.IMarkupResolver, viewFactory: View.IViewFactory){
-            JohnSmith.Common.JS.addHandlerFactory(new RenderValueFactory(destinationFactory, markupResolver, viewFactory));
+        function(
+            destinationFactory:Common.IElementFactory,
+            markupResolver:Common.IMarkupResolver,
+            viewFactory: View.IViewFactory,
+            fetcherFactory: Fetchers.IFetcherFactory){
+            JohnSmith.Common.JS.addHandlerFactory(new RenderValueFactory(destinationFactory, markupResolver, viewFactory, fetcherFactory));
         },
         "elementFactory",
         "markupResolver",
-        "viewFactory");
+        "viewFactory",
+        "fetcherFactory");
 }

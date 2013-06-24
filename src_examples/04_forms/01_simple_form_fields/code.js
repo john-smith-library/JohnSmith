@@ -19,17 +19,17 @@ var FormView = function(){
         // bind firstName to text input
         this.bind(viewModel.firstName).to(
             "input[type='text']",
-            { valueType: "inputValue" });
+            { fetch: "value" });
 
         // bind rememberMe to checkbox
         this.bind(viewModel.rememberMe).to(
             "input[type='checkbox']",
-            { valueType: "checkedAttribute" });
+            { fetch: "checkedAttribute" });
 
         // bind bio to textarea
         this.bind(viewModel.bio).to(
             "textarea",
-            { valueType: "inputValue" });
+            { fetch: "value" });
     };
 };
 

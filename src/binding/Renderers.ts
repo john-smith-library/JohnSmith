@@ -1,4 +1,5 @@
 /// <reference path="../Common.ts"/>
+/// <reference path="../Fetchers.ts"/>
 /// <reference path="Contracts.ts"/>
 /// <reference path="Handling.ts"/>
 
@@ -67,34 +68,61 @@ module JohnSmith.Binding {
         }
     }
 
-    /**
-     * Sets input element value (value attribute).
-     */
-    // todo [OBSOLETE]
-    export class InputValueRenderer extends RendererBase {
-        constructor(formatter:IValueFormatter){
-            super(formatter);
+    export class FetcherToRendererAdapter implements IValueRenderer {
+        private _fetcher:Fetchers.IFetcher;
+
+        constructor(fetcher:Fetchers.IFetcher){
+            this._fetcher = fetcher;
         }
 
-        public doRender(value: any, destination: JohnSmith.Common.IElement) : JohnSmith.Common.IElement {
-            var currentValue = destination.getValue();
-            if (currentValue !== value){
-                destination.setValue(value);
-            }
-
+        public render(formattedValue:string, destination: Common.IElement) : Common.IElement {
+            this._fetcher.valueToElement(formattedValue, destination);
             return destination;
         }
     }
 
-    // todo [OBSOLETE]
-    export class CheckedAttributeRenderer implements IValueRenderer {
-        public render(value: any, destination: JohnSmith.Common.IElement) : JohnSmith.Common.IElement {
-            var currentValue = destination.getAttribute("checked");
-            if (currentValue !== value){
-                destination.setAttribute("checked", value);
-            }
+//    export class FetcherToRendererAdapter extends RendererBase {
+//        private _fetcher:Fetchers.IFetcher;
+//
+//        constructor(formatter:IValueFormatter, fetcher:Fetchers.IFetcher){
+//            super(formatter);
+//            this._fetcher = fetcher;
+//        }
+//
+//        public doRender(formattedValue:string, destination: Common.IElement) : Common.IElement {
+//            this._fetcher.valueToElement(formattedValue, destination);
+//            return destination;
+//        }
+//    }
 
-            return destination;
-        }
-    }
+//    /**
+//     * Sets input element value (value attribute).
+//     */
+//    // todo [OBSOLETE]
+//    export class InputValueRenderer extends RendererBase {
+//        constructor(formatter:IValueFormatter){
+//            super(formatter);
+//        }
+//
+//        public doRender(value: any, destination: JohnSmith.Common.IElement) : JohnSmith.Common.IElement {
+//            var currentValue = destination.getValue();
+//            if (currentValue !== value){
+//                destination.setValue(value);
+//            }
+//
+//            return destination;
+//        }
+//    }
+//
+//    // todo [OBSOLETE]
+//    export class CheckedAttributeRenderer implements IValueRenderer {
+//        public render(value: any, destination: JohnSmith.Common.IElement) : JohnSmith.Common.IElement {
+//            var currentValue = destination.getAttribute("checked");
+//            if (currentValue !== value){
+//                destination.setAttribute("checked", value);
+//            }
+//
+//            return destination;
+//        }
+//    }
 }

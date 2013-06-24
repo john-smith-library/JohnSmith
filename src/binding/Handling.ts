@@ -13,6 +13,7 @@ module JohnSmith.Binding {
         renderer?: IValueRenderer;
         formatter?: IValueFormatter;
         valueType?: string;
+        fetch?: string;
         view?: any;
         type?: string;
         to?: string;

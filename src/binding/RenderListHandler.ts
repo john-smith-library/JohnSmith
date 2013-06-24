@@ -1,3 +1,4 @@
+/// <reference path="../Fetchers.ts"/>
 /// <reference path="Contracts.ts"/>
 /// <reference path="Handling.ts"/>
 /// <reference path="RenderValueHandler.ts"/>
@@ -166,9 +167,10 @@ module JohnSmith.Binding {
             destinationFactory: Common.IElementFactory,
             markupResolver: Common.IMarkupResolver,
             viewFactory: View.IViewFactory,
-            mapper: IValueToElementMapper){
+            mapper: IValueToElementMapper,
+            fetcherFactory: Fetchers.IFetcherFactory){
 
-            super(destinationFactory, markupResolver, viewFactory);
+            super(destinationFactory, markupResolver, viewFactory, fetcherFactory);
             this._mapper = mapper;
         }
 
@@ -231,11 +233,13 @@ module JohnSmith.Binding {
             destinationFactory:Common.IElementFactory,
             markupResolver:Common.IMarkupResolver,
             mapper:IValueToElementMapper,
-            viewFactory: View.IViewFactory){
-            JohnSmith.Common.JS.addHandlerFactory(new RenderListFactory(destinationFactory, markupResolver, viewFactory, mapper));
+            viewFactory: View.IViewFactory,
+            fetcherFactory: Fetchers.IFetcherFactory){
+            JohnSmith.Common.JS.addHandlerFactory(new RenderListFactory(destinationFactory, markupResolver, viewFactory, mapper, fetcherFactory));
         },
         "elementFactory",
         "markupResolver",
         "valueToElementMapper",
-        "viewFactory");
+        "viewFactory",
+        "fetcherFactory");
 }
