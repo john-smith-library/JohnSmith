@@ -6,19 +6,26 @@ module JohnSmith.Command {
         private _targetElement:Common.IElement;
         private _event:string;
         private _commandContext:any;
+        private _argumentsFetcher: ICommandArgumentsFetcher;
 
-        constructor(targetElement:Common.IElement, event:string, commandContext:any){
+        constructor(targetElement:Common.IElement, event:string, commandContext:any, argumentsFetcher: ICommandArgumentsFetcher){
             this._targetElement = targetElement;
             this._event = event;
             this._commandContext = commandContext;
+            this._argumentsFetcher = argumentsFetcher;
         }
 
         public wireWith(command:Command.ICommand):void {
             var context = this._commandContext;
+            var argumentsFetcher = this._argumentsFetcher;
+
             this._targetElement.attachEventHandler(
                 this._event,
                 function(target: Common.IElement) {
-                    command.execute.call(context);
+                    var arguments = argumentsFetcher == null ?
+                        [] : argumentsFetcher.fetch(target);
+
+                    command.execute.apply(context, arguments);
                 });
         }
 
@@ -26,9 +33,28 @@ module JohnSmith.Command {
         }
     }
 
+    class ValueCommandArgumentFetcher implements ICommandArgumentsFetcher {
+        public fetch(target:Common.IElement): any[] {
+            return [target.getValue()];
+        }
+    }
+
+    class CheckedAttributeArgumentFetcher implements ICommandArgumentsFetcher {
+        public fetch(target:Common.IElement): any[] {
+            var isChecked = false;
+            if (target.getAttribute("checked")){
+                isChecked = true;
+            }
+
+            return [isChecked];
+        }
+    }
+
     interface CommandCauseOptions {
         to?: string;
         event?: string;
+        fetch?: string;
+        argumentsFetcher?: ICommandArgumentsFetcher;
     }
 
     export class DefaultCommandManager extends Common.ArgumentProcessorsBasedHandler implements ICommandManager {
@@ -80,11 +106,21 @@ module JohnSmith.Command {
                 throw new Error("Required option 'event' is not set!");
             }
 
+            if (!options.argumentsFetcher) {
+                if (options.fetch === "value") {
+                    options.argumentsFetcher = new ValueCommandArgumentFetcher();
+                } else if (options.fetch === "checkedAttribute") {
+                    options.argumentsFetcher = new CheckedAttributeArgumentFetcher();
+                } else {
+                    options.argumentsFetcher = null;
+                }
+            }
+
             var target = context == null ?
                 this._elementFactory.createElement(options.to) :
                 context.findRelative(options.to);
 
-            return new EventCommandCause(target, options.event, commandContext);
+            return new EventCommandCause(target, options.event, commandContext, options.argumentsFetcher);
         }
     }
 }

@@ -16,6 +16,10 @@ module JohnSmith.Command {
         causeData: any[];
     }
 
+    export interface ICommandArgumentsFetcher {
+        fetch(target:Common.IElement): any[];
+    }
+
     export class CommandWire implements Common.IDisposable {
         private _command: ICommand;
         private _cause: ICommandCause;
