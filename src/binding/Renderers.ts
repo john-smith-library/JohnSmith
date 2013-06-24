@@ -70,6 +70,7 @@ module JohnSmith.Binding {
     /**
      * Sets input element value (value attribute).
      */
+    // todo [OBSOLETE]
     export class InputValueRenderer extends RendererBase {
         constructor(formatter:IValueFormatter){
             super(formatter);
@@ -85,6 +86,7 @@ module JohnSmith.Binding {
         }
     }
 
+    // todo [OBSOLETE]
     export class CheckedAttributeRenderer implements IValueRenderer {
         public render(value: any, destination: JohnSmith.Common.IElement) : JohnSmith.Common.IElement {
             var currentValue = destination.getAttribute("checked");

@@ -33,12 +33,18 @@ module JohnSmith.Command {
         }
     }
 
+//    class FetcherToArgumentFetcherAdapter {
+//
+//    }
+
+    // todo [OBSOLETE]
     class ValueCommandArgumentFetcher implements ICommandArgumentsFetcher {
         public fetch(target:Common.IElement): any[] {
             return [target.getValue()];
         }
     }
 
+    // todo [OBSOLETE]
     class CheckedAttributeArgumentFetcher implements ICommandArgumentsFetcher {
         public fetch(target:Common.IElement): any[] {
             var isChecked = false;

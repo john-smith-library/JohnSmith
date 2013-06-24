@@ -7,6 +7,7 @@
         <item url="file://$PROJECT_DIR$/src/binding/RenderListHandler.js" />
         <item url="file://$PROJECT_DIR$/src/view/DefaultViewFactory.js" />
         <item url="file://$PROJECT_DIR$/src/binding/BindableList.js" />
+        <item url="file://$PROJECT_DIR$/src/Fetchers.js" />
         <item url="file://$PROJECT_DIR$/src/view/DefaultView.js" />
         <item url="file://$PROJECT_DIR$/src/binding/RenderValueHandler.js" />
         <item url="file://$PROJECT_DIR$/src/binding/BindableManager.js" />
@@ -53,6 +54,7 @@
       <root url="file://$PROJECT_DIR$/src/binding/BindableList.js" />
       <root url="file://$PROJECT_DIR$/src/binding/RenderValueHandler.js" />
       <root url="file://$PROJECT_DIR$/src/view/DefaultView.js" />
+      <root url="file://$PROJECT_DIR$/src/Fetchers.js" />
       <root url="file://$PROJECT_DIR$/src/binding/BindableManager.js" />
       <root url="file://$PROJECT_DIR$/src/binding/Contracts.js" />
       <root url="file://$PROJECT_DIR$/src/binding/CallbackHandler.js" />
