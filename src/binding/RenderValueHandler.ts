@@ -101,12 +101,18 @@ module JohnSmith.Binding {
         }
 
         private getRenderer(options:RenderHandlerOptions) : IValueRenderer{
+            var fetcher:Fetchers.IFetcher = null;
+
             if (options.fetch) {
-                var fetcher = this._fetcherFactory.getByKey(options.fetch);
+                fetcher = this._fetcherFactory.getByKey(options.fetch);
                 if (!fetcher) {
                     throw new Error("Fetcher " + options.fetch + " not found");
                 }
+            } else {
+                fetcher = this._fetcherFactory.getForElement(options.contentDestination);
+            }
 
+            if (fetcher) {
                 return new FetcherToRendererAdapter(fetcher);
             }
 

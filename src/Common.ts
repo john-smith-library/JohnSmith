@@ -236,6 +236,7 @@ module JohnSmith.Common {
         getHtml: () => string;
         findRelative: (query:string) => IElement;
         remove: () => void;
+        getNodeName: () => string;
 
         addClass: (className: string) => void;
         removeClass: (className: string) => void;

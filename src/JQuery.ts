@@ -55,6 +55,14 @@ module JohnSmith.JQuery {
             return this.target.html();
         };
 
+        public getNodeName(): string {
+            if (this.target.length == 1) {
+                return this.target[0].nodeName;
+            }
+
+            return null
+        }
+
         public findRelative(query:string) : JohnSmith.Common.IElement {
             var result = this.target.filter(query);
             if (result.length == 0) {
