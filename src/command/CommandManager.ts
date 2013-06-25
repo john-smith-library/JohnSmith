@@ -23,10 +23,10 @@ module JohnSmith.Command {
             this._targetElement.attachEventHandler(
                 this._event,
                 function(target: Common.IElement) {
-                    var arguments = argumentsFetcher == null ?
+                    var commandArguments = argumentsFetcher == null ?
                         [] : argumentsFetcher.fetch(target);
 
-                    command.execute.apply(context, arguments);
+                    command.execute.apply(context, commandArguments);
                 });
         }
 
@@ -123,9 +123,19 @@ module JohnSmith.Command {
                 throw new Error("Required option 'event' is not set!");
             }
 
+            var target = context == null ?
+                this._elementFactory.createElement(options.to) :
+                context.findRelative(options.to);
+
             if (!options.argumentsFetcher) {
+                var fetcher: Fetchers.IFetcher = null;
                 if (options.fetch) {
-                    var fetcher = this._fetcherFactory.getByKey(options.fetch);
+                    fetcher = this._fetcherFactory.getByKey(options.fetch);
+                } else {
+                    fetcher = this._fetcherFactory.getForElement(target);
+                }
+
+                if (fetcher) {
                     options.argumentsFetcher = new FetcherToArgumentFetcherAdapter(fetcher);
                 }
 
@@ -138,9 +148,7 @@ module JohnSmith.Command {
 //                }
             }
 
-            var target = context == null ?
-                this._elementFactory.createElement(options.to) :
-                context.findRelative(options.to);
+
 
             return new EventCommandCause(target, options.event, commandContext, options.argumentsFetcher);
         }

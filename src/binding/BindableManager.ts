@@ -27,7 +27,7 @@ module JohnSmith.Binding {
             Log().info("Binding ", data.bindableData, " to ", data.handlerData);
 
             var bindable: IBindable = this.getBindable(data.bindableData);
-            var handler: IBindableHandler = this.getHandler(data.handlerData, bindable, data.context);
+            var handler: IBindableHandler = this.getHandler(data.handlerData, bindable, data.context, data.commandHost);
 
             Log().info("    resolved bindable: ", bindable);
             Log().info("    resolved handler: ", handler);
@@ -48,11 +48,11 @@ module JohnSmith.Binding {
             throw new Error("Could not transform object " + bindableObject + " to bindable");
         }
 
-        private getHandler(handlerData: any[], bindable:IBindable, context: JohnSmith.Common.IElement): IBindableHandler {
+        private getHandler(handlerData: any[], bindable:IBindable, context: JohnSmith.Common.IElement, commandHost:Command.ICommandHost): IBindableHandler {
             var options = this.processArguments(handlerData, context);
             for (var i = 0; i < this.handlerFactories.count(); i++) {
                 var factory: IHandlerFactory = this.handlerFactories.getAt(i);
-                var result: IBindableHandler = factory.createHandler(options, bindable, context);
+                var result: IBindableHandler = factory.createHandler(options, bindable, context, commandHost);
                 if (result) {
                     return result;
                 }
@@ -114,6 +114,6 @@ module JohnSmith.Binding {
     JohnSmith.Common.JS.ioc.register("bindingManager", bindingManager);
 
     JohnSmith.Common.JS.bind = function(bindable: any): JohnSmith.Binding.BindingConfig {
-        return new BindingConfig(bindingManager, bindable, null);
+        return new BindingConfig(bindingManager, bindable, null, Common.JS);
     }
 }

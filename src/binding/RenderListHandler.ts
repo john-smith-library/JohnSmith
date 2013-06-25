@@ -174,7 +174,7 @@ module JohnSmith.Binding {
             this._mapper = mapper;
         }
 
-        public createHandler(handlerData: any, bindable:IBindable, context: Common.IElement): IBindableHandler {
+        public createHandler(handlerData: any, bindable:IBindable, context: Common.IElement, commandHost:Command.ICommandHost): IBindableHandler {
             if (!handlerData) {
                 return null;
             }
@@ -195,7 +195,7 @@ module JohnSmith.Binding {
             }
 
             this.fillContentDestination(options, context);
-            this.fillRenderer(options);
+            this.fillRenderer(options, commandHost, bindable);
 
             if (!options.mapper) {
                 options.mapper = this._mapper;

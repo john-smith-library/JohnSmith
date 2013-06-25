@@ -16,6 +16,10 @@ module JohnSmith.Command {
         causeData: any[];
     }
 
+    export interface ICommandHost {
+        on(...causeArguments: any[]): CommandConfig;
+    }
+
     export interface ICommandArgumentsFetcher {
         fetch(target:Common.IElement): any[];
     }

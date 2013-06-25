@@ -75,7 +75,7 @@ module JohnSmith.Binding {
             }
         }
 
-        public fillRenderer(options:RenderHandlerOptions){
+        public fillRenderer(options:RenderHandlerOptions, commandHost:Command.ICommandHost, bindable:IBindable){
             if (!options.renderer) {
                 /** try to resolve view first */
                 if (options.view) {
@@ -95,12 +95,12 @@ module JohnSmith.Binding {
                         options.formatter =  new DefaultFormatter();
                     }
 
-                    options.renderer = this.getRenderer(options);
+                    options.renderer = this.getRenderer(options, commandHost, bindable);
                 }
             }
         }
 
-        private getRenderer(options:RenderHandlerOptions) : IValueRenderer{
+        private getRenderer(options:RenderHandlerOptions, commandHost:Command.ICommandHost, bindable:IBindable) : IValueRenderer{
             var fetcher:Fetchers.IFetcher = null;
 
             if (options.fetch) {
@@ -113,6 +113,19 @@ module JohnSmith.Binding {
             }
 
             if (fetcher) {
+                var command = null;
+                var context = null;
+
+                var bindableObject: IChangeable = <IChangeable> bindable;
+                if (bindableObject.setValue){
+                    command = bindableObject.setValue;
+                    context = bindableObject;
+                }
+
+                if (command) {
+                    commandHost.on(options.to, "change").do(command, context);
+                }
+
                 return new FetcherToRendererAdapter(fetcher);
             }
 
@@ -121,10 +134,6 @@ module JohnSmith.Binding {
                     return new TextRenderer(options.formatter);
                 case Common.ValueType.html:
                     return new HtmlRenderer(options.formatter);
-//                case Common.ValueType.inputValue:
-//                    return new InputValueRenderer(options.formatter);
-//                case Common.ValueType.checkedAttribute:
-//                    return new CheckedAttributeRenderer();
                 case Common.ValueType.unknown:
                     return new ResolvableMarkupRenderer(options.formatter, this._markupResolver);
                 default:
@@ -159,7 +168,7 @@ module JohnSmith.Binding {
             super(destinationFactory, markupResolver, viewFactory, fetcherFactory);
         }
 
-        public createHandler(handlerData: any, bindable:IBindable, context: Common.IElement): IBindableHandler {
+        public createHandler(handlerData: any, bindable:IBindable, context: Common.IElement, commandHost:Command.ICommandHost): IBindableHandler {
             if (!handlerData) {
                 return null;
             }
@@ -180,7 +189,7 @@ module JohnSmith.Binding {
             }
 
             this.fillContentDestination(options, context);
-            this.fillRenderer(options);
+            this.fillRenderer(options, commandHost, bindable);
 
             var handler = new RenderValueHandler(
                 options.contentDestination,

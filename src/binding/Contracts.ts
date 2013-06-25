@@ -1,4 +1,5 @@
 /// <reference path="../Common.ts"/>
+/// <reference path="../command/Contracts.ts"/>
 
 module JohnSmith.Binding {
     /////////////////////////////////
@@ -25,6 +26,10 @@ module JohnSmith.Binding {
         removeListener: (listener: IBindableListener) => void;
     }
 
+    export interface IChangeable {
+        setValue?: (value: any) => void;
+    }
+
     // transforms any object to bindable value
     export interface IBindableFactory
     {
@@ -39,13 +44,14 @@ module JohnSmith.Binding {
 
     // transforms any object to bindable handler
     export interface IHandlerFactory {
-        createHandler: (options: any, bindable:IBindable, context: JohnSmith.Common.IElement) => IBindableHandler;
+        createHandler: (options: any, bindable:IBindable, context: JohnSmith.Common.IElement, commandHost: Command.ICommandHost) => IBindableHandler;
     }
 
     export interface IBindingData {
         bindableData: any;
         context: JohnSmith.Common.IElement;
         handlerData: any[];
+        commandHost: Command.ICommandHost;
     }
 
     // stores a combination of bindable and handler
@@ -87,18 +93,25 @@ module JohnSmith.Binding {
         private manager: IBindableManager;
         private bindable: any;
         private context: JohnSmith.Common.IElement;
+        private commandHost: Command.ICommandHost;
 
-        constructor(manager: IBindableManager, bindable: any, context: JohnSmith.Common.IElement) {
+        constructor(
+            manager: IBindableManager,
+            bindable: any,
+            context: JohnSmith.Common.IElement,
+            commandHost: Command.ICommandHost) {
             this.manager = manager;
             this.bindable = bindable;
             this.context = context;
+            this.commandHost = commandHost;
         }
 
         public to(...handler: any[]):BindingConfig {
             this.manager.bind({
                 bindableData: this.bindable,
                 handlerData: handler,
-                context: this.context
+                context: this.context,
+                commandHost: this.commandHost
             }).init();
             return this;
         }

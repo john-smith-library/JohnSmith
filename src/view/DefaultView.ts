@@ -10,7 +10,7 @@ module JohnSmith.View {
         viewModel: any;
     }
 
-    export class DefaultView implements IView {
+    export class DefaultView implements IView, Command.ICommandHost {
         /** Read only fields */
         private elementFactory: Common.IElementFactory;
         private bindableManager: Binding.IBindableManager;
@@ -94,11 +94,11 @@ module JohnSmith.View {
             return new Binding.BindingConfig(
                 this.bindableManager,
                 bindable,
-                this.rootElement
-            )
+                this.rootElement,
+                this);
         }
 
-        public on(...causeArguments: any[]){
+        public on(...causeArguments: any[]): Command.CommandConfig {
             return new Command.CommandConfig(
                 causeArguments,
                 this.commandManager,

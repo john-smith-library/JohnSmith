@@ -30,28 +30,20 @@ testCase.prototype.testTextarea_AutodetectFormField_ShouldChangeValue = function
 
 testCase.prototype.testCheckbox_ValueTypeIsFormField_ShouldChangeValue = function(){
     var foo = js.bindableValue();
-
     js.bind(foo).to("#checkbox", { fetch: "checkedAttribute" });
-
-    foo.setValue(true);
-    console.log($("#checkbox").parent().html());
-    assertTrue("Checkbox is checked", $("#checkbox").is(':checked'));
-
-    foo.setValue(false);
-    console.log($("#checkbox").parent().html());
-    assertFalse("Checkbox is checked", $("#checkbox").is(':checked'));
+    this.assertCheckbox(foo);
 };
 
 testCase.prototype.testCheckbox_AutodetectFormField_ShouldChangeValue = function(){
     var foo = js.bindableValue();
-
     js.bind(foo).to("#checkbox");
+    this.assertCheckbox(foo);
+};
 
+testCase.prototype.assertCheckbox = function(foo){
     foo.setValue(true);
-    console.log($("#checkbox").parent().html());
     assertTrue("Checkbox is checked", $("#checkbox").is(':checked'));
 
     foo.setValue(false);
-    console.log($("#checkbox").parent().html());
     assertFalse("Checkbox is checked", $("#checkbox").is(':checked'));
-};
+}
