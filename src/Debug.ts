@@ -2,6 +2,7 @@
 /// <reference path="view/Contracts.ts"/>
 /// <reference path="view/Integration.ts"/>
 /// <reference path="JQuery.ts"/>
+/// <reference path="../libs/jquery.d.ts"/>
 
 // Replace no-op logger with console-based implementation
 JohnSmith.Common.log = {
@@ -26,8 +27,6 @@ JohnSmith.Common.log = {
         } catch (Error) {}
     }
 }
-
-declare var $;
 
 var log = JohnSmith.Common.log;
 
