@@ -53,7 +53,7 @@ module JohnSmith.JQuery {
 
         public getHtml() : string {
             return this.target.html();
-        };
+        }
 
         public getNodeName(): string {
             if (this.target.length == 1) {
@@ -70,7 +70,7 @@ module JohnSmith.JQuery {
             }
 
             return new JQueryElement(result);
-        };
+        }
 
         public remove(): void {
             this.target.remove();
