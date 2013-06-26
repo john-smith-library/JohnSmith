@@ -46,25 +46,6 @@ module JohnSmith.Command {
         }
     }
 
-//    // todo [OBSOLETE]
-//    class ValueCommandArgumentFetcher implements ICommandArgumentsFetcher {
-//        public fetch(target:Common.IElement): any[] {
-//            return [target.getValue()];
-//        }
-//    }
-//
-//    // todo [OBSOLETE]
-//    class CheckedAttributeArgumentFetcher implements ICommandArgumentsFetcher {
-//        public fetch(target:Common.IElement): any[] {
-//            var isChecked = false;
-//            if (target.getAttribute("checked")){
-//                isChecked = true;
-//            }
-//
-//            return [isChecked];
-//        }
-//    }
-
     interface CommandCauseOptions {
         to?: string;
         event?: string;
@@ -138,17 +119,7 @@ module JohnSmith.Command {
                 if (fetcher) {
                     options.argumentsFetcher = new FetcherToArgumentFetcherAdapter(fetcher);
                 }
-
-//                if (options.fetch === "value") {
-//                    options.argumentsFetcher = new ValueCommandArgumentFetcher();
-//                } else if (options.fetch === "checkedAttribute") {
-//                    options.argumentsFetcher = new CheckedAttributeArgumentFetcher();
-//                } else {
-//                    options.argumentsFetcher = null;
-//                }
             }
-
-
 
             return new EventCommandCause(target, options.event, commandContext, options.argumentsFetcher);
         }

@@ -113,17 +113,20 @@ module JohnSmith.Binding {
             }
 
             if (fetcher) {
-                var command = null;
-                var context = null;
+                if (options.bidirectional !== false){
+                    var command = options.command;
+                    var context = options.commandContext;
+                    var event = options.event || "change";
 
-                var bindableObject: IChangeable = <IChangeable> bindable;
-                if (bindableObject.setValue){
-                    command = bindableObject.setValue;
-                    context = bindableObject;
-                }
+                    var bindableObject: IChangeable = <IChangeable> bindable;
+                    if((!command) && bindableObject.setValue) {
+                        command = bindableObject.setValue;
+                        context = bindableObject;
+                    }
 
-                if (command) {
-                    commandHost.on(options.to, "change").do(command, context);
+                    if (command) {
+                        commandHost.on(options.to, event).do(command, context);
+                    }
                 }
 
                 return new FetcherToRendererAdapter(fetcher);

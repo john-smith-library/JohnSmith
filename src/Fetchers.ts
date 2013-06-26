@@ -1,6 +1,8 @@
 /// <reference path="Common.ts"/>
 
 module JohnSmith.Fetchers {
+    import common = JohnSmith.Common;
+
     export class FetcherType {
         public static Value: string = "value";
         public static CheckedAttribute: string = "checkedAttribute";
@@ -18,7 +20,7 @@ module JohnSmith.Fetchers {
     }
 
     class ValueFetcher implements IFetcher {
-        public isSuitableFor(element: Common.IElement): bool {
+        public isSuitableFor(element: common.IElement): bool {
             var nodeName = element.getNodeName();
             if (nodeName) {
                 nodeName = nodeName.toUpperCase();

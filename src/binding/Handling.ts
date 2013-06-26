@@ -18,6 +18,11 @@ module JohnSmith.Binding {
         type?: string;
         to?: string;
         encode: bool;
+
+        bidirectional?: bool;
+        command?: any;
+        commandContext?: any;
+        event?: string;
     }
 
     export interface RenderListOptions extends RenderHandlerOptions {

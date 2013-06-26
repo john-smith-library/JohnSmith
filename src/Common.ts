@@ -215,12 +215,6 @@ module JohnSmith.Common {
         /** The value contains plain text */
         public static text = "text";
 
-        /** The value contains form field */
-        public static inputValue = "inputValue";
-
-        /** The value contains true or false  */
-        public static checkedAttribute = "checkedAttribute";
-
         /** The value contains prepared html */
         public static html = "html";
 
