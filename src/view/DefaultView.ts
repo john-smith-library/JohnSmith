@@ -24,6 +24,8 @@ module JohnSmith.View {
         /** Regular fields */
         private children: IChildView[];
         private rootElement: JohnSmith.Common.IElement;
+        private bindings: Binding.BindingConfig[];
+        private commands: Command.CommandConfig[];
 
         constructor (
             bindableManager: Binding.IBindableManager,
@@ -43,6 +45,9 @@ module JohnSmith.View {
             this.eventBus = eventBus;
             this.viewFactory = viewFactory;
             this.markupResolver = markupResolver;
+
+            this.bindings = [];
+            this.commands = [];
         }
 
         public addChild(destination:any, child:IView, viewModel: any){
@@ -91,19 +96,27 @@ module JohnSmith.View {
         }
 
         public bind(bindable: any): Binding.BindingConfig {
-            return new Binding.BindingConfig(
+            var binding = new Binding.BindingConfig(
                 this.bindableManager,
                 bindable,
                 this.rootElement,
                 this);
+
+            this.bindings.push(binding);
+
+            return  binding;
         }
 
         public on(...causeArguments: any[]): Command.CommandConfig {
-            return new Command.CommandConfig(
+            var commandConfig = new Command.CommandConfig(
                 causeArguments,
                 this.commandManager,
                 this.getRootElement(),
                 this.viewModel);
+
+            this.commands.push(commandConfig);
+
+            return  commandConfig;
         }
 
         public getRootElement() : JohnSmith.Common.IElement {
@@ -111,11 +124,18 @@ module JohnSmith.View {
         }
 
         public dispose(): void {
-            // todo implement
             if (this.hasChildren()){
                 for (var i = 0; i < this.children.length; i++){
                     this.children[i].child.dispose();
                 }
+            }
+
+            for (var i = 0; i < this.bindings.length; i++) {
+                this.bindings[i].dispose();
+            }
+
+            for (var i = 0; i < this.commands.length; i++) {
+                this.commands[i].dispose();
             }
         }
 

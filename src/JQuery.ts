@@ -101,10 +101,17 @@ module JohnSmith.JQuery {
         }
 
         public attachEventHandler(event: string, callback: (target:Common.IElement) => void){
-            this.target.on(event, function(){
+            var actualCallback = function () {
                 callback(new JQueryElement($(this)));
                 return false;
-            });
+            };
+
+            this.target.on(event, actualCallback);
+            return actualCallback;
+        }
+
+        public detachEventHandler(event: string, handler: any) {
+            this.target.off(event, handler);
         }
 
         public getValue() : string {

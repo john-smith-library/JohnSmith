@@ -89,11 +89,12 @@ module JohnSmith.Binding {
         bind: (data: IBindingData) => BindingWire;
     }
 
-    export class BindingConfig {
+    export class BindingConfig implements Common.IDisposable {
         private manager: IBindableManager;
         private bindable: any;
         private context: JohnSmith.Common.IElement;
         private commandHost: Command.ICommandHost;
+        private wires: BindingWire[];
 
         constructor(
             manager: IBindableManager,
@@ -104,16 +105,25 @@ module JohnSmith.Binding {
             this.bindable = bindable;
             this.context = context;
             this.commandHost = commandHost;
+            this.wires = [];
         }
 
         public to(...handler: any[]):BindingConfig {
-            this.manager.bind({
+            var wire = this.manager.bind({
                 bindableData: this.bindable,
                 handlerData: handler,
                 context: this.context,
                 commandHost: this.commandHost
-            }).init();
+            });
+            this.wires.push(wire);
+            wire.init();
             return this;
+        }
+
+        public dispose(){
+            for (var i = 0; i < this.wires.length; i++) {
+                this.wires[i].dispose();
+            }
         }
     }
 }

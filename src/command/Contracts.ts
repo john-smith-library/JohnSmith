@@ -42,28 +42,39 @@ module JohnSmith.Command {
         }
     }
 
-    export class CommandConfig {
+    export class CommandConfig implements Common.IDisposable {
         private _causeData: any[];
         private _commandManager: ICommandManager;
         private _context: Common.IElement;
         private _commandContext: any;
+        private _wires: CommandWire[];
 
         constructor(causeData: any[], commandManager: ICommandManager, context: Common.IElement, commandContext?: any){
             this._causeData = causeData;
             this._commandManager = commandManager;
             this._context = context;
             this._commandContext = commandContext;
+            this._wires = [];
         }
 
         public do(command: any, commandContext?: any): CommandConfig {
-            this._commandManager.setUpBinding({
+            var wire = this._commandManager.setUpBinding({
                 command: command,
                 context: this._context,
                 causeData: this._causeData,
                 commandContext: commandContext || this._commandContext || null
-            }).init();
+            });
 
+            this._wires.push(wire);
+
+            wire.init();
             return this;
+        }
+
+        public dispose(){
+            for (var i = 0; i < this._wires.length; i++) {
+                this._wires[i].dispose();
+            }
         }
     }
 

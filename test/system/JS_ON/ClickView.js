@@ -15,7 +15,7 @@ var View = function(){
     this.init = function(viewModel){
         this.on("a", "click").do(viewModel.send);
     };
-}
+};
 
 testCase.prototype.doClick = function(){
     $("#send").click();
@@ -31,7 +31,7 @@ testCase.prototype.test_OnClickDoFunction_ShouldCallCallback = function(){
     this.renderView(View, viewModel);
     this.doClick();
 
-    assertTrue("Callback was called", viewModel.send.calledOnce);
+    assertTrue("Callback was called", viewModel.send.called);
 };
 
 testCase.prototype.test_OnClickDoFunction_ShouldCallOnViewModel = function(){

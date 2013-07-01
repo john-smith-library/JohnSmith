@@ -9,7 +9,7 @@ JohnSmith.Common.log = {
     info: function(args) : void {
         try
         {
-            console.log.apply(console, arguments);
+            //console.log.apply(console, arguments);
         } catch (Error) {}
     },
 

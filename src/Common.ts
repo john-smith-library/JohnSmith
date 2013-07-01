@@ -244,7 +244,8 @@ module JohnSmith.Common {
         getAttribute(attribute: string);
         setAttribute(attribute: string, value: string);
 
-        attachEventHandler(event: string, callback: (target:IElement) => void);
+        attachEventHandler(event: string, callback: (target:IElement) => void) : any;
+        detachEventHandler(event: string, handler: any);
         // [OBSOLETE]
         attachClickHandler: (callback: () => void) => void;
     }

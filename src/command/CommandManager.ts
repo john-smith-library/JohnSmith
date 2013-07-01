@@ -8,6 +8,7 @@ module JohnSmith.Command {
         private _event:string;
         private _commandContext:any;
         private _argumentsFetcher: ICommandArgumentsFetcher;
+        private _handlerRef: any;
 
         constructor(targetElement:Common.IElement, event:string, commandContext:any, argumentsFetcher: ICommandArgumentsFetcher){
             this._targetElement = targetElement;
@@ -20,7 +21,7 @@ module JohnSmith.Command {
             var context = this._commandContext;
             var argumentsFetcher = this._argumentsFetcher;
 
-            this._targetElement.attachEventHandler(
+            this._handlerRef = this._targetElement.attachEventHandler(
                 this._event,
                 function(target: Common.IElement) {
                     var commandArguments = argumentsFetcher == null ?
@@ -31,6 +32,7 @@ module JohnSmith.Command {
         }
 
         public dispose(): void {
+            this._targetElement.detachEventHandler(this._event, this._handlerRef);
         }
     }
 

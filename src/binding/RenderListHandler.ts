@@ -51,7 +51,6 @@ module JohnSmith.Binding {
                     element.removeClass("selected");
                 }
             }
-
         }
     }
 
