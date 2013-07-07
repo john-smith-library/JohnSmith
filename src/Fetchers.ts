@@ -62,12 +62,12 @@ module JohnSmith.Fetchers {
         }
 
         public valueToElement(value: any, element: Common.IElement): void {
-            element.setAttribute("checked", value);
+            element.setProperty("checked", value);
         }
 
         public valueFromElement(element: Common.IElement): any {
             var isChecked = false;
-            if (element.getAttribute("checked")){
+            if (element.getProperty("checked")){
                 isChecked = true;
             }
 

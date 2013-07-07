@@ -28,3 +28,14 @@ testCase.prototype.test_OnChangeFetchChecked_ShouldPassValueToCallback = functio
     this.doChange(false);
     assertTrue("False passed to callback", callback.calledWithExactly(false));
 };
+
+testCase.prototype.test_OnChangeAutodetect_ShouldPassValueToCallback = function(){
+    var callback = sinon.spy();
+    js.on("#checkbox", "change").do(callback);
+
+    this.doChange(true);
+    assertTrue("True passed to callback", callback.calledWithExactly(true));
+
+    this.doChange(false);
+    assertTrue("False passed to callback", callback.calledWithExactly(false));
+};

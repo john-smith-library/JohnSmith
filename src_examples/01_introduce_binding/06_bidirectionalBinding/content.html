@@ -1,0 +1,38 @@
+<p>
+    This example demonstrates bi-directional binding usage.
+    By default John Smith makes any binding to form elements bidirectional.
+    If you wand input value wire to be unidirectional, pass this options to binding config:
+</p>
+
+<pre><code class="javascript">{ bidirectional: false }</code></pre>
+
+<p>Note that for <code>lastName</code> custom event type is set:</p>
+
+<pre><code class="javascript">{ event: "keyup" }</code></pre>
+
+<p>Because of this option Last Name change occur on key up instead of field leave.</p>
+
+<div class="alert alert-block alert-error">
+    <p>
+        <strong>John Smith does not really like bi-directional binding.</strong>
+        Such kind of binding can easily lead you to bad design.
+    </p>
+
+    <p>
+        Nevertheless, bi-directional wires are handy when you work with form elements (like input, textearea etc).
+        But make sure you never never never listen to bindable value changes in <strong>View Model</strong> code.
+        Bindable notifications are for View only! Not for View Model! If you feel you need to listen to changes in View Model,
+        this probably indicates that bi-directional binding should be changed to regular binding plus regular event handler.
+    </p>
+</div>
+
+<div class="alert alert-block">
+    <p>Note how <code>to</code> method calls chained:</p>
+
+    <pre><code class="javascript">js.bind(/*...*/)
+        .to(/* something */)
+        // ...more 'to' cals can go here...
+        .to(/* something */);</code></pre>
+
+    <p>You can use these chains any time you need to bind a single variable to multiple handlers.</p>
+</div>

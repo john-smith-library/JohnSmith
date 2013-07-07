@@ -129,6 +129,14 @@ module JohnSmith.JQuery {
         public setAttribute(attribute: string, value: string) {
             this._target.attr(attribute, value);
         }
+
+        public getProperty(property: string):any {
+            return this._target.prop(property);
+        }
+
+        public setProperty(property: string, value: any) {
+            this._target.prop(property, value);
+        }
     }
 
     export class JQueryMarkupResolver implements JohnSmith.Common.IMarkupResolver {
