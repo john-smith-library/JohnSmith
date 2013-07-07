@@ -7,10 +7,12 @@ module JohnSmith.Binding {
         return JohnSmith.Common.log;
     }
 
-    // default implementation of binding manager
+    /**
+     * Default implementation of binding manager.
+     */
     export class DefaultBindingManager extends Common.ArgumentProcessorsBasedHandler implements IBindableManager {
-        private handlerFactories: JohnSmith.Common.ArrayList;
-        private bindableFactories: JohnSmith.Common.ArrayList;
+        private _handlerFactories: JohnSmith.Common.ArrayList;
+        private _bindableFactories: JohnSmith.Common.ArrayList;
 
         constructor(
             bindableFactories:  JohnSmith.Common.ArrayList,
@@ -19,8 +21,8 @@ module JohnSmith.Binding {
 
             super(handlerArgumentProcessors);
 
-            this.bindableFactories = bindableFactories;
-            this.handlerFactories = handlerFactories;
+            this._bindableFactories = bindableFactories;
+            this._handlerFactories = handlerFactories;
         }
 
         public bind(data:IBindingData): BindingWire {
@@ -37,8 +39,8 @@ module JohnSmith.Binding {
         }
 
         private getBindable(bindableObject: any): IBindable {
-            for (var i = 0; i < this.bindableFactories.count(); i++) {
-                var factory: JohnSmith.Binding.IBindableFactory = this.bindableFactories.getAt(i);
+            for (var i = 0; i < this._bindableFactories.count(); i++) {
+                var factory: JohnSmith.Binding.IBindableFactory = this._bindableFactories.getAt(i);
                 var result: IBindable = factory.createBindable(bindableObject);
                 if (result != null) {
                     return result;
@@ -50,8 +52,8 @@ module JohnSmith.Binding {
 
         private getHandler(handlerData: any[], bindable:IBindable, context: JohnSmith.Common.IElement, commandHost:Command.ICommandHost): IBindableHandler {
             var options = this.processArguments(handlerData, context);
-            for (var i = 0; i < this.handlerFactories.count(); i++) {
-                var factory: IHandlerFactory = this.handlerFactories.getAt(i);
+            for (var i = 0; i < this._handlerFactories.count(); i++) {
+                var factory: IHandlerFactory = this._handlerFactories.getAt(i);
                 var result: IBindableHandler = factory.createHandler(options, bindable, context, commandHost);
                 if (result) {
                     return result;

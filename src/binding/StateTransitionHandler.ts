@@ -9,12 +9,12 @@ module JohnSmith.Binding {
     }
 
     export class StateTransitionHandler implements IBindableHandler, IBindableListener {
-        private items:JohnSmith.Common.IList;
+        private _items:JohnSmith.Common.IList;
 
         constructor (...args:StateTransitionHandlerItem[]){
-            this.items = new JohnSmith.Common.ArrayList();
+            this._items = new JohnSmith.Common.ArrayList();
             for (var i = 0; i < args.length; i++){
-                this.items.add(args[i])
+                this._items.add(args[i])
             }
         }
 
@@ -30,8 +30,8 @@ module JohnSmith.Binding {
         }
 
         public stateChanged(oldState: string, newState: string) {
-            for (var i = 0; i < this.items.count(); i++){
-                var item:StateTransitionHandlerItem = this.items.getAt(i);
+            for (var i = 0; i < this._items.count(); i++){
+                var item:StateTransitionHandlerItem = this._items.getAt(i);
                 if (item.isMatched(oldState, newState)){
                     item.handle(oldState, newState);
                 }
@@ -39,7 +39,7 @@ module JohnSmith.Binding {
         }
 
         public dispose():void {
-            this.items.clear();
+            this._items.clear();
         }
     }
 }

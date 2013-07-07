@@ -9,15 +9,15 @@
 
 module JohnSmith.Binding {
     export class RenderValueHandler implements IBindableHandler, IBindableListener {
-        private contentDestination: JohnSmith.Common.IElement;
-        private valueRenderer: IValueRenderer;
+        private _contentDestination: JohnSmith.Common.IElement;
+        private _valueRenderer: IValueRenderer;
 
         constructor(
             contentDestination: JohnSmith.Common.IElement,
             renderer:IValueRenderer) {
 
-            this.contentDestination = contentDestination;
-            this.valueRenderer = renderer;
+            this._contentDestination = contentDestination;
+            this._valueRenderer = renderer;
         }
 
         public wireWith(bindable: IBindable) {
@@ -37,15 +37,15 @@ module JohnSmith.Binding {
         }
 
         public dispose(): void {
-            if (this.valueRenderer.dispose) {
-                this.valueRenderer.dispose();
+            if (this._valueRenderer.dispose) {
+                this._valueRenderer.dispose();
             }
         }
 
         private doRender(value: any):void {
-            this.contentDestination.empty();
+            this._contentDestination.empty();
             if (value !== null && value !== undefined) {
-                this.valueRenderer.render(value, this.contentDestination);
+                this._valueRenderer.render(value, this._contentDestination);
             }
         }
     }

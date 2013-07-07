@@ -56,31 +56,31 @@ module JohnSmith.Binding {
 
     // stores a combination of bindable and handler
     export class BindingWire implements JohnSmith.Common.IDisposable {
-        private bindable: IBindable;
-        private handler: IBindableHandler;
+        private _bindable: IBindable;
+        private _handler: IBindableHandler;
 
         constructor(bindable: IBindable, handler: IBindableHandler) {
-            this.bindable = bindable;
-            this.handler = handler;
+            this._bindable = bindable;
+            this._handler = handler;
         }
 
         // initializes the wire
         public init() {
-            this.handler.wireWith(this.bindable);
+            this._handler.wireWith(this._bindable);
         }
 
         // disposes the wire
         public dispose() {
-            this.handler.unwireWith(this.bindable);
-            this.handler.dispose();
+            this._handler.unwireWith(this._bindable);
+            this._handler.dispose();
         }
 
         public getBindable():IBindable {
-            return this.bindable;
+            return this._bindable;
         }
 
         public getHandler():IBindableHandler {
-            return this.handler;
+            return this._handler;
         }
     }
 
@@ -90,39 +90,39 @@ module JohnSmith.Binding {
     }
 
     export class BindingConfig implements Common.IDisposable {
-        private manager: IBindableManager;
-        private bindable: any;
-        private context: JohnSmith.Common.IElement;
-        private commandHost: Command.ICommandHost;
-        private wires: BindingWire[];
+        private _manager: IBindableManager;
+        private _bindable: any;
+        private _context: JohnSmith.Common.IElement;
+        private _commandHost: Command.ICommandHost;
+        private _wires: BindingWire[];
 
         constructor(
             manager: IBindableManager,
             bindable: any,
             context: JohnSmith.Common.IElement,
             commandHost: Command.ICommandHost) {
-            this.manager = manager;
-            this.bindable = bindable;
-            this.context = context;
-            this.commandHost = commandHost;
-            this.wires = [];
+            this._manager = manager;
+            this._bindable = bindable;
+            this._context = context;
+            this._commandHost = commandHost;
+            this._wires = [];
         }
 
         public to(...handler: any[]):BindingConfig {
-            var wire = this.manager.bind({
-                bindableData: this.bindable,
+            var wire = this._manager.bind({
+                bindableData: this._bindable,
                 handlerData: handler,
-                context: this.context,
-                commandHost: this.commandHost
+                context: this._context,
+                commandHost: this._commandHost
             });
-            this.wires.push(wire);
+            this._wires.push(wire);
             wire.init();
             return this;
         }
 
         public dispose(){
-            for (var i = 0; i < this.wires.length; i++) {
-                this.wires[i].dispose();
+            for (var i = 0; i < this._wires.length; i++) {
+                this._wires[i].dispose();
             }
         }
     }

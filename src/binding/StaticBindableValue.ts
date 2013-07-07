@@ -2,14 +2,14 @@
 
 module JohnSmith.Binding {
     export class StaticBindableValue implements IBindable {
-        private value: any;
+        private _value: any;
 
         constructor(value:any) {
-            this.value = value;
+            this._value = value;
         }
 
         public getValue(): any {
-            return this.value;
+            return this._value;
         }
 
         public getState() {

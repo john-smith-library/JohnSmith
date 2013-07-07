@@ -5,10 +5,10 @@ module JohnSmith.Binding {
     var CALLBACK_HANDLER_KEY = "callback";
 
     export class CallbackHandler implements IBindableHandler, IBindableListener {
-        private callback: (value:any, oldValue:any, changeType: DataChangeReason) => void;
+        private _callback: (value:any, oldValue:any, changeType: DataChangeReason) => void;
 
         constructor(callback: (value:any, oldValue:any, changeType: DataChangeReason) => void){
-            this.callback = callback;
+            this._callback = callback;
         }
 
         public wireWith(bindable: IBindable) {
@@ -24,7 +24,7 @@ module JohnSmith.Binding {
             // so 'native' functions like 'alert' would work correctly
             var context = window;
 
-            this.callback.call(context, newValue, oldValue, changeType);
+            this._callback.call(context, newValue, oldValue, changeType);
         }
 
         public dispose(): void {

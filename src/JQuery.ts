@@ -9,18 +9,18 @@
 
 module JohnSmith.JQuery {
     class JQueryElement implements JohnSmith.Common.IElement {
-        private target:any;
+        private _target:any;
 
         constructor (target:any){
-            this.target = target;
+            this._target = target;
         }
 
         public isEmpty(): bool{
-            return this.target.length == 0;
+            return this._target.length == 0;
         }
 
         public empty(): void{
-            this.target.empty();
+            this._target.empty();
         }
 
         public appendHtml(html:string) : JohnSmith.Common.IElement{
@@ -34,7 +34,7 @@ module JohnSmith.JQuery {
 
             var parsedHtml = $($.parseHTML(html));
 
-            this.target.append(parsedHtml);
+            this._target.append(parsedHtml);
             return new JQueryElement(parsedHtml);
         }
 
@@ -52,52 +52,52 @@ module JohnSmith.JQuery {
         }
 
         public getHtml() : string {
-            return this.target.html();
+            return this._target.html();
         }
 
         public getNodeName(): string {
-            if (this.target.length == 1) {
-                return this.target[0].nodeName;
+            if (this._target.length == 1) {
+                return this._target[0].nodeName;
             }
 
             return null
         }
 
         public findRelative(query:string) : JohnSmith.Common.IElement {
-            var result = this.target.filter(query);
+            var result = this._target.filter(query);
             if (result.length == 0) {
-                result = this.target.find(query);
+                result = this._target.find(query);
             }
 
             return new JQueryElement(result);
         }
 
         public remove(): void {
-            this.target.remove();
+            this._target.remove();
         }
 
         public getTarget(): any {
-            return this.target;
+            return this._target;
         }
 
         public setText(text:string) {
-            this.target.text(text);
+            this._target.text(text);
         }
 
         public setHtml(html:string) {
-            this.target.html(html);
+            this._target.html(html);
         }
 
         public addClass(className: string) : void {
-            this.target.addClass(className);
+            this._target.addClass(className);
         }
 
         public removeClass(className: string) : void {
-            this.target.removeClass(className);
+            this._target.removeClass(className);
         }
 
         public attachClickHandler(callback: () => void) : void {
-            this.target.click(callback);
+            this._target.click(callback);
         }
 
         public attachEventHandler(event: string, callback: (target:Common.IElement) => void){
@@ -106,28 +106,28 @@ module JohnSmith.JQuery {
                 return false;
             };
 
-            this.target.on(event, actualCallback);
+            this._target.on(event, actualCallback);
             return actualCallback;
         }
 
         public detachEventHandler(event: string, handler: any) {
-            this.target.off(event, handler);
+            this._target.off(event, handler);
         }
 
         public getValue() : string {
-            return this.target.val();
+            return this._target.val();
         }
 
         public setValue(value: string) : string{
-            return this.target.val(value);
+            return this._target.val(value);
         }
 
         public getAttribute(attribute: string) {
-            return this.target.attr(attribute);
+            return this._target.attr(attribute);
         }
 
         public setAttribute(attribute: string, value: string) {
-            this.target.attr(attribute, value);
+            this._target.attr(attribute, value);
         }
     }
 

@@ -100,38 +100,38 @@ module JohnSmith.Common {
     }
 
     export class ArrayList implements IList {
-        private items: any;
+        private _items: any;
 
         constructor() {
-            this.items = [];
+            this._items = [];
         }
 
         public getAt(index: number): any {
-            return this.items[index]
+            return this._items[index]
         }
 
         public setAt(index: number, item: any): void {
-            this.items[index] = item;
+            this._items[index] = item;
         }
 
         public removeAt(index: number): void {
-            this.items.splice(index, 1);
+            this._items.splice(index, 1);
         }
 
         public insertAt(index: number, item: any): void {
-            this.items.splice(index, 0, item);
+            this._items.splice(index, 0, item);
         }
 
         public add(item: any): void {
-            this.items.push(item);
+            this._items.push(item);
         }
 
         public count():number {
-            return this.items.length;
+            return this._items.length;
         }
 
         public clear():void {
-            this.items.length = 0;
+            this._items.length = 0;
         }
     }
 
@@ -175,10 +175,10 @@ module JohnSmith.Common {
     }
 
     class DefaultEventBus implements IEventBus {
-        private listeners: IList;
+        private _listeners: IList;
 
         constructor(){
-            this.listeners = new ArrayList();
+            this._listeners = new ArrayList();
         }
 
         public addListener(eventType:string, callback:(data:any) => void):void {
@@ -187,13 +187,13 @@ module JohnSmith.Common {
                 callback: callback
             };
 
-            this.listeners.add(listener);
+            this._listeners.add(listener);
         }
 
         public trigger(eventType:string, data: any) : void {
-            var listenersCount = this.listeners.count();
+            var listenersCount = this._listeners.count();
             for (var i = 0; i < listenersCount; i++) {
-                var listener:IListener = this.listeners.getAt(i);
+                var listener:IListener = this._listeners.getAt(i);
                 if (listener.eventType === eventType) {
                     listener.callback(data);
                 }

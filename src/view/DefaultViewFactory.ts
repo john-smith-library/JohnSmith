@@ -9,11 +9,11 @@ module JohnSmith.View {
      * Default implementation of IViewFactory
      */
     export class DefaultViewFactory implements IViewFactory {
-        private elementFactory:JohnSmith.Common.IElementFactory;
-        private bindableManager:JohnSmith.Binding.IBindableManager;
-        private commandManager: Command.ICommandManager;
-        private eventBus:JohnSmith.Common.IEventBus;
-        private markupResolver:JohnSmith.Common.IMarkupResolver;
+        private _elementFactory:JohnSmith.Common.IElementFactory;
+        private _bindableManager:JohnSmith.Binding.IBindableManager;
+        private _commandManager: Command.ICommandManager;
+        private _eventBus:JohnSmith.Common.IEventBus;
+        private _markupResolver:JohnSmith.Common.IMarkupResolver;
 
         constructor (
             bindableManager:JohnSmith.Binding.IBindableManager,
@@ -22,11 +22,11 @@ module JohnSmith.View {
             eventBus:JohnSmith.Common.IEventBus,
             markupResolver:JohnSmith.Common.IMarkupResolver){
 
-            this.bindableManager = bindableManager;
-            this.commandManager = commandManager;
-            this.elementFactory = elementFactory;
-            this.eventBus = eventBus;
-            this.markupResolver = markupResolver;
+            this._bindableManager = bindableManager;
+            this._commandManager = commandManager;
+            this._elementFactory = elementFactory;
+            this._eventBus = eventBus;
+            this._markupResolver = markupResolver;
         }
 
         public resolve(dataDescriptor: any, viewModel: any) : IView {
@@ -41,14 +41,14 @@ module JohnSmith.View {
 
             if (dataDescriptor.template){
                 return new DefaultView(
-                    this.bindableManager,
-                    this.commandManager,
-                    this.elementFactory,
+                    this._bindableManager,
+                    this._commandManager,
+                    this._elementFactory,
                     <IViewData> dataDescriptor,
                     viewModel,
-                    this.eventBus,
+                    this._eventBus,
                     this,
-                    this.markupResolver);
+                    this._markupResolver);
             }
 
             if (dataDescriptor.renderTo && dataDescriptor.getRootElement){

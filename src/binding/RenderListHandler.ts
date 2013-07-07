@@ -55,9 +55,9 @@ module JohnSmith.Binding {
     }
 
     export class RenderListHandler implements IBindableHandler, IBindableListener {
-        private contentDestination: JohnSmith.Common.IElement;
-        private valueRenderer: IValueRenderer;
-        private mapper:IValueToElementMapper;
+        private _contentDestination: JohnSmith.Common.IElement;
+        private _valueRenderer: IValueRenderer;
+        private _mapper:IValueToElementMapper;
 
         constructor(
             contentDestination: JohnSmith.Common.IElement,
@@ -65,9 +65,9 @@ module JohnSmith.Binding {
             mapper:IValueToElementMapper,
             selectionOptions:SelectionOptions) {
 
-            this.contentDestination = contentDestination;
-            this.valueRenderer = renderer;
-            this.mapper = mapper;
+            this._contentDestination = contentDestination;
+            this._valueRenderer = renderer;
+            this._mapper = mapper;
         }
 
         public wireWith(bindable: IBindable) {
@@ -87,8 +87,8 @@ module JohnSmith.Binding {
         }
 
         public dispose(): void {
-            if (this.valueRenderer.dispose) {
-                this.valueRenderer.dispose();
+            if (this._valueRenderer.dispose) {
+                this._valueRenderer.dispose();
             }
         }
 
@@ -98,7 +98,7 @@ module JohnSmith.Binding {
             if (reason == DataChangeReason.remove){
                 for (var i = 0; i < items.length; i++){
                     var item = items[i];
-                    var itemElement = this.mapper.getElementFor(item, this.contentDestination);
+                    var itemElement = this._mapper.getElementFor(item, this._contentDestination);
                     if (itemElement) {
                         itemElement.remove();
                     }
@@ -106,7 +106,7 @@ module JohnSmith.Binding {
             } else if (reason == DataChangeReason.add) {
                 this.appendItems(value);
             } else {
-                this.contentDestination.empty();
+                this._contentDestination.empty();
                 this.appendItems(value);
             }
         }
@@ -118,9 +118,9 @@ module JohnSmith.Binding {
 
             for (var i = 0; i < items.length; i++){
                 var item = items[i];
-                var itemElement = this.valueRenderer.render(item, this.contentDestination);
+                var itemElement = this._valueRenderer.render(item, this._contentDestination);
 
-                this.mapper.attachValueToElement(item, itemElement);
+                this._mapper.attachValueToElement(item, itemElement);
             }
         }
     }

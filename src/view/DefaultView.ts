@@ -12,20 +12,20 @@ module JohnSmith.View {
 
     export class DefaultView implements IView, Command.ICommandHost {
         /** Read only fields */
-        private elementFactory: Common.IElementFactory;
-        private bindableManager: Binding.IBindableManager;
-        private commandManager: Command.ICommandManager;
-        private eventBus: Common.IEventBus;
-        private viewModel:IViewModel;
-        private data:IViewData;
-        private viewFactory:IViewFactory;
-        private markupResolver:Common.IMarkupResolver;
+        private _elementFactory: Common.IElementFactory;
+        private _bindableManager: Binding.IBindableManager;
+        private _commandManager: Command.ICommandManager;
+        private _eventBus: Common.IEventBus;
+        private _viewModel:IViewModel;
+        private _data:IViewData;
+        private _viewFactory:IViewFactory;
+        private _markupResolver:Common.IMarkupResolver;
 
         /** Regular fields */
-        private children: IChildView[];
-        private rootElement: JohnSmith.Common.IElement;
-        private bindings: Binding.BindingConfig[];
-        private commands: Command.CommandConfig[];
+        private _children: IChildView[];
+        private _rootElement: JohnSmith.Common.IElement;
+        private _bindings: Binding.BindingConfig[];
+        private _commands: Command.CommandConfig[];
 
         constructor (
             bindableManager: Binding.IBindableManager,
@@ -37,25 +37,25 @@ module JohnSmith.View {
             viewFactory: IViewFactory,
             markupResolver: Common.IMarkupResolver){
 
-            this.bindableManager = bindableManager;
-            this.commandManager = commandManager;
-            this.elementFactory = elementFactory;
-            this.data = viewData;
-            this.viewModel = viewModel;
-            this.eventBus = eventBus;
-            this.viewFactory = viewFactory;
-            this.markupResolver = markupResolver;
+            this._bindableManager = bindableManager;
+            this._commandManager = commandManager;
+            this._elementFactory = elementFactory;
+            this._data = viewData;
+            this._viewModel = viewModel;
+            this._eventBus = eventBus;
+            this._viewFactory = viewFactory;
+            this._markupResolver = markupResolver;
 
-            this.bindings = [];
-            this.commands = [];
+            this._bindings = [];
+            this._commands = [];
         }
 
         public addChild(destination:any, child:IView, viewModel: any){
             if (!this.hasChildren()) {
-                this.children = [];
+                this._children = [];
             }
 
-            this.children.push({
+            this._children.push({
                 child: child,
                 destination: destination,
                 viewModel: viewModel
@@ -63,46 +63,46 @@ module JohnSmith.View {
         }
 
         public renderTo(destination:any):void {
-            var templateHtml = this.markupResolver.resolve(this.data.template);
+            var templateHtml = this._markupResolver.resolve(this._data.template);
             var destinationElement = typeof destination == "string" ?
-                this.elementFactory.createElement(destination) :
+                this._elementFactory.createElement(destination) :
                 destination;
 
-            this.rootElement = destinationElement.appendHtml(templateHtml);
+            this._rootElement = destinationElement.appendHtml(templateHtml);
 
-            this.eventBus.trigger(
+            this._eventBus.trigger(
                 "viewRendered",
                 {
-                    root: this.rootElement,
+                    root: this._rootElement,
                     view: this
                 });
 
-            if (this.data.init){
-                this.data.init.call(this, this.viewModel);
+            if (this._data.init){
+                this._data.init.call(this, this._viewModel);
             }
 
             if (this.hasChildren()){
-                for (var i = 0; i < this.children.length; i++) {
-                    var childData = this.children[i];
+                for (var i = 0; i < this._children.length; i++) {
+                    var childData = this._children[i];
                     var viewModel = childData.viewModel;
-                    var child = this.viewFactory.resolve(childData.child, viewModel);
-                    child.renderTo(this.rootElement.findRelative(childData.destination));
+                    var child = this._viewFactory.resolve(childData.child, viewModel);
+                    child.renderTo(this._rootElement.findRelative(childData.destination));
                 }
             }
 
-            if (this.viewModel && this.viewModel.resetState){
-                this.viewModel.resetState();
+            if (this._viewModel && this._viewModel.resetState){
+                this._viewModel.resetState();
             }
         }
 
         public bind(bindable: any): Binding.BindingConfig {
             var binding = new Binding.BindingConfig(
-                this.bindableManager,
+                this._bindableManager,
                 bindable,
-                this.rootElement,
+                this._rootElement,
                 this);
 
-            this.bindings.push(binding);
+            this._bindings.push(binding);
 
             return  binding;
         }
@@ -110,37 +110,37 @@ module JohnSmith.View {
         public on(...causeArguments: any[]): Command.CommandConfig {
             var commandConfig = new Command.CommandConfig(
                 causeArguments,
-                this.commandManager,
+                this._commandManager,
                 this.getRootElement(),
-                this.viewModel);
+                this._viewModel);
 
-            this.commands.push(commandConfig);
+            this._commands.push(commandConfig);
 
             return  commandConfig;
         }
 
         public getRootElement() : JohnSmith.Common.IElement {
-            return this.rootElement;
+            return this._rootElement;
         }
 
         public dispose(): void {
             if (this.hasChildren()){
-                for (var i = 0; i < this.children.length; i++){
-                    this.children[i].child.dispose();
+                for (var i = 0; i < this._children.length; i++){
+                    this._children[i].child.dispose();
                 }
             }
 
-            for (var i = 0; i < this.bindings.length; i++) {
-                this.bindings[i].dispose();
+            for (var i = 0; i < this._bindings.length; i++) {
+                this._bindings[i].dispose();
             }
 
-            for (var i = 0; i < this.commands.length; i++) {
-                this.commands[i].dispose();
+            for (var i = 0; i < this._commands.length; i++) {
+                this._commands[i].dispose();
             }
         }
 
         private hasChildren():bool {
-            return this.children != null;
+            return this._children != null;
         }
     }
 }
