@@ -58,7 +58,6 @@ module JohnSmith.Binding {
         private contentDestination: JohnSmith.Common.IElement;
         private valueRenderer: IValueRenderer;
         private mapper:IValueToElementMapper;
-        private selectionOptions:SelectionOptions;
 
         constructor(
             contentDestination: JohnSmith.Common.IElement,
@@ -69,33 +68,11 @@ module JohnSmith.Binding {
             this.contentDestination = contentDestination;
             this.valueRenderer = renderer;
             this.mapper = mapper;
-            this.selectionOptions = selectionOptions;
         }
 
         public wireWith(bindable: IBindable) {
             this.doRender(bindable.getValue(), DataChangeReason.replace)
             bindable.addListener(this);
-
-            if (this.selectionOptions && this.selectionOptions.isSelectable) {
-                if (!this.selectionOptions.selectedItem){
-                    this.selectionOptions.selectedItem =  (<BindableList> bindable).selectedItem();
-                }
-
-                if (!this.selectionOptions.setSelectedCallback){
-                    var handler = this;
-
-                    this.selectionOptions.setSelectedCallback = function(selectedItem: any){
-                        (<BindableValue> handler.selectionOptions.selectedItem).setValue(selectedItem);
-                    }
-                }
-
-                new MarkSelectedHandler(
-                    bindable,
-                    this.contentDestination,
-                    this.valueRenderer,
-                    this.mapper
-                ).wireWith(this.selectionOptions.selectedItem);
-            }
         }
 
         public unwireWith(bindable: IBindable) {
@@ -142,17 +119,6 @@ module JohnSmith.Binding {
             for (var i = 0; i < items.length; i++){
                 var item = items[i];
                 var itemElement = this.valueRenderer.render(item, this.contentDestination);
-
-                if (this.selectionOptions && this.selectionOptions.isSelectable) {
-                    /** Fucking closure */
-                    var callback = (function(handler: RenderListHandler, value: any){
-                        return function(){
-                            handler.selectionOptions.setSelectedCallback(value);
-                        }
-                    })(this, item);
-
-                    itemElement.attachClickHandler(callback);
-                }
 
                 this.mapper.attachValueToElement(item, itemElement);
             }

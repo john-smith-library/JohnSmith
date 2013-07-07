@@ -5,7 +5,6 @@
 module JohnSmith.Binding {
     export class BindableList extends BindableValue implements IBindable {
         private _count: BindableValue;
-        private _selectedItem: BindableValue;
 
         constructor(){
             super();
@@ -57,14 +56,6 @@ module JohnSmith.Binding {
             }
 
             return this._count;
-        }
-
-        public selectedItem():BindableValue {
-            if (!this._selectedItem) {
-                this._selectedItem = new BindableValue();
-            }
-
-            return this._selectedItem;
         }
 
         private reactOnChange(items: any[], reason:DataChangeReason):void{
