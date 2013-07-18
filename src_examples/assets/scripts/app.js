@@ -43,8 +43,6 @@ $(function(){
     var topicViewModel = new TopicViewModel();
     var appViewModel = new AppViewModel();
 
-
-
     $(".topicLink").click(function(e){
         if(e.ctrlKey) {
             return true;
@@ -75,6 +73,9 @@ $(function(){
             $currentTopic.find("#article").hide();
 
             eval(topic.topicData.code);
+
+            $currentTopic.find("#formJs").val(topic.topicData.code);
+            $currentTopic.find("#formHtml").val(topic.topicData.markup);
         } else {
             $currentTopic.find("#example").hide();
             $currentTopic.find("#article").show();

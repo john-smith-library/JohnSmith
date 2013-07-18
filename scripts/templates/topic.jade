@@ -81,8 +81,8 @@ html
                                 !{currentTopic.markup}
 
                             form(action='http://jsfiddle.net/api/post/jquery/2.0/', method='POST', target='_blank')
-                                input(type='hidden', value='#{currentTopic.code}', name='js')
-                                input(type='hidden', value='#{currentTopic.markup}', name='html')
+                                input#formJs(type='hidden', value='#{currentTopic.code}', name='js')
+                                input#formHtml(type='hidden', value='#{currentTopic.markup}', name='html')
                                 input(type='hidden', value='/', name='wrap')
                                 input(type='hidden', value='http://john-smith-js.com/john-smith.debug.js', name='resources')
                                 input(type='submit', value='Open in jsFiddle')
