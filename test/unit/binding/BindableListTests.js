@@ -12,6 +12,34 @@ var ListenerMock = function(){
     };
 };
 
+testCase.prototype.testForEachCallback = function(){
+    var bindable = new JohnSmith.Binding.BindableList();
+    bindable.setValue([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+
+    var counter = 0;
+
+    bindable.forEach(function(){
+        counter++;
+    });
+
+    assertEquals("counter in callback", 10, counter);
+}
+
+testCase.prototype.testForEachThisArg = function(){
+
+    var bindable = new JohnSmith.Binding.BindableList();
+    bindable.setValue([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+
+    var thisObj = {counter: 10};
+
+    bindable.forEach(function(){
+        this.counter++;
+    }, thisObj);
+
+    assertEquals("counter in callback", 20, thisObj.counter);
+
+}
+
 testCase.prototype.testSetValueThrowsErrorIfValueIsNotArray = function() {
     var bindable = new JohnSmith.Binding.BindableList();
 
