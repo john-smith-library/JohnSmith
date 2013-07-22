@@ -3,11 +3,6 @@
 /// <reference path="BindableList.ts"/>
 
 module JohnSmith.Binding {
-    export interface IValueToElementMapper {
-        getElementFor(value:any, root:JohnSmith.Common.IElement):JohnSmith.Common.IElement;
-        attachValueToElement(value:any, element:JohnSmith.Common.IElement);
-    }
-
     export interface RenderHandlerOptions extends HandlerOptions {
         contentDestination?: JohnSmith.Common.IElement;
         renderer?: IValueRenderer;
@@ -26,7 +21,6 @@ module JohnSmith.Binding {
     }
 
     export interface RenderListOptions extends RenderHandlerOptions {
-        mapper?: IValueToElementMapper;
         selectable?: bool;
         selectedItem: BindableValue;
         setSelection: (value: any) => void;

@@ -12,18 +12,14 @@ module JohnSmith.Binding {
     export class RenderListHandler implements IBindableHandler, IBindableListener {
         private _contentDestination: JohnSmith.Common.IElement;
         private _valueRenderer: IValueRenderer;
-        //private _mapper:IValueToElementMapper;
         private _renderedValues: IRenderedValueData[];
 
         constructor(
             contentDestination: JohnSmith.Common.IElement,
-            renderer:IValueRenderer,
-            mapper:IValueToElementMapper,
-            selectionOptions:SelectionOptions) {
+            renderer:IValueRenderer) {
 
             this._contentDestination = contentDestination;
             this._valueRenderer = renderer;
-            //this._mapper = mapper;
             this._renderedValues = [];
         }
 
@@ -68,7 +64,6 @@ module JohnSmith.Binding {
                 for (var i = 0; i < items.length; i++){
                     var item = items[i];
                     var itemRenderedValue = this.findRenderedValue(item);
-                        //this._mapper.getElementFor(item, this._contentDestination);
                     if (itemRenderedValue) {
                         if (itemRenderedValue.dispose) {
                             itemRenderedValue.dispose();
@@ -98,24 +93,18 @@ module JohnSmith.Binding {
                     value: item,
                     renderedValue: itemRenderedValue
                 });
-                //this._mapper.attachValueToElement(item, itemRenderedValue.element);
-                //this._renderedValues.push(itemRenderedValue);
             }
         }
     }
 
     export class RenderListFactory extends RenderHandlerFactoryBase implements IHandlerFactory {
-        private _mapper: IValueToElementMapper;
-
         constructor(
             destinationFactory: Common.IElementFactory,
             markupResolver: Common.IMarkupResolver,
             viewFactory: View.IViewFactory,
-            mapper: IValueToElementMapper,
             fetcherFactory: Fetchers.IFetcherFactory){
 
             super(destinationFactory, markupResolver, viewFactory, fetcherFactory);
-            this._mapper = mapper;
         }
 
         public createHandler(handlerData: any, bindable:IBindable, context: Common.IElement, commandHost:Command.ICommandHost): IBindableHandler {
@@ -141,32 +130,9 @@ module JohnSmith.Binding {
             this.fillContentDestination(options, context);
             this.fillRenderer(options, commandHost, bindable);
 
-            if (!options.mapper) {
-                options.mapper = this._mapper;
-            }
-
-            if (options.selectedItem){
-                options.selectable = true;
-
-                if (!options.setSelection){
-                    options.setSelection = function(value: any){
-                        options.selectedItem.setValue(value);
-                    }
-                }
-            }
-
-            var isSelectable = options.selectable || false;
-            var selectionOptions:SelectionOptions = {
-                isSelectable: isSelectable,
-                selectedItem: options.selectedItem,
-                setSelectedCallback: options.setSelection
-            };
-
             var handler = new RenderListHandler(
                 options.contentDestination,
-                options.renderer,
-                options.mapper,
-                selectionOptions);
+                options.renderer);
 
             return handler;
         }
@@ -176,14 +142,13 @@ module JohnSmith.Binding {
         function(
             destinationFactory:Common.IElementFactory,
             markupResolver:Common.IMarkupResolver,
-            mapper:IValueToElementMapper,
             viewFactory: View.IViewFactory,
             fetcherFactory: Fetchers.IFetcherFactory){
-            JohnSmith.Common.JS.addHandlerFactory(new RenderListFactory(destinationFactory, markupResolver, viewFactory, mapper, fetcherFactory));
+            JohnSmith.Common.JS.addHandlerFactory(new RenderListFactory(destinationFactory, markupResolver, viewFactory, fetcherFactory));
         },
         "elementFactory",
         "markupResolver",
-        "valueToElementMapper",
+        //"valueToElementMapper",
         "viewFactory",
         "fetcherFactory");
 }

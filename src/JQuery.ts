@@ -188,27 +188,6 @@ module JohnSmith.JQuery {
         }
     }
 
-    export class JQueryValueToElementMapper implements Binding.IValueToElementMapper {
-        public getElementFor(value:any, root:JohnSmith.Common.IElement): JohnSmith.Common.IElement {
-            var $items = (<JQueryElement> root.findRelative(".dataItem")).getTarget();
-            for (var i = 0; i < $items.length; i++){
-                var $element = $($items[i]);
-                if ($element.data("dataItem") === value){
-                    return new JQueryElement($element)
-                }
-            }
-
-            return null;
-        }
-
-        public attachValueToElement(value:any, element:JohnSmith.Common.IElement): void {
-            var $target = (<JQueryElement> element).getTarget();
-            $target
-                .addClass("dataItem")
-                .data("dataItem", value);
-        }
-    }
-
     /////////////////////////////////
     // Configuring ioc dependencies
     /////////////////////////////////
@@ -228,6 +207,6 @@ module JohnSmith.JQuery {
     JohnSmith.Common.JS.addHandlerArgumentProcessor(new JQueryTargetArgumentProcessor());
     JohnSmith.Common.JS.addCommandCauseArgumentProcessor(new JQueryTargetArgumentProcessor());
     JohnSmith.Common.JS.ioc.register("markupResolver", new JQueryMarkupResolver());
-    JohnSmith.Common.JS.ioc.register("valueToElementMapper", new JQueryValueToElementMapper());
+    //JohnSmith.Common.JS.ioc.register("valueToElementMapper", new JQueryValueToElementMapper());
 }
 
