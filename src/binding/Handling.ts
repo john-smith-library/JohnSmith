@@ -46,12 +46,17 @@ module JohnSmith.Binding {
         dispose?: () => void;
     }
 
+    export interface IRenderedValue {
+        element: Common.IElement;
+        dispose?: () => void;
+    }
+
     /**
      * Renders value to DOM element.
      */
     export interface IValueRenderer {
-        render: (value: any, destination: JohnSmith.Common.IElement) => JohnSmith.Common.IElement;
-        dispose?: () => void;
+        render: (value: any, destination: JohnSmith.Common.IElement) => IRenderedValue;
+        //dispose?: () => void;
     }
 
     export interface HandlerOptions {

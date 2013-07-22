@@ -30,8 +30,6 @@ testCase.prototype.setUp = function(){
 testCase.prototype.tearDown = function(){
     this.list.setValue(items);
 
-    console.log($("#listDestination").html());
-
     assertEquals("Rendered items count", 2, $("#listDestination li").length);
     assertEquals("First rendered item", "foo", $("#listDestination li:eq(0)").text());
     assertEquals("First rendered item", "bar", $("#listDestination li:eq(1)").text());

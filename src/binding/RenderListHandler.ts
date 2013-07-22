@@ -4,60 +4,16 @@
 /// <reference path="RenderValueHandler.ts"/>
 
 module JohnSmith.Binding {
-    export class MarkSelectedHandler implements IBindableHandler, IBindableListener {
-        private _listBindable: IBindable;
-        private _contentDestination: JohnSmith.Common.IElement;
-        private _valueRenderer: IValueRenderer;
-        private _mapper:IValueToElementMapper;
-
-        constructor(
-            listBindable: IBindable,
-            contentDestination: JohnSmith.Common.IElement,
-            valueRenderer: IValueRenderer,
-            mapper:IValueToElementMapper){
-            this._listBindable = listBindable;
-            this._contentDestination = contentDestination;
-            this._valueRenderer = valueRenderer;
-            this._mapper = mapper;
-        }
-
-        public wireWith(bindable: IBindable) {
-            this.doRender(bindable.getValue(), DataChangeReason.replace)
-            bindable.addListener(this);
-        }
-
-        public unwireWith(bindable: IBindable) {
-            bindable.removeListener(this);
-        }
-
-        public valueChanged(oldValue: Object, newValue: Object, changeType: DataChangeReason) {
-            this.doRender(newValue, changeType);
-        }
-
-        public stateChanged(oldState: string, newState: string) {
-        }
-
-        public dispose(): void {
-        }
-
-        private doRender(value: any, reason:DataChangeReason):void {
-            var items:Array = this._listBindable.getValue();
-            for (var i = 0; i < items.length; i++) {
-                var item = items[i];
-                var element = this._mapper.getElementFor(item, this._contentDestination);
-                if (item == value) {
-                    element.addClass("selected");
-                } else {
-                    element.removeClass("selected");
-                }
-            }
-        }
+    export interface IRenderedValueData {
+        value: any;
+        renderedValue: IRenderedValue;
     }
 
     export class RenderListHandler implements IBindableHandler, IBindableListener {
         private _contentDestination: JohnSmith.Common.IElement;
         private _valueRenderer: IValueRenderer;
-        private _mapper:IValueToElementMapper;
+        //private _mapper:IValueToElementMapper;
+        private _renderedValues: IRenderedValueData[];
 
         constructor(
             contentDestination: JohnSmith.Common.IElement,
@@ -67,7 +23,8 @@ module JohnSmith.Binding {
 
             this._contentDestination = contentDestination;
             this._valueRenderer = renderer;
-            this._mapper = mapper;
+            //this._mapper = mapper;
+            this._renderedValues = [];
         }
 
         public wireWith(bindable: IBindable) {
@@ -87,9 +44,21 @@ module JohnSmith.Binding {
         }
 
         public dispose(): void {
-            if (this._valueRenderer.dispose) {
-                this._valueRenderer.dispose();
+            for (var i = 0; i < this._renderedValues.length; i++){
+                if (this._renderedValues[i].renderedValue.dispose){
+                    this._renderedValues[i].renderedValue.dispose();
+                }
             }
+        }
+
+        private findRenderedValue(value: any) :IRenderedValue{
+            for (var i = 0; i < this._renderedValues.length; i++){
+                if (this._renderedValues[i].value === value){
+                    return this._renderedValues[i].renderedValue;
+                }
+            }
+
+            return null;
         }
 
         private doRender(value: any, reason:DataChangeReason):void {
@@ -98,14 +67,20 @@ module JohnSmith.Binding {
             if (reason == DataChangeReason.remove){
                 for (var i = 0; i < items.length; i++){
                     var item = items[i];
-                    var itemElement = this._mapper.getElementFor(item, this._contentDestination);
-                    if (itemElement) {
-                        itemElement.remove();
+                    var itemRenderedValue = this.findRenderedValue(item);
+                        //this._mapper.getElementFor(item, this._contentDestination);
+                    if (itemRenderedValue) {
+                        if (itemRenderedValue.dispose) {
+                            itemRenderedValue.dispose();
+                        }
+
+                        itemRenderedValue.element.remove();
                     }
                 }
             } else if (reason == DataChangeReason.add) {
                 this.appendItems(value);
             } else {
+                this._renderedValues = [];
                 this._contentDestination.empty();
                 this.appendItems(value);
             }
@@ -118,9 +93,13 @@ module JohnSmith.Binding {
 
             for (var i = 0; i < items.length; i++){
                 var item = items[i];
-                var itemElement = this._valueRenderer.render(item, this._contentDestination);
-
-                this._mapper.attachValueToElement(item, itemElement);
+                var itemRenderedValue = this._valueRenderer.render(item, this._contentDestination);
+                this._renderedValues.push({
+                    value: item,
+                    renderedValue: itemRenderedValue
+                });
+                //this._mapper.attachValueToElement(item, itemRenderedValue.element);
+                //this._renderedValues.push(itemRenderedValue);
             }
         }
     }

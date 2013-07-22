@@ -31,3 +31,27 @@ testCase.prototype.testRemove_ShouldRemoveItems = function(){
 
     assertEquals("Rendered items count", 1, $("#listDestination").find("li").length);
 };
+
+testCase.prototype.testRemove_ShouldDisposeView = function(){
+    var views = [];
+
+    // watch for rendered views to store references to it
+    js.event.bus.addListener("viewRendered", function(data){
+        views.push(data.view);
+    });
+
+    this.list.add("foo", "bar");
+
+    assertEquals("Rendered views count", 2, views.length);
+
+    // replace original views dispose method with the stub
+    for (var i = 0; i < views.length; i++) {
+        views[i].dispose = sinon.spy();
+    }
+
+    this.list.remove("foo");
+
+    assertTrue("Foo view is disposed", views[0].dispose.calledOnce);
+    assertFalse("Bar view is disposed", views[1].dispose.calledOnce);
+
+};

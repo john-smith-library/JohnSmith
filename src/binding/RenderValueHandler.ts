@@ -11,6 +11,7 @@ module JohnSmith.Binding {
     export class RenderValueHandler implements IBindableHandler, IBindableListener {
         private _contentDestination: JohnSmith.Common.IElement;
         private _valueRenderer: IValueRenderer;
+        private _currentValue: IRenderedValue;
 
         constructor(
             contentDestination: JohnSmith.Common.IElement,
@@ -37,15 +38,20 @@ module JohnSmith.Binding {
         }
 
         public dispose(): void {
-            if (this._valueRenderer.dispose) {
-                this._valueRenderer.dispose();
-            }
+            this.disposeCurrentValue();
         }
 
         private doRender(value: any):void {
+            this.disposeCurrentValue();
             this._contentDestination.empty();
             if (value !== null && value !== undefined) {
-                this._valueRenderer.render(value, this._contentDestination);
+                this._currentValue = this._valueRenderer.render(value, this._contentDestination);
+            }
+        }
+
+        private disposeCurrentValue(){
+            if (this._currentValue && this._currentValue.dispose) {
+                this._currentValue.dispose();
             }
         }
     }

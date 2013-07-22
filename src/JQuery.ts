@@ -53,6 +53,8 @@ module JohnSmith.JQuery {
             }
 
             var encodedHtml = $("<div/>").text(text).html();
+
+            // todo: review it. appendText should not return anything
             return this.appendHtml(encodedHtml);
         }
 

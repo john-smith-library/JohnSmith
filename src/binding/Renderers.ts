@@ -11,9 +11,11 @@ module JohnSmith.Binding {
             this._formatter = formatter;
         }
 
-        public render(value: any, destination: Common.IElement) : Common.IElement {
+        public render(value: any, destination: Common.IElement) : IRenderedValue {
             var formattedValue = this._formatter.format(value);
-            return this.doRender(formattedValue, destination);
+            return {
+                element: this.doRender(formattedValue, destination)
+            };
         }
 
         /**
@@ -75,9 +77,11 @@ module JohnSmith.Binding {
             this._fetcher = fetcher;
         }
 
-        public render(formattedValue:string, destination: Common.IElement) : Common.IElement {
+        public render(formattedValue:string, destination: Common.IElement) : IRenderedValue {
             this._fetcher.valueToElement(formattedValue, destination);
-            return destination;
+            return {
+                element: destination
+            };
         }
     }
 }
