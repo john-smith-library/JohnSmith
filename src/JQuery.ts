@@ -39,12 +39,17 @@ module JohnSmith.JQuery {
         }
 
         public appendText(text:string) : JohnSmith.Common.IElement{
-            if (!text) {
+            if (text === undefined || text == null) {
                 throw new Error("Could not append empty string!")
             }
 
             if (typeof text !== "string"){
                 throw new Error("Expected string text but was" + text);
+            }
+
+            if (text === ""){
+                this.getTarget().empty();
+                return this;
             }
 
             var encodedHtml = $("<div/>").text(text).html();

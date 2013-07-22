@@ -5,6 +5,13 @@ testCase.prototype.setUp = function(){
     this.foo = js.bindableValue();
 };
 
+testCase.prototype.testCanRenderEmptyString = function(){
+    js.bind(this.foo).to("#testDynamicBinding .value");
+    this.foo.setValue("");
+
+    assertEquals("Bound value result", "", $("#testDynamicBinding .value").text());
+};
+
 testCase.prototype.testShouldRenderEncodedValue = function(){
     js.bind(this.foo).to("#testDynamicBinding .value");
     this.foo.setValue("<span>content</span>");
