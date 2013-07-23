@@ -58,6 +58,11 @@ module JohnSmith.Binding {
             return this._count;
         }
 
+        public forEach(callback, thisArg){
+            var array:Array = this.getValue();
+            array.forEach(callback, thisArg);
+        }
+
         private reactOnChange(items: any[], reason:DataChangeReason):void{
             super.notifyListeners(items, reason);
             this.notifyCountListeners();
