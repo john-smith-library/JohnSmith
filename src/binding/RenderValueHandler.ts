@@ -153,7 +153,7 @@ module JohnSmith.Binding {
         /**
          * Checks id the bindable stores an array.
          */
-        public isList(bindable:IBindable):bool {
+        public isList(bindable:IBindable):boolean {
             if (bindable instanceof BindableList){
                 return true;
             } else if (bindable){

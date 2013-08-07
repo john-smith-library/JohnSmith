@@ -18,7 +18,7 @@ module JohnSmith.View {
             argument:any,
             argumentIndex: number,
             options: any,
-            context:JohnSmith.Common.IElement) : bool{
+            context:JohnSmith.Common.IElement) : boolean {
             return argumentIndex === 1 && (!options.view)
         }
 

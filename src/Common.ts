@@ -33,7 +33,7 @@ module JohnSmith.Common {
      * Process an argument passed to BindableManager as handler data.
      */
     export interface IArgumentProcessor {
-        canProcess(argument:any, argumentIndex: number, options: any, context: IElement) : bool;
+        canProcess(argument:any, argumentIndex: number, options: any, context: IElement) : boolean;
         process(argument:any, options: any, context: IElement);
     }
 
@@ -80,7 +80,7 @@ module JohnSmith.Common {
         /**
          * @protected
          */
-        public isOptionsArgument(value: any): bool {
+        public isOptionsArgument(value: any): boolean {
             return JohnSmith.Common.TypeUtils.isObject(value);
         }
     }
@@ -223,7 +223,7 @@ module JohnSmith.Common {
     }
 
     export interface IElement {
-        isEmpty: () => bool;
+        isEmpty: () => boolean;
         empty: () => void;
         appendHtml: (html:string) => IElement;
         appendText: (text:string) => IElement;
@@ -321,7 +321,7 @@ module JohnSmith.Common {
             this.clear();
         }
 
-        public has(key:string): bool {
+        public has(key:string): boolean {
             return (this._resolvedDependencies[key] != null);
         }
 
@@ -388,7 +388,7 @@ module JohnSmith.Common {
             }
         }
 
-        private processCallback(definition: IDefinition, resolved: any) : bool {
+        private processCallback(definition: IDefinition, resolved: any) : boolean {
             var dependencies = [];
 
             for (var j = 0; j < definition.dependencies.length; j++) {

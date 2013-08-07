@@ -145,7 +145,7 @@ module JohnSmith.View {
             }
         }
 
-        private hasChildren():bool {
+        private hasChildren():boolean {
             return this._children != null;
         }
     }

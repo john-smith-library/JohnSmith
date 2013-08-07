@@ -14,13 +14,13 @@ module JohnSmith.Fetchers {
     }
 
     export interface IFetcher {
-        isSuitableFor(element: Common.IElement): bool;
+        isSuitableFor(element: Common.IElement): boolean;
         valueToElement(value: any, element: Common.IElement): void;
         valueFromElement(element: Common.IElement): any;
     }
 
     class ValueFetcher implements IFetcher {
-        public isSuitableFor(element: common.IElement): bool {
+        public isSuitableFor(element: common.IElement): boolean {
             var nodeName = element.getNodeName();
             if (nodeName) {
                 nodeName = nodeName.toUpperCase();
@@ -50,7 +50,7 @@ module JohnSmith.Fetchers {
     }
 
     class CheckedAttributeFetcher implements IFetcher {
-        public isSuitableFor(element: Common.IElement): bool {
+        public isSuitableFor(element: Common.IElement): boolean {
             var nodeName = element.getNodeName();
             if (nodeName) {
                 nodeName = nodeName.toUpperCase();

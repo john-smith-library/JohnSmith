@@ -5,7 +5,7 @@
 
 module JohnSmith.Command {
     class EventArgumentProcessor implements JohnSmith.Common.IArgumentProcessor {
-        public canProcess(argument:any, argumentIndex: number, options: any, context:JohnSmith.Common.IElement) : bool {
+        public canProcess(argument:any, argumentIndex: number, options: any, context:JohnSmith.Common.IElement) : boolean {
             return (typeof argument == "string") && argumentIndex == 1
         }
 

@@ -58,8 +58,8 @@ for (var i = 0; i < allSrcFiles.length; i++) {
 }
 
 var buildCmd = "tsc --out " + properties.outFileName;
-if (isDebug){
-    buildCmd += " --comments";
+if (!isDebug){
+    buildCmd += " --removeComments";
 }
 
 buildCmd += " " + allSrcFiles.join(" ");
@@ -79,6 +79,7 @@ exec(
         }
 
         if (error !== null) {
+            console.log("Error: " + error);
             stepCompleteWithErrors();
         } else {
             stepMinify();

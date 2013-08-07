@@ -4,7 +4,7 @@
 
 module JohnSmith.Binding {
     export interface StateTransitionHandlerItem {
-        isMatched: (oldState: string, newState: string) => bool;
+        isMatched: (oldState: string, newState: string) => boolean;
         handle: (oldState: string, newState: string) => void;
     }
 

@@ -12,22 +12,22 @@ module JohnSmith.Binding {
         view?: any;
         type?: string;
         to?: string;
-        encode: bool;
+        encode: boolean;
 
-        bidirectional?: bool;
+        bidirectional?: boolean;
         command?: any;
         commandContext?: any;
         event?: string;
     }
 
     export interface RenderListOptions extends RenderHandlerOptions {
-        selectable?: bool;
+        selectable?: boolean;
         selectedItem: BindableValue;
         setSelection: (value: any) => void;
     }
 
     export interface SelectionOptions {
-        isSelectable: bool;
+        isSelectable: boolean;
         selectedItem: IBindable;
         setSelectedCallback: (selectedItem: any) => void;
     }

@@ -15,7 +15,7 @@ module JohnSmith.JQuery {
             this._target = target;
         }
 
-        public isEmpty(): bool{
+        public isEmpty(): boolean{
             return this._target.length == 0;
         }
 
@@ -173,7 +173,7 @@ module JohnSmith.JQuery {
             argument:any,
             argumentIndex: number,
             options: any,
-            context:JohnSmith.Common.IElement) : bool {
+            context:JohnSmith.Common.IElement) : boolean {
             return (typeof argument == "string") && argumentIndex == 0
         }
 
