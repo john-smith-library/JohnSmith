@@ -78,6 +78,12 @@ module JohnSmith.View {
                 });
 
             if (this._data.init){
+                for (var field in this._data){
+                    if (this[field] === undefined){
+                        this[field] = this._data[field];
+                    }
+                }
+
                 this._data.init.call(this, this._viewModel);
             }
 

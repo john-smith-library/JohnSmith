@@ -59,6 +59,25 @@ testCase.prototype.testCreateView_ViewClassInstanceData_ShouldRenderView = funct
     this.assertCanRenderView(view);
 };
 
+testCase.prototype.testCreateView_ViewClassInstanceData_ShouldRespectDataFieldsInInitMethod = function(){
+    var PersonView = function(){
+        this.template = "#viewTemplate";
+        this.firstName = "John";
+        this.lastName = "Smith";
+        this.init = function(viewModel){
+            assertNotUndefined("First name from [this]", this.firstName);
+            assertNotUndefined("Last name from [this]", this.lastName);
+
+            this.bind(this.firstName).to(".firstName");
+            this.bind(this.lastName).to(".lastName");
+        };
+    };
+
+    var view = js.createView(new PersonView(), new PersonViewModel());
+
+    this.assertCanRenderView(view);
+};
+
 testCase.prototype.assertCanRenderView = function(view){
     assertNotNull("View", view);
 
