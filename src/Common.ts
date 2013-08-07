@@ -201,8 +201,8 @@ module JohnSmith.Common {
         }
     }
 
-    JS.event = {};
-    JS.event.bus = new DefaultEventBus();
+    Common.JS.event = {};
+    Common.JS.event.bus = new DefaultEventBus();
 
     /////////////////////////////////
     // Dom services
@@ -412,9 +412,9 @@ module JohnSmith.Common {
 
     var ioc:IContainer = new Container();
 
-    JS.ioc = ioc;
+    Common.JS.ioc = ioc;
 
-    JS.createIocContainer = function(){
+    Common.JS.createIocContainer = function(){
         return new Container();
     }
 }

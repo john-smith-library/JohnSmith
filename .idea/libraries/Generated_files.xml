@@ -9,6 +9,7 @@
         <item url="file://$PROJECT_DIR$/src/binding/BindableValue.js" />
         <item url="file://$PROJECT_DIR$/src/binding/Handling.js" />
         <item url="file://$PROJECT_DIR$/src/view/DefaultView.js" />
+        <item url="file://$PROJECT_DIR$/src/Common.js" />
         <item url="file://$PROJECT_DIR$/src/binding/StateTransitionHandler.js" />
         <item url="file://$PROJECT_DIR$/src/binding/BindableManager.js" />
         <item url="file://$PROJECT_DIR$/src/view/Integration.js" />
@@ -36,31 +37,22 @@
       <root url="file://$PROJECT_DIR$/src/View.js" />
       <root url="file://$PROJECT_DIR$/src/binding/RenderHandlersFactory.js" />
       <root url="file://$PROJECT_DIR$/src/binding/RenderHandlersFactory.js" />
-      <root url="file://$PROJECT_DIR$/src/view/DefaultViewFactory.js" />
-      <root url="file://$PROJECT_DIR$/src/view/Contracts.js" />
-      <root url="file://$PROJECT_DIR$/src/Fetchers.js" />
       <root url="file://$PROJECT_DIR$/src/Debug.js" />
-      <root url="file://$PROJECT_DIR$/src/command/CommandManager.js" />
-      <root url="file://$PROJECT_DIR$/src/binding/Renderers.js" />
       <root url="file://$PROJECT_DIR$/src/binding/RenderListHandler.js" />
-      <root url="file://$PROJECT_DIR$/src/view/DefaultViewFactory.js" />
-      <root url="file://$PROJECT_DIR$/src/view/Contracts.js" />
-      <root url="file://$PROJECT_DIR$/src/Fetchers.js" />
       <root url="file://$PROJECT_DIR$/src/Debug.js" />
-      <root url="file://$PROJECT_DIR$/src/command/CommandManager.js" />
-      <root url="file://$PROJECT_DIR$/src/binding/Renderers.js" />
       <root url="file://$PROJECT_DIR$/src/binding/RenderListHandler.js" />
-      <root url="file://$PROJECT_DIR$/src/JQuery.js" />
       <root url="file://$PROJECT_DIR$/src/binding/CallbackHandler.js" />
       <root url="file://$PROJECT_DIR$/src/binding/BindableList.js" />
-      <root url="file://$PROJECT_DIR$/src/binding/RenderValueHandler.js" />
       <root url="file://$PROJECT_DIR$/src/binding/BindableValue.js" />
-      <root url="file://$PROJECT_DIR$/src/binding/Handling.js" />
       <root url="file://$PROJECT_DIR$/src/view/DefaultView.js" />
       <root url="file://$PROJECT_DIR$/src/binding/StateTransitionHandler.js" />
-      <root url="file://$PROJECT_DIR$/src/binding/BindableManager.js" />
       <root url="file://$PROJECT_DIR$/src/view/Integration.js" />
       <root url="file://$PROJECT_DIR$/src/command/Integration.js" />
+      <root url="file://$PROJECT_DIR$/src/JQuery.js" />
+      <root url="file://$PROJECT_DIR$/src/binding/RenderValueHandler.js" />
+      <root url="file://$PROJECT_DIR$/src/binding/Handling.js" />
+      <root url="file://$PROJECT_DIR$/src/Common.js" />
+      <root url="file://$PROJECT_DIR$/src/binding/BindableManager.js" />
     </CLASSES>
     <SOURCES />
   </library>
