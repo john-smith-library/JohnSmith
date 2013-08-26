@@ -103,7 +103,8 @@ task("test", ["buildDebug"], function(){
         "java -jar " + jsTestDriverJarPath + " --config test/config.jstd --tests all --server http://localhost:9876 --testOutput out",
         function(){
             complete();
-        }, { printStdout: true, printStderr: true });
+        },
+        { printStdout: true, printStderr: true });
 }, { async: true });
 
 /** Create versioned copies */
@@ -116,7 +117,17 @@ task("copyVersioned", ["buildFull"], function(){
 
 /** Build and publish */
 desc("Builds and publishes artifacts");
-task("buildAndPublish", ["buildFull", "buildTutorial", "test", "copyVersioned"]);
+task("buildAndPublish", ["buildFull", "buildTutorial", "test", "copyVersioned", "packNuGet"]);
+
+desc("Packs NuGet package");
+task("packNuGet", ["buildFull"], function(){
+    jake.exec(
+        "mono --runtime=v4.0 " + process.env.NUGET + " help",
+        function() {
+            complete();
+        },
+        { printStdout: true, printStderr: true });
+}, { async: true });
 
 /** Build tutorial */
 desc("Builds tutorial");
