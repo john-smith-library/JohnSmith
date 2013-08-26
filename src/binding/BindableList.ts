@@ -49,6 +49,12 @@ module JohnSmith.Binding {
             this.reactOnChange(args, DataChangeReason.remove);
         }
 
+        /** Removes all items from the list */
+        public clear(): void {
+            var removed = this.getValue().splice(0, this.getValue().length);
+            this.reactOnChange(removed, DataChangeReason.remove);
+        }
+
         /** Returns a bindable value that stores size of the list */
         public count():BindableValue {
             if (!this._count) {

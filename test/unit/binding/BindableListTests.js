@@ -113,3 +113,27 @@ testCase.prototype.testShouldNotifyListenerOnDelete = function() {
     assertEquals(7, listener.calls[0].newValue[3]);
     assertEquals(9, listener.calls[0].newValue[4]);
 };
+
+testCase.prototype.testShouldNotifyListenerOnClear = function() {
+    var bindable = new JohnSmith.Binding.BindableList();
+    var listener = new ListenerMock();
+
+    bindable.setValue([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+    bindable.addListener(listener);
+    bindable.clear();
+
+    assertEquals("Listener calls count", 1, listener.calls.length);
+    assertEquals("Listener change type", JohnSmith.Binding.DataChangeReason.remove, listener.calls[0].changeType);
+    assertArray("Listener new value", listener.calls[0].newValue);
+    assertEquals("Listener new value size", 10, listener.calls[0].newValue.length);
+};
+
+testCase.prototype.testClearShouldDeleteAllItems = function() {
+    var bindable = new JohnSmith.Binding.BindableList();
+
+    bindable.setValue([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+    assertEquals("List size", 10, bindable.getValue().length);
+
+    bindable.clear();
+    assertEquals("List size", 0, bindable.getValue().length);
+};
