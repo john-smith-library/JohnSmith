@@ -121,9 +121,21 @@ task("buildAndPublish", ["buildFull", "buildTutorial", "test", "copyVersioned", 
 
 desc("Packs NuGet package");
 task("packNuGet", ["buildFull"], function(){
-    fs.createReadStream(process.env.NUGET).pipe(fs.createWriteStream("out/NuGet.exe"));
+    fs.mkdirpSync("out/nuget");
+    fs.mkdirpSync("out/nuget/content");
+    fs.mkdirpSync("out/nuget/content/Scripts");
+
+    fs.createReadStream(".build/Microsoft.Build.dll").pipe(fs.createWriteStream(process.env.NUGET.replace("NuGet.exe", "Microsoft.Build.dll")));
+    fs.createReadStream("out/john-smith.debug.js").pipe(fs.createWriteStream("out/nuget/content/Scripts/john-smith.debug.js"));
+    fs.createReadStream("out/john-smith.min.js").pipe(fs.createWriteStream("out/nuget/content/Scripts/john-smith.min.js"));
+
+    var renderSpec = jade.compile(fs.readFileSync("scripts/templates/nuspec.jade"));
+    fs.writeFileSync("out/nuget/JohnSmith.nuspec", renderSpec({
+        version: version
+    }));
+
     jake.exec(
-        "mono --runtime=v4.0 " + process.env.NUGET + " help",
+        "mono --runtime=v4.0 " + process.env.NUGET + " pack out/nuget/JohnSmith.nuspec -OutputDirectory out/nuget",
         function() {
             complete();
         },
