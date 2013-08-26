@@ -134,8 +134,10 @@ task("packNuGet", ["buildFull"], function(){
         version: version
     }));
 
+    var nugetApiKey = process.env.NUGET_API_KEY;
     jake.exec(
-        "mono --runtime=v4.0 " + process.env.NUGET + " pack out/nuget/JohnSmith.nuspec -OutputDirectory out/nuget",
+        ["mono --runtime=v4.0 " + process.env.NUGET + " pack out/nuget/JohnSmith.nuspec -OutputDirectory out/nuget",
+         "mono --runtime=v4.0 " + process.env.NUGET + " push JohnSmith." + version + ".nupkg " + nugetApiKey],
         function() {
             complete();
         },
