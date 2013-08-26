@@ -121,23 +121,22 @@ task("buildAndPublish", ["buildFull", "buildTutorial", "test", "copyVersioned", 
 
 desc("Packs NuGet package");
 task("packNuGet", ["buildFull"], function(){
-    fs.mkdirpSync("out/nuget");
-    fs.mkdirpSync("out/nuget/content");
-    fs.mkdirpSync("out/nuget/content/Scripts");
+    fs.mkdirpSync(path.join(process.env.TEMP_TOOLS, "content"));
+    fs.mkdirpSync(path.join(process.env.TEMP_TOOLS, "content/Scripts"));
 
     fs.createReadStream(".build/Microsoft.Build.dll").pipe(fs.createWriteStream(process.env.NUGET.replace("NuGet.exe", "Microsoft.Build.dll")));
-    fs.createReadStream("out/john-smith.debug.js").pipe(fs.createWriteStream("out/nuget/content/Scripts/john-smith.debug.js"));
-    fs.createReadStream("out/john-smith.min.js").pipe(fs.createWriteStream("out/nuget/content/Scripts/john-smith.min.js"));
+    fs.createReadStream("out/john-smith.debug.js").pipe(fs.createWriteStream(path.join(process.env.TEMP_TOOLS, "content/Scripts/john-smith.debug.js")));
+    fs.createReadStream("out/john-smith.min.js").pipe(fs.createWriteStream(path.join(process.env.TEMP_TOOLS, "content/Scripts/john-smith.min.js")));
 
     var renderSpec = jade.compile(fs.readFileSync("scripts/templates/nuspec.jade"));
-    fs.writeFileSync("out/nuget/JohnSmith.nuspec", renderSpec({
+    fs.writeFileSync(path.join(process.env.TEMP_TOOLS, "JohnSmith.nuspec"), renderSpec({
         version: version
     }));
 
     var nugetApiKey = process.env.NUGET_API_KEY;
     jake.exec(
-        ["mono --runtime=v4.0 " + process.env.NUGET + " pack out/nuget/JohnSmith.nuspec -OutputDirectory out/nuget",
-         "mono --runtime=v4.0 " + process.env.NUGET + " push out/nuget/JohnSmith." + version + ".nupkg " + nugetApiKey],
+        ["mono --runtime=v4.0 " + process.env.NUGET + " pack JohnSmith.nuspec -OutputDirectory out/nuget",
+         "mono --runtime=v4.0 " + process.env.NUGET + " push JohnSmith." + version + ".nupkg " + nugetApiKey],
         function() {
             complete();
         },
