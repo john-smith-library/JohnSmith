@@ -23,7 +23,7 @@ before_script:
     - sudo apt-get install mono-complete
     - mozroots --import --sync
     - "curl -o ${HOME}/temp_tools/JsTestDriver-1.3.3d.jar 'http://js-test-driver.googlecode.com/files/JsTestDriver-1.3.3d.jar'"
-    - curl -o ${HOME}/temp_tools/NuGet.exe 'https://www.nuget.org/nuget.exe'
+    - curl -o ${HOME}/temp_tools/NuGet.exe -L 'https://www.nuget.org/nuget.exe'
     - "java -jar ${HOME}/temp_tools/JsTestDriver-1.3.3d.jar --port 9876 &"
     - "sleep 3"
     - "phantomjs scripts/phantomjs-jstd.js &"
