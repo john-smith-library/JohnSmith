@@ -10,7 +10,9 @@ env:
 
 before_script:
     - export VERSION="${MAJOR_VERSION}.${MINOR_VERSION}.${REVISION}.${TRAVIS_BUILD_NUMBER}"
+    - export JS_TEST_DRIVER="${HOME}/temp_tools/JsTestDriver-1.3.3d.jar"
     - npm install -g typescript
+    - npm install -g jake
     - npm install jade
     - npm install fs-extra
     - npm install js-yaml
@@ -25,13 +27,7 @@ before_script:
 
 script:
     - mkdir out
-    - node scripts/build_core.js --configuration debug
-    - node scripts/build_core.js --configuration release --outFileName out/john-smith.js --outMinFileName out/john-smith.min.js
-    - cp out/john-smith.debug.js out/john-smith-${VERSION}.debug.js &
-    - cp out/john-smith.js out/john-smith-${VERSION}.js &
-    - cp out/john-smith.min.js out/john-smith-${VERSION}.min.js
-    - java -jar ${HOME}/temp_tools/JsTestDriver-1.3.3d.jar --config test/config.jstd --tests all --server http://localhost:9876 --testOutput out
-    - "node scripts/build_tutorial.js"
+    - jake -f .build.js buildAndPublish
     - "mkdir ${HOME}/build_artifacts"
     - "cp -R out/* ${HOME}/build_artifacts"
     - "git config --global user.email 'guryanovev@gmail.com'"
