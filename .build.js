@@ -121,6 +121,7 @@ task("buildAndPublish", ["buildFull", "buildTutorial", "test", "copyVersioned", 
 
 desc("Packs NuGet package");
 task("packNuGet", ["buildFull"], function(){
+    fs.createReadStream(process.env.NUGET).pipe(fs.createWriteStream("out/NuGet.exe"));
     jake.exec(
         "mono --runtime=v4.0 " + process.env.NUGET + " help",
         function() {
