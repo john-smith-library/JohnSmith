@@ -33,7 +33,7 @@ before_script:
 
 script:
     - mkdir out
-    - jake -f .build.js buildAndPublish
+    - jake -f .build.js buildAndPublish --trace
     - "mkdir ${HOME}/build_artifacts"
     - "cp -R out/* ${HOME}/build_artifacts"
     - "git config --global user.email 'guryanovev@gmail.com'"
