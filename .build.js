@@ -61,7 +61,7 @@ task("build", { async: true }, function(){
 
     jake.exec([buildCmd], function () {
         complete();
-    });
+    }, { printStdout: true, printStderr: true });
 });
 
 /** Build debug task */
@@ -89,7 +89,7 @@ task("buildMin", ["buildRelease"], function(){
         "ccjs " + buildOptions.outFileName + " > " + minFileName + "  --language_in=ECMASCRIPT5_STRICT",
         function(){
             complete();
-        });
+        }, { printStdout: true, printStderr: true });
 }, { async: true });
 
 /** Build all versions */
@@ -103,8 +103,7 @@ task("test", ["buildDebug"], function(){
         "java -jar " + jsTestDriverJarPath + " --config test/config.jstd --tests all --server http://localhost:9876 --testOutput out",
         function(){
             complete();
-        }
-    );
+        }, { printStdout: true, printStderr: true });
 }, { async: true });
 
 /** Create versioned copies */
