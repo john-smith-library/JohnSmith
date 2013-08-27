@@ -129,9 +129,13 @@ task("packNuGet", ["buildFull"], function(){
     //fs.createReadStream("out/john-smith.min.js").pipe(fs.createWriteStream(path.join(process.env.TEMP_TOOLS, "content/Scripts/john-smith.min.js")));
 
     var renderSpec = jade.compile(fs.readFileSync("scripts/templates/nuspec.jade"));
-    fs.writeFileSync(path.join(process.env.TEMP_TOOLS, "JohnSmith.nuspec"), renderSpec({
+    var renderedSpec = renderSpec({
         version: version
-    }));
+    });
+
+    fs.writeFileSync(
+        path.join(process.env.TEMP_TOOLS, "JohnSmith.nuspec"),
+        renderedSpec);
 
     var nugetApiKey = process.env.NUGET_API_KEY;
     var relativePathToSpec = path.join(path.relative(process.cwd(), process.env.TEMP_TOOLS), "JohnSmith." + version + ".nupkg");
