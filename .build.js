@@ -139,10 +139,10 @@ task("packNuGet", ["buildFull"], function(){
 
     var nugetApiKey = process.env.NUGET_API_KEY;
     var relativePathToSpec = path.join(path.relative(process.cwd(), process.env.TEMP_TOOLS), "JohnSmith." + version + ".nupkg");
-    console.log("mono --runtime=v4.0 " + process.env.NUGET + " push " + relativePathToSpec + " " + nugetApiKey + " -NonInteractive -Verbosity Detailed");
+    console.log("mono --runtime=v4.0 " + process.env.NUGET + " push " + relativePathToSpec + " " + nugetApiKey + " -NonInteractive -Verbosity Detailed -BasePath " + path.relative(process.env.TEMP_TOOLS, process.cwd()));
     jake.exec(
         ["mono --runtime=v4.0 " + process.env.NUGET + " pack " + path.join(process.env.TEMP_TOOLS, "JohnSmith.nuspec") + " -OutputDirectory " + process.env.TEMP_TOOLS,
-         "mono --runtime=v4.0 " + process.env.NUGET + " push " + relativePathToSpec + " " + nugetApiKey + " -NonInteractive -Verbosity Detailed -BasePath " + process.cwd()],
+         "mono --runtime=v4.0 " + process.env.NUGET + " push " + relativePathToSpec + " " + nugetApiKey + " -NonInteractive -Verbosity Detailed -BasePath " + path.relative(process.env.TEMP_TOOLS, process.cwd())],
         function() {
             complete();
         },
