@@ -264,19 +264,32 @@ task("buildTutorial", ["buildFull"], function(){
     }));
 });
 
+console.log("");
+
+console.log("========================================================== ");
+console.log("       _       _              _____           _ _   _      ");
+console.log("      | |     | |            / ____|         (_) | | |     ");
+console.log("      | | ___ | |__  _ __   | (___  _ __ ___  _| |_| |__   ");
+console.log("  _   | |/ _ \\| '_ \\| '_ \\   \\___ \\| '_ ` _ \\| | __| '_ \\  ");
+console.log(" | |__| | (_) | | | | | | |  ____) | | | | | | | |_| | | | ");
+console.log("  \\____/ \\___/|_| |_|_| |_| |_____/|_| |_| |_|_|\\__|_| |_| ");
+console.log("========================================================== ");
+
 (function(){
-    function getStartCallback(key){
+    function getStartCallback(key, currentTask){
         return function(){
-            console.log("/*=====================================================*/");
-            console.log("Starting task " + key);
+            console.log("");
+            console.log("=== Starting task " + key);
+            console.log("=== [" + currentTask.description + "]");
+            console.log("");
         };
     }
 
     for(var key in jake.Task){
         var t = jake.Task[key];
         if (t.addListener){
-            console.log(" === " + key);
-            t.addListener("start", getStartCallback(key));
+            t.addListener("start", getStartCallback(key, t));
         }
     }
 }());
+
