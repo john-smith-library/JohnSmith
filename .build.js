@@ -22,8 +22,8 @@ var buildOptions = {
 };
 
 /** Return path to a resource in TempTools directory */
-function getTempPath(path){
-    return path.join(process.env.TEMP_TOOLS, path);
+function getTempPath(filePath){
+    return path.join(process.env.TEMP_TOOLS, filePath);
 }
 
 /* ================================================================================================================== */
