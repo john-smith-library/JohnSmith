@@ -21,3 +21,7 @@ employee.add(johnQPublic);
 employee.add(joePublic);
 
 employee.remove(fredBloggs, johnQPublic);
+
+js.on("#clearList", "click").do(function(){
+    employee.clear();
+});

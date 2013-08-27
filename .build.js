@@ -21,7 +21,12 @@ var buildOptions = {
     outFileName: path.join("out", "john-smith.debug.js")
 };
 
-/** Abstract build task */
+/** Return path to a resource in TempTools directory */
+function getTempPath(path){
+    return path.join(process.env.TEMP_TOOLS, path);
+}
+
+/* ================================================================================================================== */
 desc("Builds using global options");
 task("build", { async: true }, function(){
     var readSrcDir = function(dirPath, allFiles, isDebug){
@@ -64,7 +69,7 @@ task("build", { async: true }, function(){
     }, { printStdout: true, printStderr: true });
 });
 
-/** Build debug task */
+/* ================================================================================================================== */
 desc("Builds debug version");
 task("buildDebug", function(){
     buildOptions.isDebug = true;
@@ -73,7 +78,7 @@ task("buildDebug", function(){
     jake.Task["build"].invoke();
 });
 
-/** Build release task */
+/* ================================================================================================================== */
 desc("Builds release version");
 task("buildRelease", function(){
     buildOptions.isDebug = false;
@@ -82,7 +87,7 @@ task("buildRelease", function(){
     jake.Task["build"].invoke();
 });
 
-/** Build minimized task */
+/* ================================================================================================================== */
 desc("Builds min version");
 task("buildMin", ["buildRelease"], function(){
     jake.exec(
@@ -92,11 +97,11 @@ task("buildMin", ["buildRelease"], function(){
         }, { printStdout: true, printStderr: true });
 }, { async: true });
 
-/** Build all versions */
+/* ================================================================================================================== */
 desc("Build full");
 task("buildFull", ["buildDebug", "buildMin"]);
 
-/** Test */
+/* ================================================================================================================== */
 desc("Runs unit and system tests");
 task("test", ["buildDebug"], function(){
     jake.exec(
@@ -107,26 +112,24 @@ task("test", ["buildDebug"], function(){
         { printStdout: true, printStderr: true });
 }, { async: true });
 
-/** Create versioned copies */
+/* ================================================================================================================== */
 desc("Creates versioned copies of artifacts files");
 task("copyVersioned", ["buildFull"], function(){
-    fs.createReadStream("out/john-smith.debug.js").pipe(fs.createWriteStream("out/john-smith-" + version + ".debug.js"));
-    fs.createReadStream("out/john-smith.js").pipe(fs.createWriteStream("out/john-smith-" + version + ".js"));
-    fs.createReadStream("out/john-smith.min.js").pipe(fs.createWriteStream("out/john-smith-" + version + ".min.js"));
+    jake.cpR("out/john-smith.debug.js", "out/john-smith-" + version + ".debug.js");
+    jake.cpR("out/john-smith.js", "out/john-smith-" + version + ".js");
+    jake.cpR("out/john-smith.min.js", "out/john-smith-" + version + ".min.js");
 });
 
-/** Build and publish */
+/* ================================================================================================================== */
 desc("Builds and publishes artifacts");
 task("buildAndPublish", ["buildFull", "buildTutorial", "test", "copyVersioned", "packNuGet"]);
 
+/* ================================================================================================================== */
 desc("Packs NuGet package");
 task("packNuGet", ["buildFull"], function(){
-    //fs.mkdirpSync(path.join(process.env.TEMP_TOOLS, "content"));
-    //fs.mkdirpSync(path.join(process.env.TEMP_TOOLS, "content/Scripts"));
-
-    fs.createReadStream(".build/Microsoft.Build.dll").pipe(fs.createWriteStream(process.env.NUGET.replace("NuGet.exe", "Microsoft.Build.dll")));
-    fs.createReadStream("out/john-smith.debug.js").pipe(fs.createWriteStream(path.join(process.env.TEMP_TOOLS, "john-smith.debug.js")));
-    fs.createReadStream("out/john-smith.min.js").pipe(fs.createWriteStream(path.join(process.env.TEMP_TOOLS, "john-smith.min.js")));
+    jake.cpR(".build/Microsoft.Build.dll", getTempPath("Microsoft.Build.dll"));
+    jake.cpR("out/john-smith.debug.js", getTempPath("john-smith.debug.js"));
+    jake.cpR("out/john-smith.min.js", getTempPath("john-smith.min.js"));
 
     var renderSpec = jade.compile(fs.readFileSync("scripts/templates/nuspec.jade"));
     var renderedSpec = renderSpec({
@@ -139,9 +142,8 @@ task("packNuGet", ["buildFull"], function(){
 
     var nugetApiKey = process.env.NUGET_API_KEY;
     var relativePathToSpec = path.join(path.relative(process.cwd(), process.env.TEMP_TOOLS), "JohnSmith." + version + ".nupkg");
-    console.log("mono --runtime=v4.0 " + process.env.NUGET + " push " + relativePathToSpec + " " + nugetApiKey + " -NonInteractive -Verbosity Detailed -BasePath " + path.relative(process.env.TEMP_TOOLS, process.cwd()));
     jake.exec(
-        ["mono --runtime=v4.0 " + process.env.NUGET + " pack " + path.join(process.env.TEMP_TOOLS, "JohnSmith.nuspec") + " -OutputDirectory " + process.env.TEMP_TOOLS,
+        ["mono --runtime=v4.0 " + process.env.NUGET + " pack " + getTempPath("JohnSmith.nuspec") + " -OutputDirectory " + process.env.TEMP_TOOLS,
          "mono --runtime=v4.0 " + process.env.NUGET + " push " + relativePathToSpec + " " + nugetApiKey + " -NonInteractive -Verbosity Detailed"],
         function() {
             complete();
@@ -149,7 +151,7 @@ task("packNuGet", ["buildFull"], function(){
         { printStdout: true, printStderr: true });
 }, { async: true });
 
-/** Build tutorial */
+/* ================================================================================================================== */
 desc("Builds tutorial");
 task("buildTutorial", ["buildFull"], function(){
     function discoverExamplesDirectory(dirPath, topicCollection){
@@ -261,3 +263,20 @@ task("buildTutorial", ["buildFull"], function(){
         version: version
     }));
 });
+
+(function(){
+    function getStartCallback(key){
+        return function(){
+            console.log("/*=====================================================*/");
+            console.log("Starting task " + key);
+        };
+    }
+
+    for(var key in jake.Task){
+        var t = jake.Task[key];
+        if (t.addListener){
+            console.log(" === " + key);
+            t.addListener("start", getStartCallback(key));
+        }
+    }
+}());
