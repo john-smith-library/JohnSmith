@@ -55,3 +55,19 @@ testCase.prototype.testRemove_ShouldDisposeView = function(){
     assertFalse("Bar view is disposed", views[1].dispose.calledOnce);
 
 };
+
+/** This is a regression test that checks if the same element could be added/removed multiple times. */
+testCase.prototype.testRemoveAndAddTheSameObject_ShouldWorkCorrectly = function(){
+    var item = "baz";
+
+    this.list.add("foo", "bar", item);
+
+    this.list.remove(item);
+    assertEquals("Rendered items count", 2, $("#listDestination").find("li").length);
+
+    this.list.add(item);
+    assertEquals("Rendered items count", 3, $("#listDestination").find("li").length);
+
+    this.list.remove(item);
+    assertEquals("Rendered items count", 2, $("#listDestination").find("li").length);
+};

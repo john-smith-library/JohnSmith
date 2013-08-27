@@ -39,7 +39,6 @@ module JohnSmith.View {
     export class ViewValueRenderer implements Binding.IValueRenderer {
         private _viewFactory: IViewFactory;
         private _viewDescriptor: IViewFactory;
-        //private _currentView: IView;
 
         constructor(viewFactory: IViewFactory, viewDescriptor: IViewFactory){
             this._viewFactory = viewFactory;
@@ -47,10 +46,6 @@ module JohnSmith.View {
         }
 
         public render(value: any, destination: JohnSmith.Common.IElement): Binding.IRenderedValue {
-//            if (this._currentView){
-//                this._currentView.dispose();
-//            }
-
             var currentView = this._viewFactory.resolve(this._viewDescriptor, value);
             currentView.renderTo(destination);
 
@@ -61,12 +56,6 @@ module JohnSmith.View {
                 }
             };
         }
-
-//        public dispose(): void {
-//            if (this._currentView){
-//                this._currentView.dispose();
-//            }
-//        }
     }
 
     /////////////////////////////////

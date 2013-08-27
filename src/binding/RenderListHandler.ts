@@ -57,6 +57,19 @@ module JohnSmith.Binding {
             return null;
         }
 
+        private removeRenderedValue(renderedValue: IRenderedValue):void {
+            var indexToRemove = -1;
+            for (var i = 0; i < this._renderedValues.length; i++){
+                if (this._renderedValues[i].renderedValue === renderedValue){
+                    indexToRemove = i;
+                }
+            }
+
+            if (indexToRemove >=0) {
+                this._renderedValues.splice(indexToRemove, 1);
+            }
+        }
+
         private doRender(value: any, reason:DataChangeReason):void {
             var items:Array = value;
 
@@ -70,6 +83,7 @@ module JohnSmith.Binding {
                         }
 
                         itemRenderedValue.element.remove();
+                        this.removeRenderedValue(itemRenderedValue);
                     }
                 }
             } else if (reason == DataChangeReason.add) {
