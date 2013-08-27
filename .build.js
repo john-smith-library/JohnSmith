@@ -125,8 +125,8 @@ task("packNuGet", ["buildFull"], function(){
     //fs.mkdirpSync(path.join(process.env.TEMP_TOOLS, "content/Scripts"));
 
     fs.createReadStream(".build/Microsoft.Build.dll").pipe(fs.createWriteStream(process.env.NUGET.replace("NuGet.exe", "Microsoft.Build.dll")));
-    //fs.createReadStream("out/john-smith.debug.js").pipe(fs.createWriteStream(path.join(process.env.TEMP_TOOLS, "content/Scripts/john-smith.debug.js")));
-    //fs.createReadStream("out/john-smith.min.js").pipe(fs.createWriteStream(path.join(process.env.TEMP_TOOLS, "content/Scripts/john-smith.min.js")));
+    fs.createReadStream("out/john-smith.debug.js").pipe(fs.createWriteStream(path.join(process.env.TEMP_TOOLS, "john-smith.debug.js")));
+    fs.createReadStream("out/john-smith.min.js").pipe(fs.createWriteStream(path.join(process.env.TEMP_TOOLS, "john-smith.min.js")));
 
     var renderSpec = jade.compile(fs.readFileSync("scripts/templates/nuspec.jade"));
     var renderedSpec = renderSpec({
