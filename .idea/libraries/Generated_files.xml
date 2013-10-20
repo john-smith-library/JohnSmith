@@ -1,25 +1,5 @@
 <component name="libraryTable">
   <library name="Generated files" type="javaScript">
-    <properties>
-      <sourceFilesUrls>
-        <item url="file://$PROJECT_DIR$/src/view/Contracts.js" />
-        <item url="file://$PROJECT_DIR$/src/binding/CallbackHandler.js" />
-        <item url="file://$PROJECT_DIR$/src/binding/BindableList.js" />
-        <item url="file://$PROJECT_DIR$/src/view/DefaultViewFactory.js" />
-        <item url="file://$PROJECT_DIR$/src/binding/BindableValue.js" />
-        <item url="file://$PROJECT_DIR$/src/view/DefaultView.js" />
-        <item url="file://$PROJECT_DIR$/src/binding/StateTransitionHandler.js" />
-        <item url="file://$PROJECT_DIR$/src/view/Integration.js" />
-        <item url="file://$PROJECT_DIR$/src/command/Integration.js" />
-        <item url="file://$PROJECT_DIR$/src/JQuery.js" />
-        <item url="file://$PROJECT_DIR$/src/binding/RenderValueHandler.js" />
-        <item url="file://$PROJECT_DIR$/src/binding/Handling.js" />
-        <item url="file://$PROJECT_DIR$/src/Common.js" />
-        <item url="file://$PROJECT_DIR$/src/binding/BindableManager.js" />
-        <item url="file://$PROJECT_DIR$/src/binding/Contracts.js" />
-        <item url="file://$PROJECT_DIR$/src/binding/RenderListHandler.js" />
-      </sourceFilesUrls>
-    </properties>
     <CLASSES>
       <root url="file://$PROJECT_DIR$/src/Commons.js" />
       <root url="file://$PROJECT_DIR$/src/Commons.js" />

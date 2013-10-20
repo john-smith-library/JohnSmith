@@ -14,7 +14,10 @@ module JohnSmith.Binding {
         public render(value: any, destination: Common.IElement) : IRenderedValue {
             var formattedValue = this._formatter.format(value);
             return {
-                element: this.doRender(formattedValue, destination)
+                element: this.doRender(formattedValue, destination),
+                unrender: function(){
+                    this.element.remove();
+                }
             };
         }
 
@@ -80,7 +83,10 @@ module JohnSmith.Binding {
         public render(formattedValue:string, destination: Common.IElement) : IRenderedValue {
             this._fetcher.valueToElement(formattedValue, destination);
             return {
-                element: destination
+                element: destination,
+                unrender: function(){
+                    /* do not need to unrender fetcher-based values */
+                }
             };
         }
     }

@@ -53,6 +53,9 @@ module JohnSmith.View {
                 element: <Common.IElement>currentView.getRootElement(),
                 dispose: function(){
                     currentView.dispose();
+                },
+                unrender: function(){
+                    currentView.unrenderView();
                 }
             };
         }

@@ -82,7 +82,8 @@ module JohnSmith.Binding {
                             itemRenderedValue.dispose();
                         }
 
-                        itemRenderedValue.element.remove();
+                        itemRenderedValue.unrender();
+                        //itemRenderedValue.element.remove();
                         this.removeRenderedValue(itemRenderedValue);
                     }
                 }

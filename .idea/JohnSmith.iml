@@ -10,6 +10,7 @@
     <orderEntry type="library" name="JsTestDriver Assertion Framework" level="application" />
     <orderEntry type="library" name="Node.js v0.10.5 Core Modules" level="application" />
     <orderEntry type="library" name="Node.js v0.10.5 Core Modules" level="application" />
+    <orderEntry type="library" name="JsTestDriver Assertion Framework" level="application" />
   </component>
 </module>
 

@@ -77,13 +77,15 @@ module JohnSmith.View {
                     view: this
                 });
 
-            if (this._data.init){
+            if (this._data.init || this._data.unrender){
                 for (var field in this._data){
                     if (this[field] === undefined){
                         this[field] = this._data[field];
                     }
                 }
+            }
 
+            if (this._data.init){
                 this._data.init.call(this, this._viewModel);
             }
 
@@ -127,6 +129,14 @@ module JohnSmith.View {
 
         public getRootElement() : JohnSmith.Common.IElement {
             return this._rootElement;
+        }
+
+        public unrenderView() {
+            if (this._data.unrender) {
+                this._data.unrender();
+            } else {
+                this.getRootElement().remove();
+            }
         }
 
         public dispose(): void {

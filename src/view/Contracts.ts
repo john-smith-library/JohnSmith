@@ -14,6 +14,7 @@ module JohnSmith.View {
     export interface IViewData {
         template: any;
         init?: (viewModel: any) => void;
+        unrender?: () => void;
     }
 
     /**
@@ -28,6 +29,7 @@ module JohnSmith.View {
      */
     export interface IView extends Common.IDisposable {
         renderTo: (destination:any) => void;
+        unrenderView: () => void;
         getRootElement: () => Common.IElement;
     }
 }
