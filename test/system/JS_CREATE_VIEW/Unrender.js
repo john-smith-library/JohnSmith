@@ -9,43 +9,50 @@ testCase.prototype.setUp = function(){
 
     /** Add view destination markup */
     /*:DOC += <div id="viewDestination"></div> */
+
+    var unrenderSpy = sinon.spy();
+
+    this.unrenderSpy = unrenderSpy;
+    this.view = function(){
+        this.template = "#viewTemplate";
+        this.unrender = unrenderSpy;
+    };
 };
 
 testCase.prototype.testValueView_UnrenderConfigured_ShouldCallUnrenderOnChange = function(){
     var bindable = js.bindableValue();
-    var unrender = sinon.spy();
 
-    var view = function(){
-        this.template = "#viewTemplate";
-        this.unrender = unrender;
-    };
-
-    js.bind(bindable).to("#viewDestination", view);
+    js.bind(bindable).to("#viewDestination", this.view);
 
     bindable.setValue("value1");
-    assertTrue("Unrender not called on first set", unrender.notCalled);
+    assertTrue("Unrender not called on first set", this.unrenderSpy.notCalled);
 
     bindable.setValue("value2");
-    assertTrue("Unrender called on second set", unrender.calledOnce);
+    assertTrue("Unrender called on second set", this.unrenderSpy.calledOnce);
 
     bindable.setValue("value3");
-    assertTrue("Unrender called on every next set", unrender.calledTwice);
+    assertTrue("Unrender called on every next set", this.unrenderSpy.calledTwice);
+};
+
+testCase.prototype.testValueView_UnrenderConfigured_ShouldCallUnrenderOnViewObject = function(){
+    var bindable = js.bindableValue();
+
+    js.bind(bindable).to("#viewDestination", this.view);
+
+    bindable.setValue("value1");
+    bindable.setValue("value2");
+    assertNotUndefined("Unrender context", this.unrenderSpy.firstCall.thisValue);
+    assertTrue("Unrender called on view object", this.unrenderSpy.firstCall.thisValue.renderTo !== null);
 };
 
 testCase.prototype.testListView_UnrenderConfigured_ShouldCallUnrenderOnDeletingItems = function(){
     var bindable = js.bindableList();
-    var unrender = sinon.spy();
 
-    var view = function(){
-        this.template = "#viewTemplate";
-        this.unrender = unrender;
-    };
-
-    js.bind(bindable).to("#viewDestination", view);
+    js.bind(bindable).to("#viewDestination", this.view);
 
     bindable.setValue([1, 2, 3]);
-    assertTrue("Unrender not called on first set", unrender.notCalled);
+    assertTrue("Unrender not called on first set", this.unrenderSpy.notCalled);
 
     bindable.remove(2, 3);
-    assertTrue("Unrender called for every removed item", unrender.calledTwice);
+    assertTrue("Unrender called for every removed item", this.unrenderSpy.calledTwice);
 };

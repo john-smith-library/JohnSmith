@@ -133,7 +133,7 @@ module JohnSmith.View {
 
         public unrenderView() {
             if (this._data.unrender) {
-                this._data.unrender();
+                this._data.unrender.call(this);
             } else {
                 this.getRootElement().remove();
             }
