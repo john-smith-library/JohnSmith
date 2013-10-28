@@ -62,6 +62,14 @@ module JohnSmith.Binding {
                 listener.valueChanged(this._value, newValue, reason);
             }
         }
+
+        public hasValue(): boolean {
+            if (this._value == null || this._value == undefined) {
+                return false;
+            }
+
+            return true;
+        }
     }
 
     JohnSmith.Common.JS.bindableValue = function():JohnSmith.Binding.BindableValue {

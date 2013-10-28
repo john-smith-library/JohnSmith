@@ -1,12 +1,12 @@
-var bindingBindableValue = TestCase("unit.binding.BindableValue");
+var testCase = TestCase("unit.binding.BindableValue");
 
-bindingBindableValue.prototype.testCanAddListener = function() {
+testCase.prototype.testCanAddListener = function() {
     var bindableValue = new JohnSmith.Binding.BindableValue();
     bindableValue.addListener({});
     assertEquals("Should contain single listener", 1, bindableValue.getListenersCount());
 };
 
-bindingBindableValue.prototype.testCanDeleteListener = function() {
+testCase.prototype.testCanDeleteListener = function() {
     var bindableValue = new JohnSmith.Binding.BindableValue();
     var listener = {};
     bindableValue.addListener(listener);
@@ -14,19 +14,19 @@ bindingBindableValue.prototype.testCanDeleteListener = function() {
     assertEquals("Listeners count", 0, bindableValue.getListenersCount());
 };
 
-bindingBindableValue.prototype.testCanReturnValue = function() {
+testCase.prototype.testCanReturnValue = function() {
     var bindableValue = new JohnSmith.Binding.BindableValue();
     bindableValue.setValue("foo");
     assertEquals("Actual value", "foo", bindableValue.getValue());
 };
 
-bindingBindableValue.prototype.testCanReturnState = function() {
+testCase.prototype.testCanReturnState = function() {
     var bindableValue = new JohnSmith.Binding.BindableValue();
     bindableValue.setState("loading");
     assertEquals("Actual state", "loading", bindableValue.getState());
 };
 
-bindingBindableValue.prototype.testCallListenerOnValueChange = function() {
+testCase.prototype.testCallListenerOnValueChange = function() {
     var listenerWasCalled = false;
     var bindableValue = new JohnSmith.Binding.BindableValue();
     var listener = {
@@ -40,7 +40,7 @@ bindingBindableValue.prototype.testCallListenerOnValueChange = function() {
     assertTrue("Listener was called", listenerWasCalled);
 };
 
-bindingBindableValue.prototype.testPassNewAndOldValuesToListener = function() {
+testCase.prototype.testPassNewAndOldValuesToListener = function() {
     var bindableValue = new JohnSmith.Binding.BindableValue();
     var listener = {
         valueChanged: function(oldValue, newValue, changeType){
@@ -54,7 +54,7 @@ bindingBindableValue.prototype.testPassNewAndOldValuesToListener = function() {
     bindableValue.setValue("bar");
 };
 
-bindingBindableValue.prototype.testPassStateToListener = function() {
+testCase.prototype.testPassStateToListener = function() {
     var bindableValue = new JohnSmith.Binding.BindableValue();
     var listenerCalled = false;
     var listener = {
@@ -70,4 +70,25 @@ bindingBindableValue.prototype.testPassStateToListener = function() {
     bindableValue.setState("ready");
 
     assertTrue("Listener called", listenerCalled)
+};
+
+testCase.prototype.testHasValue_null_shouldReturnFalse = function() {
+    var bindableValue = new JohnSmith.Binding.BindableValue();
+    bindableValue.setValue(null);
+
+    assertFalse("hasValue", bindableValue.hasValue());
+};
+
+testCase.prototype.testHasValue_undefined_shouldReturnFalse = function() {
+    var bindableValue = new JohnSmith.Binding.BindableValue();
+    bindableValue.setValue(undefined);
+
+    assertFalse("hasValue", bindableValue.hasValue());
+};
+
+testCase.prototype.testHasValue_stringValueValue_shouldReturnTrue = function() {
+    var bindableValue = new JohnSmith.Binding.BindableValue();
+    bindableValue.setValue("22");
+
+    assertTrue("hasValue", bindableValue.hasValue());
 };
