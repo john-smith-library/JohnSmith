@@ -15,13 +15,11 @@ module JohnSmith.Binding {
     // Common Interfaces
     /////////////////////////////////
     export interface IBindableListener {
-        valueChanged?: (oldValue: Object, newValue: Object, changeType: DataChangeReason) => void;
-        stateChanged?: (oldState: string, newState: string) => void;
+        valueChanged: (oldValue: Object, newValue: Object, changeType: DataChangeReason) => void;
     }
 
     export interface IBindable {
         getValue: () => any;
-        getState: () => string;
         addListener: (listener: IBindableListener) => void;
         removeListener: (listener: IBindableListener) => void;
     }

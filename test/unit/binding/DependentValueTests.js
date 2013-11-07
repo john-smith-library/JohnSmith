@@ -5,8 +5,7 @@ testCase.prototype.testCallsListenerOnDependenciesChange = function() {
     var lastName = new JohnSmith.Binding.BindableValue();
     var fullName = new JohnSmith.Binding.DependentValue(
         function(){ return null; },
-        firstName,
-        lastName);
+        [firstName, lastName]);
 
     var changeSpy = sinon.spy();
     fullName.addListener({
@@ -27,8 +26,7 @@ testCase.prototype.test_getValue_shouldReturnEvaluatedValue = function() {
         function(firstNameValue, lastNameValue){
             return firstNameValue + " " + lastNameValue;
         },
-        firstName,
-        lastName);
+        [firstName, lastName]);
 
     firstName.setValue("John");
     lastName.setValue("Smith");

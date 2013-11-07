@@ -12,10 +12,6 @@ module JohnSmith.Binding {
             return this._value;
         }
 
-        public getState() {
-            return "normal";
-        }
-
         public addListener(listener: IBindableListener) {
         }
 

@@ -20,12 +20,6 @@ testCase.prototype.testCanReturnValue = function() {
     assertEquals("Actual value", "foo", bindableValue.getValue());
 };
 
-testCase.prototype.testCanReturnState = function() {
-    var bindableValue = new JohnSmith.Binding.BindableValue();
-    bindableValue.setState("loading");
-    assertEquals("Actual state", "loading", bindableValue.getState());
-};
-
 testCase.prototype.testCallListenerOnValueChange = function() {
     var listenerWasCalled = false;
     var bindableValue = new JohnSmith.Binding.BindableValue();
@@ -52,24 +46,6 @@ testCase.prototype.testPassNewAndOldValuesToListener = function() {
     bindableValue.setValue("foo");
     bindableValue.addListener(listener);
     bindableValue.setValue("bar");
-};
-
-testCase.prototype.testPassStateToListener = function() {
-    var bindableValue = new JohnSmith.Binding.BindableValue();
-    var listenerCalled = false;
-    var listener = {
-        stateChanged: function(oldValue, newValue){
-            assertEquals("Old value", oldValue, "loading");
-            assertEquals("New value", newValue, "ready");
-            listenerCalled = true;
-        }
-    };
-
-    bindableValue.setState("loading");
-    bindableValue.addListener(listener);
-    bindableValue.setState("ready");
-
-    assertTrue("Listener called", listenerCalled)
 };
 
 testCase.prototype.testHasValue_null_shouldReturnFalse = function() {

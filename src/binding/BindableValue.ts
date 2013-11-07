@@ -7,7 +7,6 @@ module JohnSmith.Binding {
     export class BindableValue implements IBindable {
         private _listeners: JohnSmith.Common.ArrayList;
         private _value: any;
-        private _state: string;
 
         constructor() {
             this._listeners = new JohnSmith.Common.ArrayList();
@@ -20,19 +19,6 @@ module JohnSmith.Binding {
         public setValue(value: any) {
             this.notifyListeners(value, DataChangeReason.replace);
             this._value = value;
-        }
-
-        public getState() {
-            return this._state;
-        }
-
-        public setState(state: string) {
-            for (var i = 0; i < this._listeners.count(); i++) {
-                var listener: IBindableListener = this._listeners.getAt(i);
-                listener.stateChanged(this._state, state);
-            }
-
-            this._state = state;
         }
 
         public addListener(listener: IBindableListener) {
