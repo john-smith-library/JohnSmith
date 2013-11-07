@@ -62,13 +62,28 @@ module JohnSmith.View {
             });
         }
 
-        public renderTo(destination:any):void {
-            var templateHtml = this._markupResolver.resolve(this._data.template);
+        public attachTo(destination:any):void {
             var destinationElement = typeof destination == "string" ?
                 this._elementFactory.createElement(destination) :
                 destination;
 
-            this._rootElement = destinationElement.appendHtml(templateHtml);
+            this.attachViewToRoot(destinationElement);
+        }
+
+        public renderTo(destination:any):void {
+            var templateHtml = this._markupResolver.resolve(this._data.template);
+
+            var destinationElement = typeof destination == "string" ?
+                this._elementFactory.createElement(destination) :
+                destination;
+
+            var root = destinationElement.appendHtml(templateHtml);
+
+            this.attachViewToRoot(root);
+        }
+
+        private attachViewToRoot(root: JohnSmith.Common.IElement):void {
+            this._rootElement = root;
 
             this._eventBus.trigger(
                 "viewRendered",

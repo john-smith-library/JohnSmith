@@ -29,6 +29,7 @@ module JohnSmith.View {
      */
     export interface IView extends Common.IDisposable {
         renderTo: (destination:any) => void;
+        attachTo: (destination:any) => void;
         unrenderView: () => void;
         getRootElement: () => Common.IElement;
     }
