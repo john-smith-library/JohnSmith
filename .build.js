@@ -154,7 +154,7 @@ task("packNuGet", ["buildFull"], function(){
 /* ================================================================================================================== */
 desc("Builds tutorial");
 task("buildTutorial", ["buildFull"], function(){
-    function discoverExamplesDirectory(dirPath, topicCollection){
+    function discoverExamplesDirectory(dirPath, topicCollection, flatTopics){
         var dirContent = fs.readdirSync(dirPath);
         for (var i = 0; i < dirContent.length; i++){
             var topicId = dirContent[i];
@@ -197,15 +197,33 @@ task("buildTutorial", ["buildFull"], function(){
                     }
 
                     topicCollection.push(topic);
-                    discoverExamplesDirectory(childPath, topic.children);
+
+                    if (topic.code && topic.markup) {
+                        flatTopics.push(topic);
+                    }
+
+                    discoverExamplesDirectory(childPath, topic.children, flatTopics);
                 }
             }
         }
     }
 
-    function generatePages(topics, allTopics){
+    function getTopicIndex(topic, topicList){
+        for (var i = 0; i < topicList.length; i++) {
+            if (topic.id === topicList[i].id) {
+                return i;
+            }
+        }
+    }
+
+    function generatePages(topics, allTopics, flatTopics){
         for (var i = 0; i < topics.length; i++) {
             var topic = topics[i];
+
+            var currentTopicGlobalIndex = getTopicIndex(topic, flatTopics);
+            var nextTopic = currentTopicGlobalIndex == flatTopics.length - 1 ? null : flatTopics[currentTopicGlobalIndex + 1];
+            var prevTopic = currentTopicGlobalIndex == 0 ? null : flatTopics[currentTopicGlobalIndex -1];
+
             if (topic.description) {
                 var outFile = path.join("out", topic.id + ".html");
                 var outJsonFile = path.join(path.join("out", "ajax"), topic.id + ".json");
@@ -213,6 +231,8 @@ task("buildTutorial", ["buildFull"], function(){
                 fs.writeFileSync(outFile, fn({
                     topics: allTopics,
                     currentTopic: topic,
+                    nextTopic: nextTopic,
+                    prevTopic: prevTopic,
                     version: version
                 }));
 
@@ -220,7 +240,7 @@ task("buildTutorial", ["buildFull"], function(){
             }
 
             if (topic.children) {
-                generatePages(topic.children, allTopics);
+                generatePages(topic.children, allTopics, flatTopics);
             }
         }
     }
@@ -255,8 +275,9 @@ task("buildTutorial", ["buildFull"], function(){
     });
 
     var topics = [];
-    discoverExamplesDirectory(examplesBaseDir, topics);
-    generatePages(topics, topics);
+    var flatTopics = [];
+    discoverExamplesDirectory(examplesBaseDir, topics, flatTopics);
+    generatePages(topics, topics, flatTopics);
 
     fs.writeFileSync(outSitemapPath, sitemapTemplate({
         topics: topics,

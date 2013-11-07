@@ -61,9 +61,14 @@ module JohnSmith.View {
         }
     }
 
+
     /////////////////////////////////
     // Config
     /////////////////////////////////
+
+    export interface IViewDestination {
+        to(target: any);
+    }
 
     JohnSmith.Common.JS.ioc.registerWithDependencies(
         "viewFactory",
@@ -88,5 +93,25 @@ module JohnSmith.View {
     JohnSmith.Common.JS.createView = function(viewDescriptor: any, viewModel:any): View.IView{
         var viewFactory = JohnSmith.Common.JS.ioc.resolve("viewFactory");
         return viewFactory.resolve(viewDescriptor, viewModel);
+    };
+
+    JohnSmith.Common.JS.renderView = function(viewDescriptor: any, viewModel:any): any {
+        var viewFactory = JohnSmith.Common.JS.ioc.resolve("viewFactory");
+        var view = viewFactory.resolve(viewDescriptor, viewModel);
+        return {
+            to: function(destination: any){
+                view.renderTo(destination);
+            }
+        }
+    };
+
+    JohnSmith.Common.JS.attachView = function(viewDescriptor: any, viewModel:any): any {
+        var viewFactory = JohnSmith.Common.JS.ioc.resolve("viewFactory");
+        var view = viewFactory.resolve(viewDescriptor, viewModel);
+        return {
+            to: function(destination: any){
+                view.attachTo(destination);
+            }
+        }
     };
 }

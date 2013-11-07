@@ -17,21 +17,21 @@ and elements.
 /***************************
  * Bind static value
  ***************************/
-js.bind("John").to("#myFirstName");     // It is actually the same as $("#myFirstName").text("John");
+js.bind("John").to("#myFirstName");    // It is actually the same as $("#myFirstName").text("John");
 
 /***************************
  * Bind dynamic value
  ***************************/
-var firstName = js.bindableValue();     // Create observable variable.
-js.bind(firstName).to("#myFirstName");  // Setup binding.
-firstName.setValue("John");             // Changing the value will cause corresponding UI changes.
+var firstName = js.bindableValue();    // Create observable variable.
+js.bind(firstName).to("#myFirstName"); // Setup binding.
+firstName.setValue("John");            // Changing the value will cause corresponding UI changes.
 
 /***************************
  * Bind with view rendering
  ***************************/
 var me = js.bindableValue();
-js.bind(me).to("#me", PersonView);       // PersonView is a view "class". Views described later
-me.setValue(personViewModel);            // personViewModel is some kind of object with person data
+js.bind(me).to("#me", PersonView);      // PersonView is a view "class". Views described later
+me.setValue(personViewModel);           // personViewModel is some kind of object with person data
 
 /***************************
  * Bind lists
@@ -100,7 +100,27 @@ var PersonView = function(){
 };
 ```
 
-View could be nested to each other:
+Once you have *View* class defined you can:
+
+- render the view:
+
+```javascript
+js.renderView(PersonView, personViewModel).to("#me");
+```
+
+- attach the view to existing markup (template could be avoided in this case):
+
+```javascript
+js.attachView(PersonView, personViewModel).to("#me");
+```
+
+- use the view for binding:
+
+```javascript
+js.bind(joeBlogs).to("#myFriend", PersonView);
+```
+
+- add the view as a child to another view:
 
 ```javascript
 var PersonDetailsView = function(){
