@@ -44,7 +44,7 @@ myFriends.remove(friend2);                           // remove the item. Again J
 
 View Model
 ----------
-*ViewModel* is bridge between Business Logic and View Logic. ViewModel exposes properties and methods that are indended to be
+*View Model* is a bridge between Business Logic and View Logic. ViewModel exposes properties and methods that are indended to be
  consumed by the view. The properties could be regular fields or they could be bindable variables if the View wants to track changes.
 
 ```javascript
@@ -58,14 +58,71 @@ Views
 -----
 
 *View* is a reusable block of UI with attached behaviour. In a nutshell *View* is a combination of _template_
-and _rendering logic_. _Template_ is a simple HTML markup (or jQuery selector referencing this markup) and _rendering logic_ is usually a bunch of binding configuration
-and events subscriptions. View could be nested to each other.
+and _rendering logic_:
+
+```javascript
+var PersonView = function(){
+    this.template = "..template goes here...";
+    this.init = function() {
+        // rendering logic does here
+    };
+};
+```
+
+_Template_ is a simple HTML markup (or jQuery selector referencing this markup) and _rendering logic_ is usually a bunch of binding configuration
+and events subscriptions:
+
+```javascript
+var PersonView = function(){
+    // here we use plain html as view template
+    this.template = "<span class='firstName' /> <span class='lastName' />";
+
+    this.init = function() {
+        // NOTE that .firstName and .lastName selectors
+        // will be searched within the rendered template. It helps
+        // to keep the view fully reusable and independent from the outside markup.
+
+        this.bind("John").to(".firstName");
+        this.bind("Smith").to(".lastName");
+    };
+};
+```
+
+View is supposed to work with a particular View Model:
+
+```javascript
+var PersonView = function(){
+    this.template = "#personViewTemplate";  // here we use jQuery selector to reference template
+    this.init = function(viewModel) {
+        this.bind(viewModel.firstName).to(".firstName");
+        this.bind(viewModel.lastName).to(".lastName");
+    };
+};
+```
+
+View could be nested to each other:
+
+```javascript
+var PersonDetailsView = function(){
+    // ...
+};
+
+var PersonView = function(){
+    this.template = "#personViewTemplate";  // here we use jQuery selector to reference template
+    this.init = function(viewModel) {
+        this.bind(viewModel.firstName).to(".firstName");
+        this.bind(viewModel.lastName).to(".lastName");
+
+        this.addChild(".details", PersonDetailsView, viewModel.createDetailsViewModel());
+    };
+};
+```
 
 Binding + Views
 ---------------
 
-You can setup binding to use a View for rendering. And a View could configure new bindings. These infinite circle allow you
-to use Views as bricks for building composite application UI.
+You can setup binding to use a View for rendering. And a View could configure new bindings. These infinite cycle allow you
+to build composite interface and use Views as reusable UI bricks.
 
 
 
