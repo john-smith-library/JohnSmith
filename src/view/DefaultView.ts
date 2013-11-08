@@ -119,8 +119,8 @@ module JohnSmith.View {
                 }
             }
 
-            if (this._viewModel && this._viewModel.resetState){
-                this._viewModel.resetState();
+            if (this._viewModel && this._viewModel.initState){
+                this._viewModel.initState();
             }
         }
 

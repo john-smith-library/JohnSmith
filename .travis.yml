@@ -7,7 +7,7 @@ env:
     - secure: "Q9rDQLDcsiZvooElo4ztdx7q90B10me5h1kqg/NxjGf52B3M4ruwzX/nk5rm\nUAVPE1pyTt+O/yDoz5uamsTxzMP8wDg4NKZFkPlPBBsWMcjn6dS3h0Tt39md\nAsLp4fDPdS4SfsI8DmydOKyRhrms7KyWtDme9GA3zqoG+77+Xw8="
     - MAJOR_VERSION: 0
     - MINOR_VERSION: 2
-    - REVISION: 0
+    - REVISION: 1
 
 before_script:
     - export VERSION="${MAJOR_VERSION}.${MINOR_VERSION}.${REVISION}.${TRAVIS_BUILD_NUMBER}"

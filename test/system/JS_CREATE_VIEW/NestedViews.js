@@ -1,10 +1,10 @@
 /** Tests rendering of nested (parent-child) views */
 var testCase = TestCase("system.JS_CREATE_VIEW.NestedViews");
 
-/** Child view model class. Sets test bindable value on resetState. */
+/** Child view model class. Sets test bindable value on initState. */
 var ChildViewModel = function() {
     this.value = js.bindableValue();
-    this.resetState = function(){
+    this.initState = function(){
         this.value.setValue("foo");
     };
 };

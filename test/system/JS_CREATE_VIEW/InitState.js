@@ -1,4 +1,4 @@
-var testCase = new TestCase("system.JS_CREATE_VIEW.ResetState");
+var testCase = new TestCase("system.JS_CREATE_VIEW.InitState");
 
 testCase.prototype.testViewWithResetStateShouldRenderTemplate = function(){
     $("body").append(
@@ -10,7 +10,7 @@ testCase.prototype.testViewWithResetStateShouldRenderTemplate = function(){
 
     var viewModel = {
         value: js.bindableValue(),
-        resetState: function(){
+        initState: function(){
             this.value.setValue("bar2");
         }
     };

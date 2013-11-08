@@ -5,7 +5,7 @@ module JohnSmith.View {
      * Optional view model interface
      */
     export interface IViewModel {
-        resetState?: () => void;
+        initState?: () => void;
     }
 
     /**
