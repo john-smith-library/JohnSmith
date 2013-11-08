@@ -50,6 +50,11 @@ module JohnSmith.View {
             this._commands = [];
         }
 
+        // todo write tests for this
+        public find(query: string): JohnSmith.Common.IElement {
+            return this.getRootElement().findRelative(query);
+        }
+
         public addChild(destination:any, child:IView, viewModel: any){
             if (!this.hasChildren()) {
                 this._children = [];
@@ -62,6 +67,7 @@ module JohnSmith.View {
             });
         }
 
+        // todo write tests for this
         public attachTo(destination:any):void {
             var destinationElement = typeof destination == "string" ?
                 this._elementFactory.createElement(destination) :

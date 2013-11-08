@@ -34,9 +34,6 @@ module JohnSmith.Binding {
             this.doRender(newValue);
         }
 
-        public stateChanged(oldState: string, newState: string) {
-        }
-
         public dispose(): void {
             this.disposeCurrentValue();
         }
