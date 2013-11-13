@@ -5,6 +5,7 @@ module JohnSmith.Binding {
         private _listeners: JohnSmith.Common.ArrayList;
         private _evaluateValue: () => any;
         private _dependencies: IBindable[];
+        private _allDependencies: IBindable[];
         private _dependencyValues: any[];
 
         constructor(evaluate: () => any, dependencies: IBindable[]) {
@@ -12,7 +13,7 @@ module JohnSmith.Binding {
             this._evaluateValue = evaluate;
             this._listeners = new JohnSmith.Common.ArrayList();
             this._dependencyValues = [];
-
+            this._allDependencies = [];
 
             for (var i = 0; i < dependencies.length; i++) {
                 var dependency = dependencies[i];
@@ -21,11 +22,24 @@ module JohnSmith.Binding {
             }
         }
 
-        private setupDependencyListener(dependency:IBindable){
+        public setupDependencyListener(dependency:IBindable){
+            for (var i = 0; i < this._allDependencies.length; i++){
+                if (this._allDependencies[i] === dependency){
+                    return;
+                }
+            }
+
+            this._allDependencies.push(dependency);
+
             var dependentValue = this;
             dependency.addListener({
                 valueChanged: function(oldValue: Object, newValue: Object, changeType: DataChangeReason) {
-                    dependentValue.notifyListeners(dependency, newValue);
+                    var actualValue = newValue;
+                    if (changeType !== DataChangeReason.replace) {
+                        actualValue = dependency.getValue();
+                    }
+
+                    dependentValue.notifyListeners(dependency, actualValue);
                 }
             });
         }

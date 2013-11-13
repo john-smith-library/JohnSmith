@@ -41,10 +41,6 @@ module JohnSmith.Binding {
         private doRender(value: any):void {
             this.disposeCurrentValue();
 
-            if (this._currentValue) {
-                this._currentValue.unrender();
-            }
-
             if (value !== null && value !== undefined) {
                 this._currentValue = this._valueRenderer.render(value, this._contentDestination);
             } else {
@@ -53,7 +49,7 @@ module JohnSmith.Binding {
         }
 
         private disposeCurrentValue(){
-            if (this._currentValue && this._currentValue.dispose) {
+            if (this._currentValue) {
                 this._currentValue.dispose();
             }
         }

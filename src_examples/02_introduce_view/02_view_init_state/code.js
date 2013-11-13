@@ -1,7 +1,7 @@
 var ViewModel = function(){
     this.firstName = js.bindableValue(),
     this.lastName = js.bindableValue(),
-    this.resetState = function(){
+    this.initState = function(){
         // this function will be called by the vew after rendering.
         this.firstName.setValue("John");
         this.lastName.setValue("Smith");

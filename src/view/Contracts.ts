@@ -6,6 +6,7 @@ module JohnSmith.View {
      */
     export interface IViewModel {
         initState?: () => void;
+        releaseState?: () => void;
     }
 
     /**

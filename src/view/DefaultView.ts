@@ -161,16 +161,27 @@ module JohnSmith.View {
         }
 
         public dispose(): void {
+            this.unrenderView();
+
+            /* release viewModel state before disposing
+            *  to make sure the model will not attempt to use bindables */
+            if (this._viewModel && this._viewModel.releaseState){
+                this._viewModel.releaseState();
+            }
+
+            /* dispose children */
             if (this.hasChildren()){
                 for (var i = 0; i < this._children.length; i++){
                     this._children[i].child.dispose();
                 }
             }
 
+            /* dispose bindings */
             for (var i = 0; i < this._bindings.length; i++) {
                 this._bindings[i].dispose();
             }
 
+            /* dispose commands */
             for (var i = 0; i < this._commands.length; i++) {
                 this._commands[i].dispose();
             }

@@ -171,38 +171,41 @@ task("buildTutorial", ["buildFull"], function(){
 
                 if (fs.existsSync(configFile)){
                     var configData = yaml.load(fs.readFileSync(configFile).toString());
-                    title = configData.title;
 
-                    var cleanTopicId = topicId.replace(/^\d\d_/, "");
+                    if (configData.visible !== false){
+                        title = configData.title;
 
-                    console.log(cleanTopicId);
+                        var cleanTopicId = topicId.replace(/^\d\d_/, "");
 
-                    var topic = {
-                        id: cleanTopicId,
-                        title: title,
-                        children: [],
-                        isNew: configData.isNew || false
-                    };
+                        console.log(cleanTopicId);
 
-                    if (fs.existsSync(markupFile)){
-                        topic.markup = fs.readFileSync(markupFile).toString();
+                        var topic = {
+                            id: cleanTopicId,
+                            title: title,
+                            children: [],
+                            isNew: configData.isNew || false
+                        };
+
+                        if (fs.existsSync(markupFile)){
+                            topic.markup = fs.readFileSync(markupFile).toString();
+                        }
+
+                        if (fs.existsSync(codeFile)){
+                            topic.code = fs.readFileSync(codeFile).toString();
+                        }
+
+                        if (fs.existsSync(contentFile)){
+                            topic.description = fs.readFileSync(contentFile).toString();
+                        }
+
+                        topicCollection.push(topic);
+
+                        if (topic.code && topic.markup) {
+                            flatTopics.push(topic);
+                        }
+
+                        discoverExamplesDirectory(childPath, topic.children, flatTopics);
                     }
-
-                    if (fs.existsSync(codeFile)){
-                        topic.code = fs.readFileSync(codeFile).toString();
-                    }
-
-                    if (fs.existsSync(contentFile)){
-                        topic.description = fs.readFileSync(contentFile).toString();
-                    }
-
-                    topicCollection.push(topic);
-
-                    if (topic.code && topic.markup) {
-                        flatTopics.push(topic);
-                    }
-
-                    discoverExamplesDirectory(childPath, topic.children, flatTopics);
                 }
             }
         }

@@ -9,9 +9,9 @@ _self-contained reusable views_ to provide simple yet powerful basis for complex
 Binding
 -------
 
-*Binding feature* allow you to wire JavaScript objects properties to UI elements. The special thing about JohnSmith's binding is
-that it's anti-declarative, all configuration goes to code. That means the markup is clear of binding related attributes
-and elements.
+*Binding* feature allow you to wire JavaScript object properties to UI elements. The special thing about JohnSmith's binding is
+that it's anti-declarative, all configuration goes to the code. That means the markup is clear of binding related attributes
+and elements:
 
 ```javascript
 /***************************
@@ -44,8 +44,9 @@ myFriends.remove(friend2);                           // remove the item. Again J
 
 View Model
 ----------
-*View Model* is a bridge between Business Logic and View Logic. ViewModel exposes properties and methods that are indended to be
- consumed by the view. The properties could be regular fields or they could be bindable variables if the View wants to track changes.
+*View Model* is a bridge between Business Logic and View Logic. *View Model* exposes properties and methods that are
+indented to be  consumed by the view. The properties could be regular fields or they could be bindable variables if
+the View wants to track changes.
 
 ```javascript
 var PersonViewModel = function(){
@@ -69,8 +70,8 @@ var PersonView = function(){
 };
 ```
 
-_Template_ is a simple HTML markup (or jQuery selector referencing this markup) and _rendering logic_ is usually a bunch of binding configuration
-and events subscriptions:
+_Template_ is a simple HTML markup (or jQuery selector referencing this markup) and _rendering logic_ is usually a
+bunch of binding configuration and events subscriptions:
 
 ```javascript
 var PersonView = function(){
@@ -88,7 +89,7 @@ var PersonView = function(){
 };
 ```
 
-View is supposed to work with a particular View Model:
+View is supposed to work with a particular *[View Model](#view-model)*:
 
 ```javascript
 var PersonView = function(){
@@ -100,7 +101,7 @@ var PersonView = function(){
 };
 ```
 
-Once you have *View* class defined you can:
+Once you have a *View* class defined you can:
 
 - render the view:
 
@@ -128,10 +129,9 @@ var PersonDetailsView = function(){
 };
 
 var PersonView = function(){
-    this.template = "#personViewTemplate";  // here we use jQuery selector to reference template
+    this.template = "...";
     this.init = function(viewModel) {
-        this.bind(viewModel.firstName).to(".firstName");
-        this.bind(viewModel.lastName).to(".lastName");
+        // ...
 
         this.addChild(".details", PersonDetailsView, viewModel.createDetailsViewModel());
     };

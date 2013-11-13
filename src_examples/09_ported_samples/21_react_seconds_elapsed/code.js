@@ -1,47 +1,34 @@
-var ClickViewModel = function(){
-    this.numberOfClicks = js.bindableValue();
+/* Declare view model */
+var TimerViewModel = function(){
+    this.secondsElapsed = js.bindableValue();
 
-    this.hasClickedToManyTimes = js.dependentValue(
-        this.numberOfClicks,
-        function(numberOfClicksValue){
-            return numberOfClicksValue >= 3;
-        });
+    this.initState = function(){
+        this.secondsElapsed.setValue(0);
 
-    this.registerClick = function(){
-        var newClicksCount = this.numberOfClicks.getValue() + 1;
-
-        this.numberOfClicks.setValue(newClicksCount);
+        var that = this;
+        this.timer = setInterval(function(){that.tick();}, 1000);
     };
 
-    this.resetClicks = function(){
-        this.numberOfClicks.setValue(0);
+    this.tick = function(){
+        this.secondsElapsed.setValue(this.secondsElapsed.getValue() + 1);
     };
 
-    this.resetState = function(){
-        this.numberOfClicks.setValue(0);
+    /* releaseState is a special function that called by JS before
+    *  view un-rendering. It says ViewModel to stop using any bindables. */
+    this.releaseState = function(){
+        clearInterval(this.timer);
     };
 };
 
-var ClickView = function(){
-    this.template = "#clickViewTemplate";
+/* Declare view */
+var TimerView = function(){
+    // view is very simple, so we use inline template here
+    this.template = "<p>Seconds Elapsed: <span></span></p>";
+
     this.init = function(viewModel){
-        var toManyClicksPanel = this.find("#hasClickedTooManyTimes").getTarget();
-        var clickMeButton = this.find("#clickMe").getTarget();
-
-        this.bind(viewModel.numberOfClicks).to("#numberOfClicks");
-        this.bind(viewModel.hasClickedToManyTimes).to(function(tooManyClicks){
-            if (tooManyClicks) {
-                toManyClicksPanel.show();
-                clickMeButton.prop("disabled", true);
-            } else {
-                toManyClicksPanel.hide();
-                clickMeButton.prop("disabled", false);
-            }
-        });
-
-        this.on("#clickMe", "click").do(viewModel.registerClick);
-        this.on("#resetClicks", "click").do(viewModel.resetClicks);
+        this.bind(viewModel.secondsElapsed).to("span");
     };
 };
 
-js.renderView(ClickView, new ClickViewModel()).to("#sample");
+/* Render the vew */
+js.renderView(TimerView, new TimerViewModel()).to("#sample");

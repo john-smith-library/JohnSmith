@@ -3,9 +3,18 @@
 
     var View = function(){
         this.template = "<a id='button'>click me</a>";
-        this.init = function(viewModel){
+        this.init = function(){
             this.on("#button", "click").do(function(){});
         };
+
+        /* override unrender function to prevent DOM clearing */
+        this.unrender = function(){
+        };
+    };
+
+    testCase.prototype.setUp = function(){
+        /** Add view destination markup */
+        /*:DOC += <div id="viewDestination"></div> */
     };
 
     testCase.prototype.getEventHandlersCount = function(selector, event){
@@ -26,12 +35,14 @@
             return 0;
         }
 
-        return  targetEvents.length;
+        return targetEvents.length;
     };
 
     testCase.prototype.testDispose_ShouldUnbindEventHandler = function(){
         var view = js.createView(View, {});
-        view.renderTo("body");
+        view.renderTo("#viewDestination");
+
+        console.log($('body').html());
 
         assertTrue("Has one attached handler", this.getEventHandlersCount("#button", "click") === 1);
 

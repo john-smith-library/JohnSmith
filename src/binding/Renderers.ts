@@ -15,7 +15,7 @@ module JohnSmith.Binding {
             var formattedValue = this._formatter.format(value);
             return {
                 element: this.doRender(formattedValue, destination),
-                unrender: function(){
+                dispose: function(){
                     this.element.remove();
                 }
             };
@@ -84,8 +84,8 @@ module JohnSmith.Binding {
             this._fetcher.valueToElement(formattedValue, destination);
             return {
                 element: destination,
-                unrender: function(){
-                    /* do not need to unrender fetcher-based values */
+                dispose: function(){
+                    /* do not need to dispose fetcher-based values because no markup produced */
                 }
             };
         }

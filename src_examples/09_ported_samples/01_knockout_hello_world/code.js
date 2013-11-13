@@ -14,5 +14,5 @@ js.bind(lastName).to("#lastNameInput");
 js.bind(fullName).to("#fullName");
 
 /* put some values to bindables */
-firstName.setValue("John");
-lastName.setValue("Smith");
+firstName.setValue("Planet");
+lastName.setValue("Earth");

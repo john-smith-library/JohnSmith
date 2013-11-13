@@ -1,6 +1,6 @@
 var testCase = new TestCase("system.JS_CREATE_VIEW.InitState");
 
-testCase.prototype.testViewWithResetStateShouldRenderTemplate = function(){
+testCase.prototype.testViewWithInitStateShouldRenderTemplate = function(){
     $("body").append(
         "<script id='simpleView' type='text/view'>" +
             "<div class='value'></div>" +

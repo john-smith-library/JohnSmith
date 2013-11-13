@@ -78,12 +78,7 @@ module JohnSmith.Binding {
                     var item = items[i];
                     var itemRenderedValue = this.findRenderedValue(item);
                     if (itemRenderedValue) {
-                        if (itemRenderedValue.dispose) {
-                            itemRenderedValue.dispose();
-                        }
-
-                        itemRenderedValue.unrender();
-                        //itemRenderedValue.element.remove();
+                        itemRenderedValue.dispose();
                         this.removeRenderedValue(itemRenderedValue);
                     }
                 }
