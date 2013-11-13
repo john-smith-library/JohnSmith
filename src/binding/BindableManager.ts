@@ -116,6 +116,6 @@ module JohnSmith.Binding {
     JohnSmith.Common.JS.ioc.register("bindingManager", bindingManager);
 
     JohnSmith.Common.JS.bind = function(bindable: any): JohnSmith.Binding.BindingConfig {
-        return new BindingConfig(bindingManager, bindable, null, Common.JS);
+        return new BindingConfig(bindingManager, bindable, null, Common.JS, true);
     }
 }

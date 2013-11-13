@@ -93,17 +93,20 @@ module JohnSmith.Binding {
         private _context: JohnSmith.Common.IElement;
         private _commandHost: Command.ICommandHost;
         private _wires: BindingWire[];
+        private _initImmediately: boolean;
 
         constructor(
             manager: IBindableManager,
             bindable: any,
             context: JohnSmith.Common.IElement,
-            commandHost: Command.ICommandHost) {
+            commandHost: Command.ICommandHost,
+            initImmediately: boolean) {
             this._manager = manager;
             this._bindable = bindable;
             this._context = context;
             this._commandHost = commandHost;
             this._wires = [];
+            this._initImmediately = initImmediately;
         }
 
         public to(...handler: any[]):BindingConfig {
@@ -114,8 +117,18 @@ module JohnSmith.Binding {
                 commandHost: this._commandHost
             });
             this._wires.push(wire);
-            wire.init();
+
+            if (this._initImmediately) {
+                wire.init();
+            }
+
             return this;
+        }
+
+        public init() {
+            for (var i = 0; i < this._wires.length; i++){
+                this._wires[i].init();
+            }
         }
 
         public dispose(){

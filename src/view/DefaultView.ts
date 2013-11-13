@@ -110,6 +110,11 @@ module JohnSmith.View {
                 this._data.init.call(this, this._viewModel);
             }
 
+            /* Init bindings */
+            for (var i = 0; i < this._bindings.length; i++) {
+                this._bindings[i].init();
+            }
+
             if (this.hasChildren()){
                 for (var i = 0; i < this._children.length; i++) {
                     var childData = this._children[i];
@@ -129,7 +134,8 @@ module JohnSmith.View {
                 this._bindableManager,
                 bindable,
                 this._rootElement,
-                this);
+                this,
+                false);
 
             this._bindings.push(binding);
 
