@@ -570,3 +570,13 @@ a
 {
     float: right;
 }
+
+#mainFooter .info
+{
+    float: left;
+}
+
+#mainFooter #footerLinks
+{
+    text-align: center;
+}
