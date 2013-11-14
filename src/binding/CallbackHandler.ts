@@ -13,6 +13,7 @@ module JohnSmith.Binding {
 
         public wireWith(bindable: IBindable) {
             bindable.addListener(this);
+            this.invokeCallback(null, bindable.getValue(), DataChangeReason.replace)
         }
 
         public unwireWith(bindable: IBindable) {
@@ -20,6 +21,10 @@ module JohnSmith.Binding {
         }
 
         public valueChanged(oldValue: Object, newValue: Object, changeType: DataChangeReason) {
+            this.invokeCallback(oldValue, newValue, changeType);
+        }
+
+        private invokeCallback(oldValue: any, newValue: any, changeType: DataChangeReason){
             // context should be 'window' by default
             // so 'native' functions like 'alert' would work correctly
             var context = window;

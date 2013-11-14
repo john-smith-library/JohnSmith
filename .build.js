@@ -168,6 +168,7 @@ task("buildTutorial", ["buildFull"], function(){
                 var contentFile = path.join(childPath, "content.html");
                 var codeFile = path.join(childPath, "code.js");
                 var markupFile = path.join(childPath, "markup.html");
+                var stylesFile = path.join(childPath, "styles.css");
 
                 if (fs.existsSync(configFile)){
                     var configData = yaml.load(fs.readFileSync(configFile).toString());
@@ -196,6 +197,10 @@ task("buildTutorial", ["buildFull"], function(){
 
                         if (fs.existsSync(contentFile)){
                             topic.description = fs.readFileSync(contentFile).toString();
+                        }
+
+                        if (fs.existsSync(stylesFile)){
+                            topic.styles = fs.readFileSync(stylesFile).toString();
                         }
 
                         topicCollection.push(topic);
