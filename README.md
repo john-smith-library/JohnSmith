@@ -1,10 +1,11 @@
-JohnSmith
-=========
-
-[![Build Status](https://travis-ci.org/guryanovev/JohnSmith.png?branch=master)](https://travis-ci.org/guryanovev/JohnSmith)
+<p align="center">
+    <img src='https://raw.github.com/guryanovev/JohnSmith/master/src_examples/assets/images/logo_large.png' alt='JohnSmith' />
+</p>
 
 JohnSmith is a lightweight JavaScript UI library that utilizes the concepts of _anti-declarative binding_ and
 _self-contained reusable views_ to provide simple yet powerful basis for complex client-side applications.
+
+[![Build Status](https://travis-ci.org/guryanovev/JohnSmith.png?branch=master)](https://travis-ci.org/guryanovev/JohnSmith)
 
 Binding
 -------
