@@ -7,6 +7,11 @@ _self-contained reusable views_ to provide simple yet powerful basis for complex
 
 [![Build Status](https://travis-ci.org/guryanovev/JohnSmith.png?branch=master)](https://travis-ci.org/guryanovev/JohnSmith)
 
+Quick Samples to meet JohnSmith
+-------
+- [User Greeter](http://john-smith-js.com/index.html)
+- [File System Tree](http://john-smith-js.com/filetree.html)
+
 Binding
 -------
 
