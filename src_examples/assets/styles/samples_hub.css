@@ -1,9 +1,10 @@
 /* mini resets */
-h1, h2, h3, h4, h5, pre, code, div, header, section, body, p, a, ul, li
+h1, h2, h3, h4, h5, pre, code, div, header, section, body, p, a, ul, li, img
 {
     margin: 0;
     padding: 0;
     font-weight: normal;
+    border: none;
 }
 
 table
@@ -51,6 +52,12 @@ a
     width: 1200px; /* default width */
 }
 
+#mainHeader #johnSmith
+{
+    float: left;
+    margin-right: 5px;
+}
+
 #logo span
 {
     color: #009fe3;
@@ -91,16 +98,21 @@ a
     margin: 0 auto;
 }
 
-#page h1
-{
-    padding-top: 40px;
-    font-weight: 300;
-    padding-bottom: 10px;
-}
-
 #page .sourceContent
 {
     overflow: auto;
+}
+
+#contentHeader
+{
+    height: 80px;
+}
+
+#contentHeader h1
+{
+    padding-top: 30px;
+    font-weight: 300;
+    font-size: 26px;
 }
 
 /* ----------------------------------------------
@@ -236,7 +248,13 @@ a
     text-transform: uppercase;
     color: #999999;
     text-shadow: 1px 1px #FFFFFF;
+
+    background: #EFEFEF;
     background: -webkit-linear-gradient(#FFFFFF, #EFEFEF, #EEEEEE);
+    background: -moz-linear-gradient(top, #FFFFFF, #EFEFEF, #EEEEEE);
+    background: -ms-linear-gradient(top, #FFFFFF, #EFEFEF, #EEEEEE);
+    background: -o-linear-gradient(top, #FFFFFF, #EFEFEF, #EEEEEE);
+
     padding: 5px 10px;
     border: 1px solid #cfcfcf;
     cursor: pointer;
@@ -408,7 +426,7 @@ a
 #mainNavigation
 {
     position: absolute;
-    top: 63px;
+    top: 60px;
     z-index: 1000;
     width: 188px;
     height: 40px;
@@ -479,7 +497,11 @@ a
 #mainNavigation #nextLink,
 #mainNavigation #browseAll span
 {
-    background: -webkit-linear-gradient(#FFFFFF, #EFEFEF, #EEEEEE)
+    background: #EFEFEF;
+    background: -webkit-linear-gradient(#FFFFFF, #EFEFEF, #EEEEEE);
+    background: -moz-linear-gradient(top, #FFFFFF, #EFEFEF, #EEEEEE);
+    background: -ms-linear-gradient(top, #FFFFFF, #EFEFEF, #EEEEEE);
+    background: -o-linear-gradient(top, #FFFFFF, #EFEFEF, #EEEEEE);
 }
 
 #mainNavigation #prevLink.disabled,
