@@ -151,5 +151,6 @@ You can setup binding to use a View for rendering. And a View could configure ne
 to build composite interface and use Views as reusable UI bricks.
 
 
+---
 
-[JohnSmith Docs](http://john-smith-js.com/)
+[Discover more samples here](http://john-smith-js.com/)
