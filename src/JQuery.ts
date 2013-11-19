@@ -148,12 +148,21 @@ module JohnSmith.JQuery {
 
     export class JQueryMarkupResolver implements JohnSmith.Common.IMarkupResolver {
         public resolve(markup: any): string {
-            var jqueryMarkup =
-                markup instanceof jQuery ?
-                markup : $(markup);
+            var $markup;
+            if (markup instanceof jQuery) {
+                $markup = markup;
+            } else {
+                try {
+                    $markup = $(markup);
+                }
+                catch(error) {
+                    return markup;
+                }
 
-            if (jqueryMarkup.parent().length > 0){
-                return jqueryMarkup.html();
+            }
+
+            if ($markup.parent().length > 0){
+                return $markup.html();
             }
 
             if (typeof markup === "string") {

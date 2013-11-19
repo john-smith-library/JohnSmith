@@ -36,6 +36,15 @@ testCase.prototype.testResolve_PlainMarkup_ShouldReturnInnerHtml = function(){
     assertEquals("Resolved markup", '<div class="container">content</div>', resolvedHtml.trim());
 };
 
+/** It tests markup that is problem for Sizzle */
+testCase.prototype.testResolve_PlainMarkupWithPrependedText_ShouldReturnInnerHtml = function(){
+    var resolvedHtml = this.resolver.resolve('content <div class="container">content</div>');
+
+    assertNotNull("Resolved markup", resolvedHtml);
+    assertString("Resolved markup", resolvedHtml);
+    assertEquals("Resolved markup", 'content <div class="container">content</div>', resolvedHtml.trim());
+};
+
 testCase.prototype.testResolve_OrphanJQueryObject_ShouldReturnInnerHtml = function(){
     var resolvedHtml = this.resolver.resolve($('<div class="container">content</div>'));
 
@@ -45,6 +54,7 @@ testCase.prototype.testResolve_OrphanJQueryObject_ShouldReturnInnerHtml = functi
 };
 
 testCase.prototype.testResolve_OrphanConstructedJQueryObject_ShouldReturnInnerHtml = function(){
+
     var resolvedHtml = this.resolver.resolve($("<div>").addClass("container").text("content"));
 
     assertNotNull("Resolved markup", resolvedHtml);
