@@ -12,7 +12,7 @@ testCase.prototype.doChange = function(checked){
 
 testCase.prototype.test_OnChangeFetchChecked_ShouldCallCallback = function(){
     var callback = sinon.spy();
-    js.on("#checkbox", "change", { fetch: "checkedAttribute" }).call(callback);
+    js.on("#checkbox", "change", { fetch: "checkedAttribute" }).react(callback);
     this.doChange();
 
     assertTrue("Value passed to callback", callback.calledOnce);
@@ -20,7 +20,7 @@ testCase.prototype.test_OnChangeFetchChecked_ShouldCallCallback = function(){
 
 testCase.prototype.test_OnChangeFetchChecked_ShouldPassValueToCallback = function(){
     var callback = sinon.spy();
-    js.on("#checkbox", "change", { fetch: "checkedAttribute" }).call(callback);
+    js.on("#checkbox", "change", { fetch: "checkedAttribute" }).react(callback);
 
     this.doChange(true);
     assertTrue("True passed to callback", callback.calledWithExactly(true));
@@ -31,7 +31,7 @@ testCase.prototype.test_OnChangeFetchChecked_ShouldPassValueToCallback = functio
 
 testCase.prototype.test_OnChangeAutodetect_ShouldPassValueToCallback = function(){
     var callback = sinon.spy();
-    js.on("#checkbox", "change").call(callback);
+    js.on("#checkbox", "change").react(callback);
 
     this.doChange(true);
     assertTrue("True passed to callback", callback.calledWithExactly(true));

@@ -57,8 +57,8 @@ ApplicationView.prototype.init = function(viewModel){
 
     $window.resize(reactOnResize);
 
-    this.on("#browseAll", "click").call(viewModel.showTableOfContents);
-    this.on("#tableOfContentsOverlay", "click").call(viewModel.hideTableOfContents);
+    this.on("#browseAll", "click").react(viewModel.showTableOfContents);
+    this.on("#tableOfContentsOverlay", "click").react(viewModel.hideTableOfContents);
 
     this.bind(viewModel.tableOfContentVisible).to(function(visible){
         var $tableOfContents = $("#tableOfContents");

@@ -10,14 +10,14 @@ testCase.prototype.doClick = function(){
 
 testCase.prototype.test_OnClickDoCommand_ShouldCallFunction = function(){
     var callback = sinon.spy();
-    js.on("#send", "click").call({ execute: callback });
+    js.on("#send", "click").react({ execute: callback });
     this.doClick();
     assertTrue("Callback was called", callback.calledOnce);
 };
 
 testCase.prototype.test_OnClickDoFunction_ShouldCallFunction = function(){
     var callback = sinon.spy();
-    js.on("#send", "click").call(callback);
+    js.on("#send", "click").react(callback);
     this.doClick();
 
     assertTrue("Callback was called", callback.calledOnce);
@@ -30,7 +30,7 @@ testCase.prototype.test_OnClickDoViewModelMethod_ShouldPreserveContext = functio
     };
 
     var viewModelInstance = new ViewModel();
-    js.on("#send", "click").call(viewModelInstance.send, viewModelInstance);
+    js.on("#send", "click").react(viewModelInstance.send, viewModelInstance);
     this.doClick();
 
     assertTrue("Callback was called on viewModel", viewModelInstance.send.calledOn(viewModelInstance));
@@ -42,7 +42,7 @@ testCase.prototype.test_OnClickDoCommand_ShouldPreserveContext = function(){
         execute: sinon.spy()
     };
 
-    js.on("#send", "click").call(command);
+    js.on("#send", "click").react(command);
     this.doClick();
 
     assertTrue("Callback was called on command", command.execute.calledOn(command));

@@ -113,7 +113,7 @@ var FileView = function(){
         this.bind(fileViewModel.name).to(".name");
         this.bind(fileViewModel.children).to(".children", FileView);
 
-        this.on("a", "click").call(fileViewModel.showFullPath);
+        this.on("a", "click").react(fileViewModel.showFullPath);
     };
 };
 
