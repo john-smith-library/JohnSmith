@@ -4,7 +4,7 @@
     var View = function(){
         this.template = "<a id='button'>click me</a>";
         this.init = function(){
-            this.on("#button", "click").do(function(){});
+            this.on("#button", "click").call(function(){});
         };
 
         /* override unrender function to prevent DOM clearing */
@@ -41,8 +41,6 @@
     testCase.prototype.testDispose_ShouldUnbindEventHandler = function(){
         var view = js.createView(View, {});
         view.renderTo("#viewDestination");
-
-        console.log($('body').html());
 
         assertTrue("Has one attached handler", this.getEventHandlersCount("#button", "click") === 1);
 

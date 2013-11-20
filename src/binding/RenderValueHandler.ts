@@ -130,7 +130,7 @@ module JohnSmith.Binding {
                     }
 
                     if (command) {
-                        commandHost.on(options.to, event).do(command, context);
+                        commandHost.on(options.to, event).call(command, context);
                     }
                 }
 

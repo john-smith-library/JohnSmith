@@ -57,7 +57,7 @@ module JohnSmith.Command {
             this._wires = [];
         }
 
-        public do(command: any, commandContext?: any): CommandConfig {
+        public call(command: any, commandContext?: any): CommandConfig {
             var wire = this._commandManager.setUpBinding({
                 command: command,
                 context: this._context,

@@ -13,7 +13,7 @@ var ViewModelWithCommand = function(){
 var View = function(){
     this.template = "<a id='send'>click me</a>";
     this.init = function(viewModel){
-        this.on("a", "click").do(viewModel.send);
+        this.on("a", "click").call(viewModel.send);
     };
 };
 
@@ -69,7 +69,7 @@ testCase.prototype.test_OnClick_ShouldRespectViewContext = function(){
 
         this.init = function(viewModel){
 
-            this.on(linkSelector, "click").do(viewModel.send);
+            this.on(linkSelector, "click").call(viewModel.send);
         };
     };
 

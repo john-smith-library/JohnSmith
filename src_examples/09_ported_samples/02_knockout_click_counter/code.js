@@ -39,8 +39,8 @@ var ClickView = function(){
             }
         });
 
-        this.on("#clickMe", "click").do(viewModel.registerClick);
-        this.on("#resetClicks", "click").do(viewModel.resetClicks);
+        this.on("#clickMe", "click").call(viewModel.registerClick);
+        this.on("#resetClicks", "click").call(viewModel.resetClicks);
     };
 };
 
