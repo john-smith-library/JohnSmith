@@ -193,6 +193,8 @@ task("buildTutorial", ["buildFull"], function(){
 
                         if (fs.existsSync(codeFile)){
                             topic.code = fs.readFileSync(codeFile).toString();
+                            topic.formattedCode = formatCode(topic.code, configData);
+
                         }
 
                         if (fs.existsSync(contentFile)){
@@ -214,6 +216,38 @@ task("buildTutorial", ["buildFull"], function(){
                 }
             }
         }
+    }
+
+    function formatCode(code, configData){
+        var escapedCode = code
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+
+        var annotationIndex = 0;
+        if (!configData.annotations){
+            return escapedCode;
+        }
+
+        var annotaions = configData.annotations;
+
+        return escapedCode.replace(
+            /\/\*\(\*\/(.*)\/\*\)\*\//g,
+            function(a, b){
+                if (annotaions.length <= annotationIndex) {
+                    return b;
+                }
+
+                var result = '<span class="codeAnnotation" title="' + annotaions[annotationIndex] + '">' + b + '</span>';
+                annotationIndex++;
+
+                return  result;
+            }
+        );
+
+            //.replace('/*(*/', '<span style="background: red;">')
+            //.replace('/*)*/', '</span>');
     }
 
     function getTopicIndex(topic, topicList){

@@ -1,8 +1,8 @@
 /* ViewModel */
 var GreeterViewModel = function(){
-    this.userName = js.bindableValue();
+    this.userName = /*(*/js.bindableValue()/*)*/;
 
-    this.greetMessage = js.dependentValue(
+    this.greetMessage = /*(*/js.dependentValue/*)*/(
         this.userName,
         function(userNameValue){
             if (userNameValue) {
@@ -15,7 +15,7 @@ var GreeterViewModel = function(){
 
 /* Views */
 var GreeterView = function(){
-    this.template =
+    this./*(*/template/*)*/ =
         "<p>Enter your name: <input type='text'/></p>" +
         "<p class='message'></p>";
 

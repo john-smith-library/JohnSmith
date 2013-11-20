@@ -411,6 +411,15 @@ a
     font-size: 12px;
 }
 
+#source .javascript .codeAnnotation
+{
+    background: #ffdbb2;
+    padding-left: 3px;
+    padding-right: 3px;
+
+    border-radius: 2px;
+}
+
 #navigation
 {
     position: absolute;
