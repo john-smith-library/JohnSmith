@@ -19,9 +19,10 @@ module JohnSmith.Binding {
         }
     }
 
+    /*
     export class StaticBindableFactory implements IBindableFactory {
         public createBindable(bindable: any): IBindable {
             return new StaticBindableValue(bindable);
         }
-    }
+    }*/
 }

@@ -12,16 +12,13 @@ module JohnSmith.Binding {
      */
     export class DefaultBindingManager extends Common.ArgumentProcessorsBasedHandler implements IBindableManager {
         private _handlerFactories: IHandlerFactory[];
-        private _bindableFactories: IBindableFactory[];
 
         constructor(
-            bindableFactories:  IBindableFactory[],
             handlerFactories: IHandlerFactory[],
             handlerArgumentProcessors: Common.IArgumentProcessor[]) {
 
             super(handlerArgumentProcessors);
 
-            this._bindableFactories = bindableFactories;
             this._handlerFactories = handlerFactories;
         }
 
@@ -39,15 +36,21 @@ module JohnSmith.Binding {
         }
 
         private getBindable(bindableObject: any): IBindable {
-            for (var i = 0; i < this._bindableFactories.length; i++) {
-                var factory: JohnSmith.Binding.IBindableFactory = this._bindableFactories[i];
-                var result: IBindable = factory.createBindable(bindableObject);
-                if (result != null) {
-                    return result;
-                }
+            if (bindableObject && bindableObject.getValue && bindableObject.addListener) {
+                return bindableObject;
             }
 
-            throw new Error("Could not transform object " + bindableObject + " to bindable");
+            return new StaticBindableValue(bindableObject);
+
+//            for (var i = 0; i < this._bindableFactories.length; i++) {
+//                var factory: JohnSmith.Binding.IBindableFactory = this._bindableFactories[i];
+//                var result: IBindable = factory.createBindable(bindableObject);
+//                if (result != null) {
+//                    return result;
+//                }
+//            }
+//
+//            throw new Error("Could not transform object " + bindableObject + " to bindable");
         }
 
         private getHandler(handlerData: any[], bindable:IBindable, context: JohnSmith.Common.IElement, commandHost:Command.ICommandHost): IBindableHandler {
@@ -64,6 +67,7 @@ module JohnSmith.Binding {
         }
     }
 
+    /*
     class DefaultBindableFactory implements IBindableFactory {
         public createBindable(bindable: any): IBindable {
             if (bindable && bindable.getValue && bindable.addListener) {
@@ -72,22 +76,13 @@ module JohnSmith.Binding {
 
             return null;
         }
-    }
+    }*/
 
-    var bindableFactories:IBindableFactory[] = [];
     var handlerFactories:IHandlerFactory[] = [];
     var handlerArgumentProcessors:Common.IArgumentProcessor[] = [];
 
-    JohnSmith.Common.JS.getBindableFactories = function():IBindableFactory[] {
-        return bindableFactories;
-    }
-
     JohnSmith.Common.JS.getHandlerFactories = function():IHandlerFactory[] {
         return handlerFactories;
-    }
-
-    JohnSmith.Common.JS.addBindableFactory = function(factory: IBindableFactory) {
-        bindableFactories.push(factory);
     }
 
     JohnSmith.Common.JS.addHandlerFactory = function(transformer: IHandlerFactory) {
@@ -99,9 +94,6 @@ module JohnSmith.Binding {
         handlerArgumentProcessors.push(processor);
     }
 
-    JohnSmith.Common.JS.addBindableFactory(new DefaultBindableFactory());
-    JohnSmith.Common.JS.addBindableFactory(new StaticBindableFactory());
-
     JohnSmith.Common.JS.addHandlerFactory({
         createHandler: function (handler: any, context: JohnSmith.Common.IElement): IBindableHandler {
             if (handler && handler.wireWith && handler.unwireWith) {
@@ -112,7 +104,7 @@ module JohnSmith.Binding {
         }
     });
 
-    var bindingManager = new DefaultBindingManager(bindableFactories, handlerFactories, handlerArgumentProcessors);
+    var bindingManager = new DefaultBindingManager(handlerFactories, handlerArgumentProcessors);
 
     JohnSmith.Common.JS.ioc.register("bindingManager", bindingManager);
 
