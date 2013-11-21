@@ -86,56 +86,6 @@ module JohnSmith.Common {
     }
 
     /////////////////////////////////
-    // Collections
-    /////////////////////////////////
-
-    export interface IList {
-        getAt: (index: number) => any;
-        setAt: (index: number, item: any) => void;
-        removeAt: (index: number) => void;
-        insertAt: (index: number, item: any) => void;
-        add: (item: any) => void;
-        count: () => number;
-        clear: () => void;
-    }
-
-    export class ArrayList implements IList {
-        private _items: any;
-
-        constructor() {
-            this._items = [];
-        }
-
-        public getAt(index: number): any {
-            return this._items[index]
-        }
-
-        public setAt(index: number, item: any): void {
-            this._items[index] = item;
-        }
-
-        public removeAt(index: number): void {
-            this._items.splice(index, 1);
-        }
-
-        public insertAt(index: number, item: any): void {
-            this._items.splice(index, 0, item);
-        }
-
-        public add(item: any): void {
-            this._items.push(item);
-        }
-
-        public count():number {
-            return this._items.length;
-        }
-
-        public clear():void {
-            this._items.length = 0;
-        }
-    }
-
-    /////////////////////////////////
     // Logging
     /////////////////////////////////
 
@@ -175,10 +125,10 @@ module JohnSmith.Common {
     }
 
     class DefaultEventBus implements IEventBus {
-        private _listeners: IList;
+        private _listeners: IListener[];
 
         constructor(){
-            this._listeners = new ArrayList();
+            this._listeners = [];
         }
 
         public addListener(eventType:string, callback:(data:any) => void):void {
@@ -187,13 +137,13 @@ module JohnSmith.Common {
                 callback: callback
             };
 
-            this._listeners.add(listener);
+            this._listeners.push(listener);
         }
 
         public trigger(eventType:string, data: any) : void {
-            var listenersCount = this._listeners.count();
+            var listenersCount = this._listeners.length;
             for (var i = 0; i < listenersCount; i++) {
-                var listener:IListener = this._listeners.getAt(i);
+                var listener:IListener = this._listeners[i];
                 if (listener.eventType === eventType) {
                     listener.callback(data);
                 }

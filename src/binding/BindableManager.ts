@@ -11,12 +11,12 @@ module JohnSmith.Binding {
      * Default implementation of binding manager.
      */
     export class DefaultBindingManager extends Common.ArgumentProcessorsBasedHandler implements IBindableManager {
-        private _handlerFactories: JohnSmith.Common.ArrayList;
-        private _bindableFactories: JohnSmith.Common.ArrayList;
+        private _handlerFactories: IHandlerFactory[];
+        private _bindableFactories: IBindableFactory[];
 
         constructor(
-            bindableFactories:  JohnSmith.Common.ArrayList,
-            handlerFactories: JohnSmith.Common.ArrayList,
+            bindableFactories:  IBindableFactory[],
+            handlerFactories: IHandlerFactory[],
             handlerArgumentProcessors: Common.IArgumentProcessor[]) {
 
             super(handlerArgumentProcessors);
@@ -39,8 +39,8 @@ module JohnSmith.Binding {
         }
 
         private getBindable(bindableObject: any): IBindable {
-            for (var i = 0; i < this._bindableFactories.count(); i++) {
-                var factory: JohnSmith.Binding.IBindableFactory = this._bindableFactories.getAt(i);
+            for (var i = 0; i < this._bindableFactories.length; i++) {
+                var factory: JohnSmith.Binding.IBindableFactory = this._bindableFactories[i];
                 var result: IBindable = factory.createBindable(bindableObject);
                 if (result != null) {
                     return result;
@@ -52,8 +52,8 @@ module JohnSmith.Binding {
 
         private getHandler(handlerData: any[], bindable:IBindable, context: JohnSmith.Common.IElement, commandHost:Command.ICommandHost): IBindableHandler {
             var options = this.processArguments(handlerData, context);
-            for (var i = 0; i < this._handlerFactories.count(); i++) {
-                var factory: IHandlerFactory = this._handlerFactories.getAt(i);
+            for (var i = 0; i < this._handlerFactories.length; i++) {
+                var factory: IHandlerFactory = this._handlerFactories[i];
                 var result: IBindableHandler = factory.createHandler(options, bindable, context, commandHost);
                 if (result) {
                     return result;
@@ -74,24 +74,25 @@ module JohnSmith.Binding {
         }
     }
 
-    var bindableFactories:JohnSmith.Common.ArrayList = new JohnSmith.Common.ArrayList();
-    var handlerFactories:JohnSmith.Common.ArrayList = new Common.ArrayList();
+    var bindableFactories:IBindableFactory[] = [];
+    var handlerFactories:IHandlerFactory[] = [];
     var handlerArgumentProcessors:Common.IArgumentProcessor[] = [];
 
-    JohnSmith.Common.JS.getBindableFactories = function():JohnSmith.Common.IList {
+    JohnSmith.Common.JS.getBindableFactories = function():IBindableFactory[] {
         return bindableFactories;
     }
 
-    JohnSmith.Common.JS.getHandlerFactories = function():JohnSmith.Common.IList {
+    JohnSmith.Common.JS.getHandlerFactories = function():IHandlerFactory[] {
         return handlerFactories;
     }
 
     JohnSmith.Common.JS.addBindableFactory = function(factory: IBindableFactory) {
-        bindableFactories.add(factory);
+        bindableFactories.push(factory);
     }
 
     JohnSmith.Common.JS.addHandlerFactory = function(transformer: IHandlerFactory) {
-        handlerFactories.insertAt(0, transformer);
+        // todo insert?
+        handlerFactories.push(transformer);
     }
 
     JohnSmith.Common.JS.addHandlerArgumentProcessor = function(processor){

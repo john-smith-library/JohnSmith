@@ -9,6 +9,5 @@ test:
   - system/JS_BIND/*.js
   - system/JS_ON/*.js
   - unit/binding/*.js
-  - unit/common/*.js
   - unit/views/*.js
   - unit/jquery/*.js

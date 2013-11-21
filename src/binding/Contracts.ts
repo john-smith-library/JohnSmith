@@ -29,12 +29,15 @@ module JohnSmith.Binding {
     }
 
     // transforms any object to bindable value
+    // [obsolete]
+    // todo get rid of this factory
     export interface IBindableFactory
     {
         createBindable: (bindable: any) => IBindable;
     }
 
     // wires with the bindable and reflects it's changes in UI
+    // todo replace handler with direct listener
     export interface IBindableHandler extends JohnSmith.Common.IDisposable {
         wireWith: (bindable: IBindable) => void;
         unwireWith: (bindable: IBindable) => void;

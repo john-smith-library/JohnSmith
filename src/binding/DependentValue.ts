@@ -1,17 +1,18 @@
 /// <reference path="Contracts.ts"/>
+/// <reference path="BindableValue.ts"/>
 
 module JohnSmith.Binding {
-    export class DependentValue implements IBindable {
-        private _listeners: JohnSmith.Common.ArrayList;
+    export class DependentValue extends BindableValue {
         private _evaluateValue: () => any;
         private _dependencies: IBindable[];
         private _allDependencies: IBindable[];
         private _dependencyValues: any[];
 
         constructor(evaluate: () => any, dependencies: IBindable[]) {
+            super();
+
             this._dependencies = dependencies;
             this._evaluateValue = evaluate;
-            this._listeners = new JohnSmith.Common.ArrayList();
             this._dependencyValues = [];
             this._allDependencies = [];
 
@@ -39,7 +40,7 @@ module JohnSmith.Binding {
                         actualValue = dependency.getValue();
                     }
 
-                    dependentValue.notifyListeners(dependency, actualValue);
+                    dependentValue.notifyDependentListeners(dependency, actualValue);
                 }
             });
         }
@@ -52,28 +53,8 @@ module JohnSmith.Binding {
             throw Error("Could not set dependent value");
         }
 
-        public addListener(listener: IBindableListener) {
-            this._listeners.add(listener);
-        }
-
-        public removeListener(listener: IBindableListener) {
-            var indexToRemove: number = -1;
-            for (var i = 0; i < this._listeners.count(); i++) {
-                if (this._listeners.getAt(i) == listener) {
-                    indexToRemove = i;
-                }
-            }
-
-            if (indexToRemove >= 0) {
-                this._listeners.removeAt(indexToRemove);
-            }
-        }
-
-        public getListenersCount(): number {
-            return this._listeners.count();
-        }
-
-        public notifyListeners(causedByDependency:IBindable, newDependencyValue: any): void {
+        public notifyDependentListeners(causedByDependency:IBindable, newDependencyValue: any): void {
+            var oldValue = this.getValue();
             for (var i = 0; i < this._dependencies.length; i++) {
                 var dependency = this._dependencies[i];
                 if (dependency === causedByDependency) {
@@ -81,9 +62,10 @@ module JohnSmith.Binding {
                 }
             }
 
-            for (var i = 0; i < this._listeners.count(); i++) {
-                var listener: IBindableListener = this._listeners.getAt(i);
-                listener.valueChanged(null, this.getValue(), DataChangeReason.replace);
+            var newValue = this.getValue();
+            for (var i = 0; i < this.getListenersCount(); i++) {
+                var listener: IBindableListener = this.getListener(i);
+                listener.valueChanged(oldValue, newValue, DataChangeReason.replace);
             }
         }
     }

@@ -4,15 +4,15 @@ testCase.prototype.testShouldCreateWireIfFactoriesProvided = function() {
     var bindable = {};
     var handler = {};
 
-    var bindableFactories = new JohnSmith.Common.ArrayList();
-    bindableFactories.add({
+    var bindableFactories = [];
+    bindableFactories.push({
         createBindable: function(data){
             return bindable;
         }
     });
 
-    var handlerFactories = new JohnSmith.Common.ArrayList();
-    handlerFactories.add({
+    var handlerFactories = [];
+    handlerFactories.push({
         createHandler: function(data){
             return handler;
         }
@@ -34,14 +34,14 @@ testCase.prototype.testNoHandlerFactoryShouldThrowError = function() {
     var bindable = {};
     var handler = {};
 
-    var bindableFactories = new JohnSmith.Common.ArrayList();
-    bindableFactories.add({
+    var bindableFactories = [];
+    bindableFactories.push({
         createBindable: function(data){
             return bindable;
         }
     });
 
-    var handlerFactories = new JohnSmith.Common.ArrayList();
+    var handlerFactories = [];
     var manager = new JohnSmith.Binding.DefaultBindingManager(bindableFactories, handlerFactories, []);
 
     assertException(
@@ -58,9 +58,9 @@ testCase.prototype.testNoBindableFactoryShouldThrowError = function() {
     var bindable = {};
     var handler = {};
 
-    var bindableFactories = new JohnSmith.Common.ArrayList();
-    var handlerFactories = new JohnSmith.Common.ArrayList();
-    handlerFactories.add({
+    var bindableFactories = [];
+    var handlerFactories = [];
+    handlerFactories.push({
         createHandler: function(data){
             return new JohnSmith.Binding.HandlerFactoryResult(handler, null);
         }

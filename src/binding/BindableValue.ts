@@ -5,11 +5,11 @@ module JohnSmith.Binding {
      * Creates simple bindable value.
      */
     export class BindableValue implements IBindable {
-        private _listeners: JohnSmith.Common.ArrayList;
+        private _listeners: IBindableListener[];
         private _value: any;
 
         constructor() {
-            this._listeners = new JohnSmith.Common.ArrayList();
+            this._listeners = [];
         }
 
         public getValue():any {
@@ -22,29 +22,33 @@ module JohnSmith.Binding {
         }
 
         public addListener(listener: IBindableListener) {
-            this._listeners.add(listener);
+            this._listeners.push(listener);
         }
 
         public removeListener(listener: IBindableListener) {
             var indexToRemove: number = -1;
-            for (var i = 0; i < this._listeners.count(); i++) {
-                if (this._listeners.getAt(i) == listener) {
+            for (var i = 0; i < this._listeners.length; i++) {
+                if (this._listeners[i] == listener) {
                     indexToRemove = i;
                 }
             }
 
             if (indexToRemove >= 0) {
-                this._listeners.removeAt(indexToRemove);
+                this._listeners.splice(indexToRemove, 1);
             }
         }
 
         public getListenersCount(): number {
-            return this._listeners.count();
+            return this._listeners.length;
+        }
+
+        public getListener(index: number): IBindableListener {
+            return this._listeners[index];
         }
 
         public notifyListeners(newValue:any, reason:DataChangeReason): void {
-            for (var i = 0; i < this._listeners.count(); i++) {
-                var listener: IBindableListener = this._listeners.getAt(i);
+            for (var i = 0; i < this._listeners.length; i++) {
+                var listener: IBindableListener = this._listeners[i];
                 listener.valueChanged(this._value, newValue, reason);
             }
         }
