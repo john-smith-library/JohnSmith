@@ -103,14 +103,6 @@ module JohnSmith.Common {
     };
 
     /////////////////////////////////
-    // Exposing public API
-    /////////////////////////////////
-
-    var jsVarName = "js";
-    window[jsVarName] = window[jsVarName] || {}
-    export var JS = window[jsVarName];
-
-    /////////////////////////////////
     // Events
     /////////////////////////////////
 
@@ -124,7 +116,7 @@ module JohnSmith.Common {
         callback: (data:any) => void;
     }
 
-    class DefaultEventBus implements IEventBus {
+    export class DefaultEventBus implements IEventBus {
         private _listeners: IListener[];
 
         constructor(){
@@ -151,8 +143,7 @@ module JohnSmith.Common {
         }
     }
 
-    Common.JS.event = {};
-    Common.JS.event.bus = new DefaultEventBus();
+
 
     /////////////////////////////////
     // Dom services
@@ -262,7 +253,7 @@ module JohnSmith.Common {
         clear();
     }
 
-    class Container implements IContainer {
+    export class Container implements IContainer {
         private _resolvedDependencies : any;
         private _definitions: IDefinition[];
 
@@ -357,13 +348,5 @@ module JohnSmith.Common {
 
             return true;
         }
-    }
-
-    var ioc:IContainer = new Container();
-
-    Common.JS.ioc = ioc;
-
-    Common.JS.createIocContainer = function(){
-        return new Container();
     }
 }

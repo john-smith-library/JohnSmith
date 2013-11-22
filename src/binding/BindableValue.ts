@@ -61,8 +61,4 @@ module JohnSmith.Binding {
             return true;
         }
     }
-
-    JohnSmith.Common.JS.bindableValue = function():JohnSmith.Binding.BindableValue {
-        return new BindableValue();
-    }
 }

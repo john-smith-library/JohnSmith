@@ -8,7 +8,7 @@
 /// <reference path="Common.ts"/>
 
 module JohnSmith.JQuery {
-    class JQueryElement implements JohnSmith.Common.IElement {
+    export class JQueryElement implements JohnSmith.Common.IElement {
         private _target:any;
 
         constructor (target:any){
@@ -177,7 +177,7 @@ module JohnSmith.JQuery {
         }
     }
 
-    class JQueryTargetArgumentProcessor implements JohnSmith.Common.IArgumentProcessor {
+    export class JQueryTargetArgumentProcessor implements JohnSmith.Common.IArgumentProcessor {
         public canProcess(
             argument:any,
             argumentIndex: number,
@@ -196,22 +196,5 @@ module JohnSmith.JQuery {
             }
         }
     }
-
-    /////////////////////////////////
-    // Configuring ioc dependencies
-    /////////////////////////////////
-
-    JohnSmith.Common.JS.ioc.register(
-        "elementFactory",
-        {
-            createElement: function(query:string){
-                return new JQueryElement($(query))
-            }
-        }
-    );
-
-    JohnSmith.Common.JS.addHandlerArgumentProcessor(new JQueryTargetArgumentProcessor());
-    JohnSmith.Common.JS.addCommandCauseArgumentProcessor(new JQueryTargetArgumentProcessor());
-    JohnSmith.Common.JS.ioc.register("markupResolver", new JQueryMarkupResolver());
 }
 

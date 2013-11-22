@@ -72,12 +72,5 @@ module JohnSmith.Binding {
         }
     }
 
-    JohnSmith.Common.JS.dependentValue = function (...args: any[]):JohnSmith.Binding.DependentValue {
-        var dependencies:IBindable[] = [];
-        for (var i = 0; i < args.length - 1; i++) {
-            dependencies.push(args[i]);
-        }
 
-        return new DependentValue(args[args.length - 1], dependencies);
-    }
 }

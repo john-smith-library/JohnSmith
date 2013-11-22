@@ -36,7 +36,7 @@ module JohnSmith.Binding {
         }
     }
 
-    class CallbackArgumentProcessor implements JohnSmith.Common.IArgumentProcessor {
+    export class CallbackArgumentProcessor implements JohnSmith.Common.IArgumentProcessor {
         public canProcess(argument:any, argumentIndex: number, options: any, context:JohnSmith.Common.IElement):boolean{
             return argumentIndex == 0 &&
                 (options.handler == null || options.handler == CALLBACK_HANDLER_KEY) &&
@@ -49,16 +49,4 @@ module JohnSmith.Binding {
             options.callback = argument;
         }
     }
-
-    JohnSmith.Common.JS.addHandlerArgumentProcessor(new CallbackArgumentProcessor());
-
-    JohnSmith.Common.JS.addHandlerFactory({
-        createHandler: function (data: any, context: Common.IElement): IBindableHandler {
-            if (data && data.handler === "callback") {
-                return new CallbackHandler(data.callback);
-            }
-
-            return null;
-        }
-    });
 }

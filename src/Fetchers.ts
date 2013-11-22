@@ -1,8 +1,6 @@
 /// <reference path="Common.ts"/>
 
 module JohnSmith.Fetchers {
-    import common = JohnSmith.Common;
-
     export class FetcherType {
         public static Value: string = "value";
         public static CheckedAttribute: string = "checkedAttribute";
@@ -20,7 +18,7 @@ module JohnSmith.Fetchers {
     }
 
     class ValueFetcher implements IFetcher {
-        public isSuitableFor(element: common.IElement): boolean {
+        public isSuitableFor(element: Common.IElement): boolean {
             var nodeName = element.getNodeName();
             if (nodeName) {
                 nodeName = nodeName.toUpperCase();
@@ -93,14 +91,13 @@ module JohnSmith.Fetchers {
             return this._items[key];
         }
 
-        public registerFetcher(key: string, fetcher:IFetcher):void {
+        public registerFetcher(key: string, fetcher:IFetcher):FetcherFactory {
             this._items[key] = fetcher;
+            return this;
         }
     }
 
-    var factory = new FetcherFactory();
-    factory.registerFetcher(FetcherType.Value, new ValueFetcher());
-    factory.registerFetcher(FetcherType.CheckedAttribute, new CheckedAttributeFetcher());
-
-    Common.JS.ioc.register("fetcherFactory", factory);
+    export var factory:IFetcherFactory = new FetcherFactory()
+        .registerFetcher(FetcherType.Value, new ValueFetcher())
+        .registerFetcher(FetcherType.CheckedAttribute, new CheckedAttributeFetcher());
 }

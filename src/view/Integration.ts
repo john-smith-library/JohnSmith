@@ -61,7 +61,6 @@ module JohnSmith.View {
         }
     }
 
-
     /////////////////////////////////
     // Config
     /////////////////////////////////
@@ -69,49 +68,4 @@ module JohnSmith.View {
     export interface IViewDestination {
         to(target: any);
     }
-
-    JohnSmith.Common.JS.ioc.registerWithDependencies(
-        "viewFactory",
-        function(bindableManager: Binding.IBindableManager,
-                 commandManager: Command.ICommandManager,
-                 elementFactory: Common.IElementFactory,
-                 markupResolver: Common.IMarkupResolver){
-            return new DefaultViewFactory(bindableManager, commandManager, elementFactory, JohnSmith.Common.JS.event.bus, markupResolver);
-        },
-        "bindingManager",
-        "commandManager",
-        "elementFactory",
-        "markupResolver"
-    )
-
-    JohnSmith.Common.JS.ioc.withRegistered(
-        function(viewFactory:IViewFactory){
-            JohnSmith.Common.JS.addHandlerArgumentProcessor(new ViewArgumentProcessor(viewFactory));
-        },
-        "viewFactory");
-
-    JohnSmith.Common.JS.createView = function(viewDescriptor: any, viewModel:any): View.IView{
-        var viewFactory = JohnSmith.Common.JS.ioc.resolve("viewFactory");
-        return viewFactory.resolve(viewDescriptor, viewModel);
-    };
-
-    JohnSmith.Common.JS.renderView = function(viewDescriptor: any, viewModel:any): any {
-        var viewFactory = JohnSmith.Common.JS.ioc.resolve("viewFactory");
-        var view = viewFactory.resolve(viewDescriptor, viewModel);
-        return {
-            to: function(destination: any){
-                view.renderTo(destination);
-            }
-        }
-    };
-
-    JohnSmith.Common.JS.attachView = function(viewDescriptor: any, viewModel:any): any {
-        var viewFactory = JohnSmith.Common.JS.ioc.resolve("viewFactory");
-        var view = viewFactory.resolve(viewDescriptor, viewModel);
-        return {
-            to: function(destination: any){
-                view.attachTo(destination);
-            }
-        }
-    };
 }

@@ -86,7 +86,5 @@ module JohnSmith.Binding {
         }
     }
 
-    JohnSmith.Common.JS.bindableList = function():JohnSmith.Binding.BindableList {
-        return new BindableList();
-    }
+
 }

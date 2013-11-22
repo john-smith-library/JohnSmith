@@ -213,16 +213,5 @@ module JohnSmith.Binding {
         }
     }
 
-    JohnSmith.Common.JS.ioc.withRegistered(
-        function(
-            destinationFactory:Common.IElementFactory,
-            markupResolver:Common.IMarkupResolver,
-            viewFactory: View.IViewFactory,
-            fetcherFactory: Fetchers.IFetcherFactory){
-            JohnSmith.Common.JS.addHandlerFactory(new RenderValueFactory(destinationFactory, markupResolver, viewFactory, fetcherFactory));
-        },
-        "elementFactory",
-        "markupResolver",
-        "viewFactory",
-        "fetcherFactory");
+
 }
