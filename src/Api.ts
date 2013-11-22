@@ -17,211 +17,117 @@
 /// <reference path="JQuery.ts"/>
 
 module JohnSmith.Api {
-//    class Configurer {
-//        private _bindable
-//    }
+    class Configurer {
+        private _bindableManager: Binding.IBindableManager;
+        private _handlerFactories: Binding.IHandlerFactory[] = [];
+        private _handlerArgumentProcessors: Common.IArgumentProcessor[] = [];
+        private _commandCauseArgumentProcessors: Common.IArgumentProcessor[] = []
+        private _elementFactory: Common.IElementFactory;
+        private _markupResolver: Common.IMarkupResolver;
+        private _fetcherFactory: Fetchers.IFetcherFactory;
+        private _commandManager: Command.ICommandManager;
+        private _viewFactory: View.IViewFactory;
 
-    /////////////////////////////////
-    // Exposing public API
-    /////////////////////////////////
+        public configure(publicApi: any): void {
+            publicApi.event = {};
+            publicApi.event.bus = new Common.DefaultEventBus();
+
+            this.createDependencies(publicApi.event.bus);
+            this.setupPublicApi(publicApi);
+        }
+
+        private setupPublicApi(publicApi){
+            var that: Configurer = this;
+
+            publicApi.bindableValue = function():JohnSmith.Binding.BindableValue {
+                return new Binding.BindableValue();
+            };
+
+            publicApi.bindableList = function():JohnSmith.Binding.BindableList {
+                return new Binding.BindableList();
+            };
+
+            publicApi.dependentValue = function (...args: any[]):Binding.DependentValue {
+                var dependencies:Binding.IBindable[] = [];
+                for (var i = 0; i < args.length - 1; i++) {
+                    dependencies.push(args[i]);
+                }
+
+                return new Binding.DependentValue(args[args.length - 1], dependencies);
+            }
+
+            publicApi.bind = function(bindable: any): JohnSmith.Binding.BindingConfig {
+                return new Binding.BindingConfig(that._bindableManager, bindable, null, publicApi, true);
+            };
+
+            publicApi.on = function (...causeData: any[]){
+                return new Command.CommandConfig(causeData, that._commandManager, null);
+            };
+
+            publicApi.createView = function(viewDescriptor: any, viewModel:any): View.IView{
+                return that._viewFactory.resolve(viewDescriptor, viewModel);
+            };
+
+            publicApi.renderView = function(viewDescriptor: any, viewModel:any): any {
+                var view = that._viewFactory.resolve(viewDescriptor, viewModel);
+                return {
+                    to: function(destination: any){
+                        view.renderTo(destination);
+                    }
+                }
+            };
+
+            publicApi.attachView = function(viewDescriptor: any, viewModel:any): any {
+                var view = that._viewFactory.resolve(viewDescriptor, viewModel);
+                return {
+                    to: function(destination: any){
+                        view.attachTo(destination);
+                    }
+                }
+            };
+        }
+
+        private createDependencies(eventBus: Common.IEventBus): void {
+            this._elementFactory = {
+                createElement: function(query:string){
+                    return new JQuery.JQueryElement($(query))
+                }
+            };
+
+            this._fetcherFactory = Fetchers.factory;
+
+            this._commandManager = new Command.DefaultCommandManager(
+                this._commandCauseArgumentProcessors,
+                this._elementFactory,
+                this._fetcherFactory);
+
+            this._markupResolver = new JQuery.JQueryMarkupResolver();
+
+            this._commandCauseArgumentProcessors.push(new Command.EventArgumentProcessor());
+            this._commandCauseArgumentProcessors.push(new JQuery.JQueryTargetArgumentProcessor());
+
+            this._bindableManager = new Binding.DefaultBindingManager(this._handlerFactories, this._handlerArgumentProcessors);
+
+            this._viewFactory = new View.DefaultViewFactory(
+                this._bindableManager,
+                this._commandManager,
+                this._elementFactory,
+                eventBus,
+                this._markupResolver);
+
+            this._handlerFactories.push(new Binding.ManualHandlerFactory());
+            this._handlerFactories.push(new Binding.CallbackHandlerFactory());
+            this._handlerFactories.push(new Binding.RenderListFactory(this._elementFactory, this._markupResolver, this._viewFactory, this._fetcherFactory));
+            this._handlerFactories.push(new Binding.RenderValueFactory(this._elementFactory, this._markupResolver, this._viewFactory, this._fetcherFactory));
+
+            this._handlerArgumentProcessors.push(new Binding.CallbackArgumentProcessor());
+            this._handlerArgumentProcessors.push(new JQuery.JQueryTargetArgumentProcessor());
+            this._handlerArgumentProcessors.push(new View.ViewArgumentProcessor(this._viewFactory));
+        }
+    }
 
     var jsVarName = "js";
     window[jsVarName] = window[jsVarName] || {}
     var JS = window[jsVarName];
-
-    /////////////////////////////////
-    // Events bus
-    /////////////////////////////////
-    JS.event = {};
-    JS.event.bus = new Common.DefaultEventBus();
-
-    /////////////////////////////////
-    // Ioc Container
-    /////////////////////////////////
-    var ioc:Common.IContainer = new Common.Container();
-
-    JS.ioc = ioc;
-
-    JS.createIocContainer = function(){
-        return new Common.Container();
-    };
-
-    var configureDependencies = function configureDependencies(container: Common.IContainer){
-
-    };
-
-    configureDependencies(JS.ioc);
-
-    /////////////////////////////////
-    // Binding
-    /////////////////////////////////
-    JS.bindableValue = function():JohnSmith.Binding.BindableValue {
-        return new Binding.BindableValue();
-    };
-
-    JS.bindableList = function():JohnSmith.Binding.BindableList {
-        return new Binding.BindableList();
-    };
-
-    var handlerFactories:Binding.IHandlerFactory[] = [];
-    var handlerArgumentProcessors:Common.IArgumentProcessor[] = [];
-
-    JS.getHandlerFactories = function():Binding.IHandlerFactory[] {
-        return handlerFactories;
-    }
-
-    JS.addHandlerFactory = function(transformer: Binding.IHandlerFactory) {
-        // todo insert?
-        handlerFactories.push(transformer);
-    }
-
-    JS.addHandlerArgumentProcessor = function(processor){
-        handlerArgumentProcessors.push(processor);
-    }
-
-    JS.addHandlerFactory(new Binding.ManualHandlerFactory());
-
-    JS.addHandlerArgumentProcessor(new Binding.CallbackArgumentProcessor());
-
-    JS.addHandlerFactory(new Binding.CallbackHandlerFactory());
-
-    var bindingManager = new Binding.DefaultBindingManager(handlerFactories, handlerArgumentProcessors);
-
-    ioc.register("bindingManager", bindingManager);
-
-    JS.bind = function(bindable: any): JohnSmith.Binding.BindingConfig {
-        return new Binding.BindingConfig(bindingManager, bindable, null, JS, true);
-    };
-
-    JS.dependentValue = function (...args: any[]):Binding.DependentValue {
-        var dependencies:Binding.IBindable[] = [];
-        for (var i = 0; i < args.length - 1; i++) {
-            dependencies.push(args[i]);
-        }
-
-        return new Binding.DependentValue(args[args.length - 1], dependencies);
-    }
-
-    JS.ioc.withRegistered(
-        function(
-            destinationFactory:Common.IElementFactory,
-            markupResolver:Common.IMarkupResolver,
-            viewFactory: View.IViewFactory,
-            fetcherFactory: Fetchers.IFetcherFactory){
-            JS.addHandlerFactory(new Binding.RenderListFactory(destinationFactory, markupResolver, viewFactory, fetcherFactory));
-        },
-        "elementFactory",
-        "markupResolver",
-        "viewFactory",
-        "fetcherFactory");
-
-    JS.ioc.withRegistered(
-        function(
-            destinationFactory:Common.IElementFactory,
-            markupResolver:Common.IMarkupResolver,
-            viewFactory: View.IViewFactory,
-            fetcherFactory: Fetchers.IFetcherFactory){
-            JS.addHandlerFactory(new Binding.RenderValueFactory(destinationFactory, markupResolver, viewFactory, fetcherFactory));
-        },
-        "elementFactory",
-        "markupResolver",
-        "viewFactory",
-        "fetcherFactory");
-
-    /////////////////////////////////
-    // Commands
-    /////////////////////////////////
-
-    var commandCauseArgumentProcessors:JohnSmith.Common.IArgumentProcessor[] = [];
-
-    JS.ioc.registerWithDependencies(
-        "commandManager",
-        function(elementFactory: Common.IElementFactory, fetcherFactory: Fetchers.IFetcherFactory){
-            return new Command.DefaultCommandManager(commandCauseArgumentProcessors, elementFactory, fetcherFactory);
-        },
-        "elementFactory",
-        "fetcherFactory");
-
-    JS.on = function (...causeData: any[]){
-        var commandManager = JS.ioc.resolve("commandManager");
-        return new Command.CommandConfig(causeData, commandManager, null);
-    };
-
-    JS.addCommandCauseArgumentProcessor = function(processor:JohnSmith.Common.IArgumentProcessor){
-        commandCauseArgumentProcessors.push(processor);
-    };
-
-    JS.addCommandCauseArgumentProcessor(new Command.EventArgumentProcessor());
-
-    /////////////////////////////////
-    // Views
-    /////////////////////////////////
-
-    JS.ioc.registerWithDependencies(
-        "viewFactory",
-        function(bindableManager: Binding.IBindableManager,
-                 commandManager: Command.ICommandManager,
-                 elementFactory: Common.IElementFactory,
-                 markupResolver: Common.IMarkupResolver){
-            return new View.DefaultViewFactory(bindableManager, commandManager, elementFactory, JS.event.bus, markupResolver);
-        },
-        "bindingManager",
-        "commandManager",
-        "elementFactory",
-        "markupResolver"
-    )
-
-    JS.ioc.withRegistered(
-        function(viewFactory:View.IViewFactory){
-            JS.addHandlerArgumentProcessor(new View.ViewArgumentProcessor(viewFactory));
-        },
-        "viewFactory");
-
-    JS.createView = function(viewDescriptor: any, viewModel:any): View.IView{
-        var viewFactory = JS.ioc.resolve("viewFactory");
-        return viewFactory.resolve(viewDescriptor, viewModel);
-    };
-
-    JS.renderView = function(viewDescriptor: any, viewModel:any): any {
-        var viewFactory = JS.ioc.resolve("viewFactory");
-        var view = viewFactory.resolve(viewDescriptor, viewModel);
-        return {
-            to: function(destination: any){
-                view.renderTo(destination);
-            }
-        }
-    };
-
-    JS.attachView = function(viewDescriptor: any, viewModel:any): any {
-        var viewFactory = JS.ioc.resolve("viewFactory");
-        var view = viewFactory.resolve(viewDescriptor, viewModel);
-        return {
-            to: function(destination: any){
-                view.attachTo(destination);
-            }
-        }
-    };
-
-    /////////////////////////////////
-    // Fetchers
-    /////////////////////////////////
-    JS.ioc.register("fetcherFactory", Fetchers.factory);
-
-    /////////////////////////////////
-    // jQuery
-    /////////////////////////////////
-
-    JS.ioc.register(
-        "elementFactory",
-        {
-            createElement: function(query:string){
-                return new JQuery.JQueryElement($(query))
-            }
-        }
-    );
-
-    JS.addHandlerArgumentProcessor(new JQuery.JQueryTargetArgumentProcessor());
-    JS.addCommandCauseArgumentProcessor(new JQuery.JQueryTargetArgumentProcessor());
-
-    JS.ioc.register("markupResolver", new JQuery.JQueryMarkupResolver());
+    new Configurer().configure(JS);
 }
