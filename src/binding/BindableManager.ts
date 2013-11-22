@@ -47,4 +47,20 @@ module JohnSmith.Binding {
             throw new Error("Could not transform object " + handlerData + " to bindable handler");
         }
     }
+
+    export class ManualHandlerFactory implements IHandlerFactory {
+        public createHandler(
+            options: any,
+            bindable: IBindable,
+            context: JohnSmith.Common.IElement,
+            commandHost: Command.ICommandHost): Binding.IBindableHandler {
+
+            if (options && options.wireWith && options.unwireWith) {
+                return <Binding.IBindableHandler> options;
+            }
+
+            return null;
+        }
+    }
+
 }

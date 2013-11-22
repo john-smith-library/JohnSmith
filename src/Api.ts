@@ -17,6 +17,10 @@
 /// <reference path="JQuery.ts"/>
 
 module JohnSmith.Api {
+//    class Configurer {
+//        private _bindable
+//    }
+
     /////////////////////////////////
     // Exposing public API
     /////////////////////////////////
@@ -41,6 +45,12 @@ module JohnSmith.Api {
     JS.createIocContainer = function(){
         return new Common.Container();
     };
+
+    var configureDependencies = function configureDependencies(container: Common.IContainer){
+
+    };
+
+    configureDependencies(JS.ioc);
 
     /////////////////////////////////
     // Binding
@@ -69,27 +79,11 @@ module JohnSmith.Api {
         handlerArgumentProcessors.push(processor);
     }
 
-    JS.addHandlerFactory({
-        createHandler: function (handler: any, context: JohnSmith.Common.IElement): Binding.IBindableHandler {
-            if (handler && handler.wireWith && handler.unwireWith) {
-                return <Binding.IBindableHandler> handler;
-            }
-
-            return null;
-        }
-    });
+    JS.addHandlerFactory(new Binding.ManualHandlerFactory());
 
     JS.addHandlerArgumentProcessor(new Binding.CallbackArgumentProcessor());
 
-    JS.addHandlerFactory({
-        createHandler: function (data: any, context: Common.IElement): Binding.IBindableHandler {
-            if (data && data.handler === "callback") {
-                return new Binding.CallbackHandler(data.callback);
-            }
-
-            return null;
-        }
-    });
+    JS.addHandlerFactory(new Binding.CallbackHandlerFactory());
 
     var bindingManager = new Binding.DefaultBindingManager(handlerFactories, handlerArgumentProcessors);
 

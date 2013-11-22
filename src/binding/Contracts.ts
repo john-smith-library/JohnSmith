@@ -37,7 +37,11 @@ module JohnSmith.Binding {
 
     // transforms any object to bindable handler
     export interface IHandlerFactory {
-        createHandler: (options: any, bindable:IBindable, context: JohnSmith.Common.IElement, commandHost: Command.ICommandHost) => IBindableHandler;
+        createHandler: (
+            options: any,
+            bindable:IBindable,
+            context: JohnSmith.Common.IElement,
+            commandHost: Command.ICommandHost) => IBindableHandler;
     }
 
     export interface IBindingData {

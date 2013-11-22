@@ -49,4 +49,14 @@ module JohnSmith.Binding {
             options.callback = argument;
         }
     }
+
+    export class CallbackHandlerFactory implements IHandlerFactory {
+        public createHandler(options: any, bindable: IBindable, context: JohnSmith.Common.IElement, commandHost: Command.ICommandHost): IBindableHandler {
+            if (options && options.handler === "callback") {
+                return new Binding.CallbackHandler(options.callback);
+            }
+
+            return null;
+        }
+    }
 }
