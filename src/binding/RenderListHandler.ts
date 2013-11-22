@@ -36,9 +36,6 @@ module JohnSmith.Binding {
             this.doRender(newValue, changeType);
         }
 
-        public stateChanged(oldState: string, newState: string) {
-        }
-
         public dispose(): void {
             for (var i = 0; i < this._renderedValues.length; i++){
                 if (this._renderedValues[i].renderedValue.dispose){
@@ -158,7 +155,6 @@ module JohnSmith.Binding {
         },
         "elementFactory",
         "markupResolver",
-        //"valueToElementMapper",
         "viewFactory",
         "fetcherFactory");
 }

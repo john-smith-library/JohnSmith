@@ -42,7 +42,6 @@ module JohnSmith.Binding {
 
     export interface IRenderedValue {
         element: Common.IElement;
-        //unrender: () => void;
         dispose: () => void;
     }
 

@@ -205,7 +205,6 @@ module JohnSmith.Common {
 
     export interface IElementFactory {
         createElement(query:string);
-        createRelativeElement(parent:IElement, query:string);
     }
 
     export interface IMarkupResolver {

@@ -3,10 +3,6 @@
 /// <reference path="StaticBindableValue.ts"/>
 
 module JohnSmith.Binding {
-    var Log = function(){
-        return JohnSmith.Common.log;
-    }
-
     /**
      * Default implementation of binding manager.
      */
@@ -23,15 +19,10 @@ module JohnSmith.Binding {
         }
 
         public bind(data:IBindingData): BindingWire {
-            Log().info("Binding ", data.bindableData, " to ", data.handlerData);
-
             var bindable: IBindable = this.getBindable(data.bindableData);
             var handler: IBindableHandler = this.getHandler(data.handlerData, bindable, data.context, data.commandHost);
-
-            Log().info("    resolved bindable: ", bindable);
-            Log().info("    resolved handler: ", handler);
-
             var result: BindingWire = new BindingWire(bindable, handler);
+
             return result;
         }
 
@@ -41,16 +32,6 @@ module JohnSmith.Binding {
             }
 
             return new StaticBindableValue(bindableObject);
-
-//            for (var i = 0; i < this._bindableFactories.length; i++) {
-//                var factory: JohnSmith.Binding.IBindableFactory = this._bindableFactories[i];
-//                var result: IBindable = factory.createBindable(bindableObject);
-//                if (result != null) {
-//                    return result;
-//                }
-//            }
-//
-//            throw new Error("Could not transform object " + bindableObject + " to bindable");
         }
 
         private getHandler(handlerData: any[], bindable:IBindable, context: JohnSmith.Common.IElement, commandHost:Command.ICommandHost): IBindableHandler {
@@ -66,17 +47,6 @@ module JohnSmith.Binding {
             throw new Error("Could not transform object " + handlerData + " to bindable handler");
         }
     }
-
-    /*
-    class DefaultBindableFactory implements IBindableFactory {
-        public createBindable(bindable: any): IBindable {
-            if (bindable && bindable.getValue && bindable.addListener) {
-                return bindable;
-            }
-
-            return null;
-        }
-    }*/
 
     var handlerFactories:IHandlerFactory[] = [];
     var handlerArgumentProcessors:Common.IArgumentProcessor[] = [];

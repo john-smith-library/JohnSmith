@@ -28,14 +28,6 @@ module JohnSmith.Binding {
         setValue?: (value: any) => void;
     }
 
-    // transforms any object to bindable value
-    // [obsolete]
-    // todo get rid of this factory
-    /*export interface IBindableFactory
-    {
-        createBindable: (bindable: any) => IBindable;
-    }*/
-
     // wires with the bindable and reflects it's changes in UI
     // todo replace handler with direct listener
     export interface IBindableHandler extends JohnSmith.Common.IDisposable {
@@ -65,12 +57,12 @@ module JohnSmith.Binding {
             this._handler = handler;
         }
 
-        // initializes the wire
+        /** initializes the wire */
         public init() {
             this._handler.wireWith(this._bindable);
         }
 
-        // disposes the wire
+        /** disposes the wire */
         public dispose() {
             this._handler.unwireWith(this._bindable);
             this._handler.dispose();
@@ -85,7 +77,7 @@ module JohnSmith.Binding {
         }
     }
 
-    // sets up bindings between any objects
+    /** Sets up bindings between any objects */
     export interface IBindableManager {
         bind: (data: IBindingData) => BindingWire;
     }

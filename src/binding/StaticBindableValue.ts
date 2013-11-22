@@ -18,11 +18,4 @@ module JohnSmith.Binding {
         public removeListener(listener: IBindableListener) {
         }
     }
-
-    /*
-    export class StaticBindableFactory implements IBindableFactory {
-        public createBindable(bindable: any): IBindable {
-            return new StaticBindableValue(bindable);
-        }
-    }*/
 }

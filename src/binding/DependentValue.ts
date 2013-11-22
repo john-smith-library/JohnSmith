@@ -23,6 +23,8 @@ module JohnSmith.Binding {
             }
         }
 
+        // todo add dispose method
+
         public setupDependencyListener(dependency:IBindable){
             for (var i = 0; i < this._allDependencies.length; i++){
                 if (this._allDependencies[i] === dependency){

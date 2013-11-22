@@ -37,14 +37,14 @@ module JohnSmith.Binding {
     }
 
     class CallbackArgumentProcessor implements JohnSmith.Common.IArgumentProcessor {
-        public canProcess(argument:any, argumentIndex: number, options: any, /*bindable:IBindable,*/ context:JohnSmith.Common.IElement):boolean{
+        public canProcess(argument:any, argumentIndex: number, options: any, context:JohnSmith.Common.IElement):boolean{
             return argumentIndex == 0 &&
                 (options.handler == null || options.handler == CALLBACK_HANDLER_KEY) &&
                 (options.callback == null) &&
                 JohnSmith.Common.TypeUtils.isFunction(argument);
         }
 
-        public process(argument:any, options: any, /*bindable:IBindable,*/ context:JohnSmith.Common.IElement){
+        public process(argument:any, options: any, context:JohnSmith.Common.IElement){
             options.handler = "callback";
             options.callback = argument;
         }

@@ -40,7 +40,7 @@ module JohnSmith.JQuery {
 
         public appendText(text:string) : JohnSmith.Common.IElement{
             if (text === undefined || text == null) {
-                throw new Error("Could not append empty string!")
+                throw new Error("Could not append null object!")
             }
 
             if (typeof text !== "string"){
@@ -206,9 +206,6 @@ module JohnSmith.JQuery {
         {
             createElement: function(query:string){
                 return new JQueryElement($(query))
-            },
-            createRelativeElement: function(parent:JohnSmith.Common.IElement, query:string){
-
             }
         }
     );
@@ -216,6 +213,5 @@ module JohnSmith.JQuery {
     JohnSmith.Common.JS.addHandlerArgumentProcessor(new JQueryTargetArgumentProcessor());
     JohnSmith.Common.JS.addCommandCauseArgumentProcessor(new JQueryTargetArgumentProcessor());
     JohnSmith.Common.JS.ioc.register("markupResolver", new JQueryMarkupResolver());
-    //JohnSmith.Common.JS.ioc.register("valueToElementMapper", new JQueryValueToElementMapper());
 }
 
