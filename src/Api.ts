@@ -17,6 +17,84 @@
 /// <reference path="JQuery.ts"/>
 
 module JohnSmith.Api {
+    class PublicApi {
+        private _bindableManager: Binding.IBindableManager;
+        private _commandManager: Command.ICommandManager;
+        private _viewFactory: View.IViewFactory;
+
+        public event: any;
+
+        constructor(bindableManager: Binding.IBindableManager, commandManager: Command.ICommandManager, viewFactory: View.IViewFactory, eventBus: Common.IEventBus){
+            this._bindableManager = bindableManager;
+            this._commandManager = commandManager;
+            this._viewFactory = viewFactory;
+
+            this.event = {
+                bus: eventBus
+            };
+        }
+
+        /**
+         * Creates an observable value
+         * @returns {JohnSmith.Binding.BindableValue}
+         */
+        public bindableValue(): Binding.BindableValue {
+            return new Binding.BindableValue();
+        }
+
+        /**
+         * Creates an observable list
+         * @returns {JohnSmith.Binding.BindableList}
+         */
+        public bindableList():JohnSmith.Binding.BindableList {
+            return new Binding.BindableList();
+        }
+
+        /**
+         * Creates an observable object that depends on other objects
+         * @param args
+         * @returns {Binding.DependentValue}
+         */
+        public dependentValue(...args: any[]):Binding.DependentValue {
+            var dependencies:Binding.IBindable[] = [];
+            for (var i = 0; i < args.length - 1; i++) {
+                dependencies.push(args[i]);
+            }
+
+            return new Binding.DependentValue(args[args.length - 1], dependencies);
+        }
+
+        public bind(bindable: any): JohnSmith.Binding.BindingConfig {
+            return new Binding.BindingConfig(this._bindableManager, bindable, null, this, true);
+        }
+
+        public on(...causeData: any[]){
+            return new Command.CommandConfig(causeData, this._commandManager, null);
+        }
+
+        public createView(viewDescriptor: any, viewModel:any): View.IView{
+            return this._viewFactory.resolve(viewDescriptor, viewModel);
+        }
+
+        public renderView(viewDescriptor: any, viewModel:any): any {
+            var view = this._viewFactory.resolve(viewDescriptor, viewModel);
+            return {
+                to: function(destination: any){
+                    view.renderTo(destination);
+                }
+            }
+        }
+
+        public attachView(viewDescriptor: any, viewModel:any): any {
+            var view = this._viewFactory.resolve(viewDescriptor, viewModel);
+            return {
+                to: function(destination: any){
+                    view.attachTo(destination);
+                }
+            }
+        }
+    }
+
     class Configurer {
         private _bindableManager: Binding.IBindableManager;
         private _handlerFactories: Binding.IHandlerFactory[] = [];
@@ -28,63 +106,16 @@ module JohnSmith.Api {
         private _commandManager: Command.ICommandManager;
         private _viewFactory: View.IViewFactory;
 
-        public configure(publicApi: any): void {
-            publicApi.event = {};
-            publicApi.event.bus = new Common.DefaultEventBus();
+        public configure(): PublicApi {
+            var eventBus:Common.IEventBus = new Common.DefaultEventBus();
 
-            this.createDependencies(publicApi.event.bus);
-            this.setupPublicApi(publicApi);
-        }
+            this.createDependencies(eventBus);
 
-        private setupPublicApi(publicApi){
-            var that: Configurer = this;
-
-            publicApi.bindableValue = function():JohnSmith.Binding.BindableValue {
-                return new Binding.BindableValue();
-            };
-
-            publicApi.bindableList = function():JohnSmith.Binding.BindableList {
-                return new Binding.BindableList();
-            };
-
-            publicApi.dependentValue = function (...args: any[]):Binding.DependentValue {
-                var dependencies:Binding.IBindable[] = [];
-                for (var i = 0; i < args.length - 1; i++) {
-                    dependencies.push(args[i]);
-                }
-
-                return new Binding.DependentValue(args[args.length - 1], dependencies);
-            }
-
-            publicApi.bind = function(bindable: any): JohnSmith.Binding.BindingConfig {
-                return new Binding.BindingConfig(that._bindableManager, bindable, null, publicApi, true);
-            };
-
-            publicApi.on = function (...causeData: any[]){
-                return new Command.CommandConfig(causeData, that._commandManager, null);
-            };
-
-            publicApi.createView = function(viewDescriptor: any, viewModel:any): View.IView{
-                return that._viewFactory.resolve(viewDescriptor, viewModel);
-            };
-
-            publicApi.renderView = function(viewDescriptor: any, viewModel:any): any {
-                var view = that._viewFactory.resolve(viewDescriptor, viewModel);
-                return {
-                    to: function(destination: any){
-                        view.renderTo(destination);
-                    }
-                }
-            };
-
-            publicApi.attachView = function(viewDescriptor: any, viewModel:any): any {
-                var view = that._viewFactory.resolve(viewDescriptor, viewModel);
-                return {
-                    to: function(destination: any){
-                        view.attachTo(destination);
-                    }
-                }
-            };
+            return new PublicApi(
+                this._bindableManager,
+                this._commandManager,
+                this._viewFactory,
+                eventBus);
         }
 
         private createDependencies(eventBus: Common.IEventBus): void {
@@ -126,8 +157,6 @@ module JohnSmith.Api {
         }
     }
 
-    var jsVarName = "js";
-    window[jsVarName] = window[jsVarName] || {}
-    var JS = window[jsVarName];
-    new Configurer().configure(JS);
+    var jsVarName = window["JohnSmithAcronym"] || "js";
+    window[jsVarName] = new Configurer().configure();
 }
