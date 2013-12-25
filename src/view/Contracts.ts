@@ -1,4 +1,5 @@
 /// <reference path="../Common.ts"/>
+/// <reference path="../binding/Contracts.ts"/>
 
 module JohnSmith.View {
     /**
@@ -12,10 +13,17 @@ module JohnSmith.View {
     /**
      * Describes the data needed for creating a view.
      */
-    export interface IViewData {
+    export interface IViewData { // todo: rename to View
         template: any;
-        init?: (viewModel: any) => void;
+        init?: (context: IViewContext, viewModel: any) => void;
         unrender?: () => void;
+    }
+
+    export interface IViewContext {
+        addChild: (destination:any, child:IView, viewModel: any) => void;
+        bind: (bindable: any) => Binding.BindingConfig;
+        on: (...causeArguments: any[]) => Command.CommandConfig;
+        getRootElement: () => Common.IElement;
     }
 
     /**
@@ -28,7 +36,7 @@ module JohnSmith.View {
     /**
      * View interface. For internal usage mainly, client meant to use IViewData.
      */
-    export interface IView extends Common.IDisposable {
+    export interface IView extends Common.IDisposable { // todo rename to something
         renderTo: (destination:any) => void;
         attachTo: (destination:any) => void;
         unrenderView: () => void;

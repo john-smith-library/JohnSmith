@@ -2,8 +2,505 @@
 <html>
 <head>
     <title></title>
+    <style type="text/css">
+        body, div, html, pre {
+            margin: 0;
+            padding: 0;
+        }
+
+        .keyframe
+        {
+            position: fixed;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .movable
+        {
+            position: absolute;
+        }
+
+        #intro
+        {
+            background: #000000;
+            color: #ffffff;
+        }
+
+        #features
+        {
+            background: #ffffff;
+        }
+
+        #features UL LI
+        {
+            margin-bottom: 1em;
+        }
+
+        #features #schema i
+        {
+            color: #009fe3;
+            font-weight: bold;
+            font-style: normal;
+        }
+
+        #samples
+        {
+            background: #efefef;
+        }
+
+        #samples #samplesContainer
+        {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+        }
+
+        #samples #samplesContainer .sample
+        {
+            float: left;
+            position: relative;
+        }
+
+        #samples #samplesContainer .sample .sampleBody
+        {
+            position: absolute;
+            top: 50px;
+            bottom: 50px;
+            left: 50px;
+            right: 50px;
+
+            background: yellow;
+        }
+
+        #intro header
+        {
+            color: #CCCCCC;
+        }
+
+        header,
+        #slogan,
+        #features ul li
+        {
+            font-size: 18px;
+            font-family: "Courier New", Courier, monospace
+        }
+    </style>
 </head>
 <body>
 
+    <div id="line">
+        <div id="intro" class="keyframe">
+            <header class="movable">
+                <pre>==========================================================</pre>
+                <pre>       _       _              _____           _ _   _     </pre>
+                <pre>      | |     | |            / ____|         (_) | | |    </pre>
+                <pre>      | | ___ | |__  _ __   | (___  _ __ ___  _| |_| |__  </pre>
+                <pre>  _   | |/ _ \| '_ \| '_ \   \___ \| '_ ` _ \| | __| '_ \ </pre>
+                <pre> | |__| | (_) | | | | | | |  ____) | | | | | | | |_| | | |</pre>
+                <pre>  \____/ \___/|_| |_|_| |_| |_____/|_| |_| |_|_|\__|_| |_|</pre>
+                <pre>                                                          </pre>
+                <pre>==========================================================</pre>
+            </header>
+            <section id="slogan" class="movable">Lightweight and simple JavaScript UI framework</section>
+        </div>
+
+        <div id="features" class="keyframe">
+            <header class="movable">
+                <pre>==========================================================</pre>
+                <pre>       _       _              _____           _ _   _     </pre>
+                <pre>      | |     | |            / ____|         (_) | | |    </pre>
+                <pre>      | | ___ | |__  _ __   | (___  _ __ ___  _| |_| |__  </pre>
+                <pre>  _   | |/ _ \| '_ \| '_ \   \___ \| '_ ` _ \| | __| '_ \ </pre>
+                <pre> | |__| | (_) | | | | | | |  ____) | | | | | | | |_| | | |</pre>
+                <pre>  \____/ \___/|_| |_|_| |_| |_____/|_| |_| |_|_|\__|_| |_|</pre>
+                <pre>                                                          </pre>
+                <pre>==========================================================</pre>
+            </header>
+            <ul class="movable">
+                <li>UI-to-Logic binding configured via JS code</li>
+                <li>UI composition with reusable, independent Views</li>
+                <li>Simple API that works for large-scale applications</li>
+            </ul>
+            <section id="schema" class="movable">
+                <pre>                              _________________</pre>
+                <pre>   ___________            ___|__               |</pre>
+                <pre>  |           |          |      | Parent View  |</pre>
+                <pre>  | <i>ViewModel</i> |          | <i>View</i> |              |</pre>
+                <pre>  |           | binding  |      |              |</pre>
+                <pre id="framePlaceholder">  |           <---------<       |              |</pre>
+                <pre>  |           |          |      |              |</pre>
+                <pre id="step2Frame1">  |___________|          |______|              |</pre>
+                <pre id="step2Frame2">        |                    |                 |</pre>
+                <pre id="step2Frame3">  ~~~~~~|~~~~~~       ...more views...         |</pre>
+                <pre id="step2Frame4">        |                    |                 |</pre>
+                <pre>    ____V___                 |_________________|</pre>
+                <pre>   |        |                                   </pre>
+                <pre>   |  <i>Model</i> |                                   </pre>
+                <pre>   |________|                                   </pre>
+            </section>
+            <div id="schemaFrames" style="display: none;">
+                <pre>  |           <---------<       |              |</pre>
+                <pre>  |           <--------<<       |              |</pre>
+                <pre>  |           <-------<<<       |              |</pre>
+                <pre>  |           <------<<-<       |              |</pre>
+                <pre>  |           <-----<<--<       |              |</pre>
+                <pre>  |           <----<<---<       |              |</pre>
+                <pre>  |           <---<<----<       |              |</pre>
+                <pre>  |           <--<<-----<       |              |</pre>
+                <pre>  |           <-<<------<       |              |</pre>
+                <pre>  |           <<<-------<       |              |</pre>
+                <pre>  |           <<--------<       |              |</pre>
+                <pre>  |           <---------<       |              |</pre>
+            </div>
+            <div id="schemaStep2Frames" style="display: none;">
+                <!--<pre>  |____\/_____|          |______|              |</pre>-->
+                <pre>        o                    |                 |</pre>
+                <pre>  ~~~~~~o~~~~~~       ...more views...         |</pre>
+                <pre>        o                    |                 |</pre>
+            </div>
+        </div>
+
+        <div id="samples" class="keyframe">
+            <div id="samplesContainer">
+                <div class="sample">
+                    <div class="sampleBody">
+                        Sample 1
+                    </div>
+                </div>
+
+                <div class="sample">
+                    <div class="sampleBody">
+                        Sample 2
+                    </div>
+                </div>
+
+                <div class="sample">
+                    <div class="sampleBody">
+                        Sample 3
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="moreSamples" class="keyframe" style="background: #008000"></div>
+    </div>
+
+    <script type="application/javascript" src="assets/scripts/skrollr-x.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+    <script type="text/javascript">
+        var KeyFrame = function(rootSelector, calculateHeight){
+            this._movables = [];
+            this._lastTop = 0;
+
+            this.addMovable = function(movable){
+                this._movables.push(movable);
+            };
+
+            this._calculateHeight = calculateHeight || function(width, height){
+                return height;
+            };
+
+            this.$root = $(rootSelector);
+
+            this.updateSize = function(width, height){
+                this._calculatedHeight = this._calculateHeight(width, height);
+                this._height = height;
+
+                this.$root
+                    .css("width", width + "px")
+                    .css("height", height + "px");
+
+                for (var i = 0; i < this._movables.length; i++){
+                    var movable = this._movables[i];
+                    if (movable.updateSize){
+                        movable.updateSize(width, height);
+                    }
+                }
+
+                this._updateMovablePosition();
+            };
+
+            this.updatePosition = function(top, relativeTop){
+                this.$root.css("top", top + "px");
+                this._lastTop = relativeTop;
+                this._updateMovablePosition();
+            };
+
+            this.getCalculatedHeight = function(){
+                return this._calculatedHeight;
+            };
+
+            this._updateMovablePosition = function(){
+                for (var i = 0; i < this._movables.length; i++){
+                    this._movables[i].updatePosition(this._lastTop, - 100 * this._lastTop / this._height);
+                }
+            }
+        };
+
+        var frames = [];
+        var windowWidth;
+        var windowHeight;
+        var $window;
+        var $fakeScrollArea;
+
+        var updateFrameSize = function(){
+            var fullHeight = 0;
+            for (var i = 0; i < frames.length; i++) {
+                var frame = frames[i];
+
+                frame.updateSize(windowWidth, windowHeight);
+                fullHeight += frame.getCalculatedHeight();
+            }
+
+            $fakeScrollArea.css("height", fullHeight + "px");
+        };
+
+        var updateFramesPosition = function(scrollTop){
+            var shift = 0;
+            for (var i = 0; i < frames.length; i++) {
+                var frame = frames[i];
+                var delay = frame.getCalculatedHeight() - windowHeight;
+                var actualPosition;
+                var relativePosition = shift - scrollTop;
+                if (delay > 0){
+                    if (shift >= scrollTop){
+                        actualPosition = relativePosition;
+                    } else {
+                        actualPosition = ((scrollTop - shift) < delay) ? 0 : relativePosition + delay;
+                    }
+                } else {
+                    actualPosition = relativePosition;
+                }
+
+                //var actualPosition = ((scrollTop - shift) < delay && scrollTop > shift) ? 0 : shift - scrollTop + delay;
+
+                frame.updatePosition(actualPosition, relativePosition);
+                shift += //windowHeight;
+                    frame.getCalculatedHeight();
+            }
+        };
+
+
+        /********************************
+         *  Utils
+         *******************************/
+
+        jQuery.prototype.setTop = function(value){
+            return this.css("top", value + "px");
+        };
+
+        jQuery.prototype.setBottom = function(value){
+            return this.css("bottom", value + "px");
+        };
+
+        jQuery.prototype.setLeft = function(value){
+            return this.css("left", value + "px");
+        };
+
+        jQuery.prototype.setRight = function(value){
+            return this.css("right", value + "px");
+        };
+
+        function calcLinearProportion(minX, maxX, currentX, minY, maxY) {
+            if (currentX < minX) {
+                return minY;
+            }
+
+            if (currentX > maxX) {
+                return maxY;
+            }
+
+            return minY + (maxY - minY) * ((currentX - minX) / (maxX - minX));
+        }
+
+        /********************************
+         *  Intro
+         *******************************/
+        var HeaderMovable = function(selector){
+            this.$root = $(selector);
+
+            this.updatePosition = function(top) {
+                this.$root.setBottom(this._windowCenter + top);
+            };
+
+            this.updateSize = function(width, height){
+                this._windowCenter = height /2;
+
+                this.$root.setLeft((width - this.$root.width()) / 2);
+            };
+        };
+
+        var SloganMovable = function(){
+            this.$root = $("#slogan");
+
+            this.updatePosition = function(top) {
+                this.$root.setTop(this._windowCenter - top);
+            };
+
+            this.updateSize = function(width, height){
+                this._windowCenter = height /2;
+                this.$root.setLeft((width - this.$root.width()) / 2);
+            };
+        };
+
+        /********************************
+         *  Features
+         *******************************/
+        var FeaturesHeaderMovable = function(){
+            this.$root = $("#features header");
+            this.$schema = $("#schema");
+            this.$features = $("#features ul");
+
+            this.updatePosition = function(top, relativeTop) {
+                var topPoint = top > 0 ?
+                    this._windowCenter + top :
+                    this._windowCenter;
+
+                var leftPoint = top > 0 ?
+                    this._maxLeft :
+                    calcLinearProportion(10, 70, relativeTop, this._maxLeft, this._minLeft);
+
+                var schemaRightPoint =
+                    calcLinearProportion(10, 70, relativeTop, - this._windowWidth, this._minLeft);
+
+                this.$root
+                    .setBottom(topPoint)
+                    .setLeft(leftPoint);
+
+                this.$schema
+                    .setRight(schemaRightPoint);
+
+                this.$features
+                    .setTop(this._windowHeight - topPoint)
+                    .setLeft(leftPoint);
+            };
+
+            this.updateSize = function(width, height){
+                this._windowCenter = height /2;
+                this._windowWidth = width;
+                this._windowHeight = height;
+                this._minLeft = (width - this.$root.width() - this.$schema.width()) / 3;
+                this._maxLeft = (this._windowWidth - this.$root.width()) / 2;
+
+                var topAdge = this._windowCenter - this.$root.height();
+                var bottomAdge = this._windowCenter + this.$features.height();
+
+                this.$schema.setTop( topAdge + (bottomAdge - topAdge)/2 - this.$schema.height()/2);
+            };
+        };
+
+
+        /********************************
+         *  Samples
+         *******************************/
+
+        var SamplesContainerMovable = function(){
+            this.$root = $("#samplesContainer");
+            this.$samples = this.$root.find(".sample");
+
+            this.updatePosition = function(top) {
+                var left = top > 0 ? 0 : top;
+                if (- left > this._maxLeft) {
+                    left = - this._maxLeft;
+                }
+
+                this.$root.css("left", left + "px");
+            };
+
+            this.updateSize = function(width, height){
+                this.$samples
+                    .css("width", width + "px")
+                    .css("height", height + "px");
+
+                this._maxLeft = width * (this.$samples.length - 1);
+
+                this.$root.css("width", width * this.$samples.length + "px");
+//                this._windowCenter = height /2;
+//                this.$root.css("left", (width - this.$root.width()) / 2 + "px");
+            };
+        };
+
+        $(function(){
+            var $frames = $("#schemaFrames pre");
+            var $step2Frames = $("#schemaStep2Frames pre");
+            var $step2Placeholders = [
+                //$("#step2Frame1"),
+                $("#step2Frame2"),
+                $("#step2Frame3"),
+                $("#step2Frame4")];
+
+            var $step2Originals = [
+                //$("#step2Frame1").html(),
+                $("#step2Frame2").html(),
+                $("#step2Frame3").html(),
+                $("#step2Frame4").html()];
+
+            var $framePlaceholder = $("#framePlaceholder");
+            var currentFrameIndex = 0;
+            setInterval(function(){
+               currentFrameIndex++;
+               if (currentFrameIndex >= $frames.length + $step2Placeholders.length) {
+                   $step2Placeholders[$step2Placeholders.length - 1].html($step2Originals[$step2Placeholders.length - 1]);
+                   currentFrameIndex = 0;
+               }
+               if (currentFrameIndex < $frames.length){
+                   $framePlaceholder.html($($frames[currentFrameIndex]).html());
+               } else {
+                   var secondFrameIndex = (currentFrameIndex - $frames.length);
+                   if (secondFrameIndex > 0) {
+                       $step2Placeholders[secondFrameIndex - 1].html($step2Originals[secondFrameIndex - 1]);
+                   } else {
+
+                   }
+
+                   $step2Placeholders[secondFrameIndex].html($($step2Frames[secondFrameIndex]).html());
+               }
+
+            }, 100);
+
+            $window = $(window);
+            $fakeScrollArea = $("#line");
+
+            var keyFrame1 = new KeyFrame("#intro");
+            keyFrame1.addMovable(new HeaderMovable("#intro header"));
+            keyFrame1.addMovable(new SloganMovable());
+
+            frames.push(keyFrame1);
+            var keyFrame2 = new KeyFrame("#features", function(width, height){
+                return height * 2;
+            });
+
+            keyFrame2.addMovable(new FeaturesHeaderMovable());
+            //keyFrame2.addMovable(new FeatureListMovable());
+
+            frames.push(keyFrame2);
+
+            /** samples */
+            var samplesKeyFrame = new KeyFrame("#samples", function (width, height) {
+                return width * 3;
+            });
+            samplesKeyFrame.addMovable(new SamplesContainerMovable());
+            frames.push(samplesKeyFrame);
+
+            frames.push(new KeyFrame("#moreSamples"));
+
+            windowWidth = $window.width();
+            windowHeight = $window.height();
+            updateFrameSize();
+
+            $window.resize(function(){
+                updateFrameSize();
+                windowWidth = $window.width();
+                windowHeight = $window.height();
+            });
+
+            skrollr.init(
+                function(scrollTop){
+                    updateFramesPosition(scrollTop);
+                });
+        });
+
+
+    </script>
 </body>
 </html>

@@ -11,8 +11,8 @@ var SimpleFormatter = function(){
 
 var SimpleView = function(){
     this.template = "#listItemTemplate";
-    this.init = function(viewModel){
-        this.bind(viewModel).to("li");
+    this.init = function(context, viewModel){
+        context.bind(viewModel).to("li");
     };
 };
 

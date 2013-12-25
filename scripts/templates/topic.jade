@@ -1,7 +1,7 @@
 doctype
 head
     title
-        | JohnSmith - Lightweight and simple JavaScript MVVM Framework
+        | JohnSmith Framework - #{currentTopic.title}
 
     meta(charset="UTF-8")
 
@@ -59,9 +59,9 @@ html
                         | &nbsp;Samples Hub
 
         section#page.appContent
-            div.container
+            div.container(itemscope,itemtype="http://schema.org/Article")
                 header#contentHeader
-                    h1 #{currentTopic.title}
+                    h1(itemprop="name") #{currentTopic.title}
 
                 nav#mainNavigation
                     div.content

@@ -12,8 +12,8 @@ var ChildViewModel = function() {
 /* Child view class. Sets up binding of test value to child-related markup. */
 var ChildView = function(){
     this.template = "#childTemplate";
-    this.init = function(viewModel){
-        this.bind(viewModel.value).to(".value");
+    this.init = function(c, viewModel){
+        c.bind(viewModel.value).to(".value");
     };
 };
 
@@ -37,8 +37,8 @@ testCase.prototype.setUp = function(){
 testCase.prototype.testNestedView_ViewClassInInitData_ShouldRenderViewTree = function(){
     var parent = js.createView({
         template: "#parentTemplate",
-        init: function(){
-            this.addChild(".parent", ChildView, new ChildViewModel());
+        init: function(c){
+            c.addChild(".parent", ChildView, new ChildViewModel());
         }
     });
 
@@ -48,8 +48,8 @@ testCase.prototype.testNestedView_ViewClassInInitData_ShouldRenderViewTree = fun
 testCase.prototype.testNestedView_ViewInstanceInInitData_ShouldRenderViewTree = function(){
     var parent = js.createView({
         template: "#parentTemplate",
-        init: function(){
-            this.addChild(".parent", new ChildView(), new ChildViewModel());
+        init: function(c){
+            c.addChild(".parent", new ChildView(), new ChildViewModel());
         }
     });
 

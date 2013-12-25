@@ -4,6 +4,21 @@
     <title></title>
 </head>
 <body>
+    <form action="http://jsfiddle.net/api/post/library/pure/" method="post">
+        <div>
+            <input type="text" name="resources" value="http://code.jquery.com/jquery-1.10.1.min.js" />
+        </div>
 
+        <div>
+            <textarea name="js">alert(window['jQuery'] == undefined);</textarea>
+        </div>
+
+        <div>
+            <input type="text" value="d" name="wrap" />
+        </div>
+
+
+        <input type="submit" value="Do Post" />
+    </form>
 </body>
 </html>

@@ -9,10 +9,10 @@ testCase.prototype.test_bindShouldNotChangeMarkupWhileInsideInitFunction = funct
 
     var Parent = function(){
         this.template = "<div class='parent'></div>";
-        this.init = function(){
-            this.bind("").to(".parent", Child);
+        this.init = function(view){
+            view.bind("").to(".parent", Child);
 
-            assertFalse("Child markup detected", this.find(".child").getTarget().length > 0);
+            assertFalse("Child markup detected", view.find(".child").getTarget().length > 0);
         };
     };
 

@@ -12,8 +12,8 @@ var ViewModelWithCommand = function(){
 
 var View = function(){
     this.template = "<a id='send'>click me</a>";
-    this.init = function(viewModel){
-        this.on("a", "click").react(viewModel.send);
+    this.init = function(view, viewModel){
+        view.on("a", "click").react(viewModel.send);
     };
 };
 
@@ -67,9 +67,8 @@ testCase.prototype.test_OnClick_ShouldRespectViewContext = function(){
     var View = function(){
         this.template = "<a id='link2' class='link'>click me</a>";
 
-        this.init = function(viewModel){
-
-            this.on(linkSelector, "click").react(viewModel.send);
+        this.init = function(c, viewModel){
+            c.on(linkSelector, "click").react(viewModel.send);
         };
     };
 

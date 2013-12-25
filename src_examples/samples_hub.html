@@ -2,8 +2,87 @@
 <html>
 <head>
     <title></title>
+    <link rel="stylesheet" href="assets/styles/idea.css">
+    <link rel="stylesheet" href="assets/styles/samples_hub.css">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700' rel='stylesheet' type='text/css'>
 </head>
 <body>
+    <div id="application"></div>
 
+    <!-- Application Template -->
+    <script id="applicationTemplate" type="text/view">
+        <header id="mainHeader">
+            <div class="appContent">
+                <div id="logo" class="container">
+                    <span>JohnSmith</span> Samples Hub
+                </div>
+            </div>
+        </header>
+
+        <section id="page" class="appContent">
+            <div class="container">
+                <h1 id="mainTitle"></h1>
+
+                <nav id="mainNavigation">
+                    <div class="content">
+                        <a id="prevLink" href="#">
+                            <span>&lt;</span>
+                        </a>
+
+                        <a id="nextLink" href="#">
+                            <span>&gt;</span>
+                        </a>
+
+                        <a id="browseAll" href="#">
+                            <span>Browse all</span>
+                        </a>
+                    </div>
+
+                    <div class="bg">
+                        <span class="left"></span>
+                        <span class="right"></span>
+                        <span class="center">
+                            <span></span>
+                        </span>
+
+                    </div>
+                </nav>
+
+                <section id="result" class="fullHeight">
+                    <section id="description">
+                    </section>
+
+                    <section id="destination">
+                    </section>
+                </section>
+
+                <section id="source" class="fullHeight">
+                    <section id="javaScript" class="">
+                        <header>JavaScript</header>
+                        <section class="sourceContent">
+                            <pre><code class="javascript"></code></pre>
+                        </section>
+                    </section>
+
+                    <section id="html" class="">
+                        <header>HTML</header>
+                        <div class="sourceContent">
+                            <pre><code class="html"></code></pre>
+                        </div>
+                    </section>
+
+                </section>
+            </div>
+        </section>
+    </script>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+    <script type="text/javascript" src="assets/scripts/highlight.pack.js"></script>
+    <script src="../out/john-smith.debug.js"></script>
+    <script src="assets/scripts/samples_hub.js"></script>
+    <script type="text/javascript">
+        var data = {"id":"display_current_time","title":"Display current time","children":[],"isNew":false,"markup":"<div id='currentTime'></div>","code":"var currentTime = js.bindableValue();                    // create bindable value\r\ncurrentTime.setValue(\"...\");                             // set default value (not required)\r\n\r\nwindow.setInterval(function(){                           // this code will update bindable\r\n    var timeString = new Date().toLocaleTimeString();    // value every second\r\n    currentTime.setValue(timeString);\r\n}, 1000);\r\n\r\njs.bind(currentTime).to(\"#currentTime\");                 // do binding\r\n","description":"<p>\r\n    This example demonstrates using bindable value for displaying current time.\r\n</p>\r\n\r\n<p>\r\n    <code>setInterval</code> method callback changes <code>currentTime</code> variable value and current time displays\r\n    in corresponding markup element.\r\n</p>"}
+        runApplication(data);
+    </script>
 </body>
 </html>

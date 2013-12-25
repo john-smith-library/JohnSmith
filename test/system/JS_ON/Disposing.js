@@ -3,8 +3,8 @@
 
     var View = function(){
         this.template = "<a id='button'>click me</a>";
-        this.init = function(){
-            this.on("#button", "click").react(function(){});
+        this.init = function(c){
+            c.on("#button", "click").react(function(){});
         };
 
         /* override unrender function to prevent DOM clearing */

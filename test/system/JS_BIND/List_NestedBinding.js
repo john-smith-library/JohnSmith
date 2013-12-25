@@ -13,8 +13,8 @@ testCase.prototype.testNestedBindingsShouldWorkForListItems = function(){
 
     var ItemView = function(){
         this.template = "<li><span class='value'></span></li>";
-        this.init = function(item){
-            this.bind(item.value).to(".value");
+        this.init = function(c, item){
+            c.bind(item.value).to(".value");
         };
     };
 

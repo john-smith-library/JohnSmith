@@ -22,9 +22,9 @@ testCase.prototype.setUp = function(){
 testCase.prototype.testCreateView_InstanceViewData_ShouldRenderView = function(){
     var view = js.createView({
         template: "#viewTemplate",
-        init: function(viewModel){
-            this.bind(viewModel.firstName).to(".firstName");
-            this.bind(viewModel.lastName).to(".lastName");
+        init: function(c, viewModel){
+            c.bind(viewModel.firstName).to(".firstName");
+            c.bind(viewModel.lastName).to(".lastName");
         }
     }, new PersonViewModel());
 
@@ -34,9 +34,9 @@ testCase.prototype.testCreateView_InstanceViewData_ShouldRenderView = function()
 testCase.prototype.testCreateView_ViewClassData_ShouldRenderView = function(){
     var PersonView = function(){
         this.template = "#viewTemplate";
-        this.init = function(viewModel){
-            this.bind(viewModel.firstName).to(".firstName");
-            this.bind(viewModel.lastName).to(".lastName");
+        this.init = function(c, viewModel){
+            c.bind(viewModel.firstName).to(".firstName");
+            c.bind(viewModel.lastName).to(".lastName");
         };
     };
 
@@ -48,9 +48,9 @@ testCase.prototype.testCreateView_ViewClassData_ShouldRenderView = function(){
 testCase.prototype.testCreateView_ViewClassInstanceData_ShouldRenderView = function(){
     var PersonView = function(){
         this.template = "#viewTemplate";
-        this.init = function(viewModel){
-            this.bind(viewModel.firstName).to(".firstName");
-            this.bind(viewModel.lastName).to(".lastName");
+        this.init = function(c, viewModel){
+            c.bind(viewModel.firstName).to(".firstName");
+            c.bind(viewModel.lastName).to(".lastName");
         };
     };
 
@@ -64,12 +64,12 @@ testCase.prototype.testCreateView_ViewClassInstanceData_ShouldRespectDataFieldsI
         this.template = "#viewTemplate";
         this.firstName = "John";
         this.lastName = "Smith";
-        this.init = function(viewModel){
+        this.init = function(view, viewModel){
             assertNotUndefined("First name from [this]", this.firstName);
             assertNotUndefined("Last name from [this]", this.lastName);
 
-            this.bind(this.firstName).to(".firstName");
-            this.bind(this.lastName).to(".lastName");
+            view.bind(this.firstName).to(".firstName");
+            view.bind(this.lastName).to(".lastName");
         };
     };
 

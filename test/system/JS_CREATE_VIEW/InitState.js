@@ -17,8 +17,8 @@ testCase.prototype.testViewWithInitStateShouldRenderTemplate = function(){
 
     var view = js.createView({
         template: "#simpleView",
-        init: function(viewModel){
-            this.bind(viewModel.value).to(".value");
+        init: function(c, viewModel){
+            c.bind(viewModel.value).to(".value");
         }
     }, viewModel);
 

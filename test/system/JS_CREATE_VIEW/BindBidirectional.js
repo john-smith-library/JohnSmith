@@ -7,8 +7,8 @@ testCase.prototype.testBindBidirectional_NoOptions_ShouldChangeViewModelOnChange
 
     var View = function(){
         this.template = "<input id='viewFooInput' type='text'/>";
-        this.init = function(viewModel){
-            this.bind(viewModel.foo).to("#viewFooInput");
+        this.init = function(c, viewModel){
+            c.bind(viewModel.foo).to("#viewFooInput");
         };
     };
 
@@ -28,8 +28,8 @@ testCase.prototype.testBindBidirectional_CustomCommand_ShouldCallCommandOnChange
 
     var View = function(){
         this.template = "<input id='viewFooInput' type='text'/>";
-        this.init = function(viewModel){
-            this.bind(viewModel.foo).to("#viewFooInput", { command: viewModel.doCommand });
+        this.init = function(c, viewModel){
+            c.bind(viewModel.foo).to("#viewFooInput", { command: viewModel.doCommand });
         };
     };
 

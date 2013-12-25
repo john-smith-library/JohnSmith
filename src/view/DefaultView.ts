@@ -10,7 +10,7 @@ module JohnSmith.View {
         viewModel: any;
     }
 
-    export class DefaultView implements IView, Command.ICommandHost {
+    export class DefaultView implements IView, IViewContext, Command.ICommandHost {
         /** Read only fields */
         private _elementFactory: Common.IElementFactory;
         private _bindableManager: Binding.IBindableManager;
@@ -98,16 +98,16 @@ module JohnSmith.View {
                     view: this
                 });
 
-            if (this._data.init || this._data.unrender){
-                for (var field in this._data){
-                    if (this[field] === undefined){
-                        this[field] = this._data[field];
-                    }
-                }
-            }
+//            if (this._data.init || this._data.unrender){
+//                for (var field in this._data){
+//                    if (this[field] === undefined){
+//                        this[field] = this._data[field];
+//                    }
+//                }
+//            }
 
             if (this._data.init){
-                this._data.init.call(this, this._viewModel);
+                this._data.init(this, this._viewModel);
             }
 
             /* Init bindings */
