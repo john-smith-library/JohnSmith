@@ -19,9 +19,9 @@ var GreeterView = function(){
         "<p>Enter your name: <input type='text'/></p>" +
         "<p class='message'></p>";
 
-    this.init = function(viewModel){
-        this.bind(viewModel.userName).to("input");
-        this.bind(viewModel.greetMessage).to(".message");
+    this.init = function(view, viewModel){
+        view.bind(viewModel.userName).to("input");
+        view.bind(viewModel.greetMessage).to(".message");
     };
 };
 

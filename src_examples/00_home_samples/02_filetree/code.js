@@ -105,22 +105,22 @@ var FileView = function(){
             "<ul class='children'></ul>" +
         "</li>";
 
-    this.init = function(fileViewModel){
+    this.init = function(view, fileViewModel){
         if (fileViewModel.isDirectory) {
-            this.find(".item").addClass("directory");
+            view.find(".item").addClass("directory");
         }
 
-        this.bind(fileViewModel.name).to(".name");
-        this.bind(fileViewModel.children).to(".children", FileView);
+        view.bind(fileViewModel.name).to(".name");
+        view.bind(fileViewModel.children).to(".children", FileView);
 
-        this.on("a", "click").react(fileViewModel.showFullPath);
+        view.on("a", "click").react(fileViewModel.showFullPath);
     };
 };
 
 var FileTreeView = function(){
     this.template = "#FileSystemTemplate";
-    this.init = function(fileSystemViewModel){
-        this.bind(fileSystemViewModel.fileTree).to("#treeRoot", FileView);
+    this.init = function(view, fileSystemViewModel){
+        view.bind(fileSystemViewModel.fileTree).to("#treeRoot", FileView);
     };
 };
 
