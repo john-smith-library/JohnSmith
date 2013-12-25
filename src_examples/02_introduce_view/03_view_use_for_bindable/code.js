@@ -3,9 +3,9 @@ var friend = js.bindableValue();
 var FriendView = function(){
     this.template = "#friendTemplate";
 
-    this.init = function(viewModel){
-        this.bind(viewModel.firstName).to(".firstName");
-        this.bind(viewModel.lastName).to(".lastName");
+    this.init = function(view, viewModel){
+        view.bind(viewModel.firstName).to(".firstName");
+        view.bind(viewModel.lastName).to(".lastName");
     };
 };
 

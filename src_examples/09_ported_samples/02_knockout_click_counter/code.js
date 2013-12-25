@@ -24,12 +24,12 @@ var ClickViewModel = function(){
 
 var ClickView = function(){
     this.template = "#clickViewTemplate";
-    this.init = function(viewModel){
-        var toManyClicksPanel = this.find("#hasClickedTooManyTimes").getTarget();
-        var clickMeButton = this.find("#clickMe").getTarget();
+    this.init = function(view, viewModel){
+        var toManyClicksPanel = view.find("#hasClickedTooManyTimes").getTarget();
+        var clickMeButton = view.find("#clickMe").getTarget();
 
-        this.bind(viewModel.numberOfClicks).to("#numberOfClicks");
-        this.bind(viewModel.hasClickedToManyTimes).to(function(tooManyClicks){
+        view.bind(viewModel.numberOfClicks).to("#numberOfClicks");
+        view.bind(viewModel.hasClickedToManyTimes).to(function(tooManyClicks){
             if (tooManyClicks) {
                 toManyClicksPanel.show();
                 clickMeButton.prop("disabled", true);
@@ -39,8 +39,8 @@ var ClickView = function(){
             }
         });
 
-        this.on("#clickMe", "click").react(viewModel.registerClick);
-        this.on("#resetClicks", "click").react(viewModel.resetClicks);
+        view.on("#clickMe", "click").react(viewModel.registerClick);
+        view.on("#resetClicks", "click").react(viewModel.resetClicks);
     };
 };
 

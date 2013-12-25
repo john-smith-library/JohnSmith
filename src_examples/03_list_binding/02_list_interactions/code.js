@@ -2,8 +2,8 @@ var employee = js.bindableList();
 
 var View = function(){
     this.template = "#listItemTemplate";
-    this.init = function(viewModel){
-        this.bind(viewModel.name).to("li");
+    this.init = function(view, viewModel){
+        view.bind(viewModel.name).to("li");
     };
 }
 js.bind(employee).to("#employee", View);
@@ -22,6 +22,6 @@ employee.add(joePublic);
 
 employee.remove(fredBloggs, johnQPublic);
 
-js.on("#clearList", "click").do(function(){
+js.on("#clearList", "click").react(function(){
     employee.clear();
 });

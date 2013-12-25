@@ -25,8 +25,8 @@ var TimerView = function(){
     // view is very simple, so we use inline template here
     this.template = "<p>Seconds Elapsed: <span></span></p>";
 
-    this.init = function(viewModel){
-        this.bind(viewModel.secondsElapsed).to("span");
+    this.init = function(view, viewModel){
+        view.bind(viewModel.secondsElapsed).to("span");
     };
 };
 
