@@ -38,7 +38,7 @@ ApplicationViewModel.prototype.hideTableOfContents = function(){
 function ApplicationView(){
 }
 
-ApplicationView.prototype.init = function(viewModel){
+ApplicationView.prototype.init = function(view, viewModel){
     var NAV_PANEL_WIDTH = 188;
 
     var $window = $(window);
@@ -46,7 +46,7 @@ ApplicationView.prototype.init = function(viewModel){
     var $fullHeight = $(".fullHeight");
     var $sourceContent = $(".sourceContent");
     var $navPanel = $("#mainNavigation");
-    var root = this.getRootElement();
+    var root = view.getRootElement();
 
     var reactOnResize = function(){
         viewModel.updateWidth($window.width());
@@ -57,10 +57,10 @@ ApplicationView.prototype.init = function(viewModel){
 
     $window.resize(reactOnResize);
 
-    this.on("#browseAll", "click").react(viewModel.showTableOfContents);
-    this.on("#tableOfContentsOverlay", "click").react(viewModel.hideTableOfContents);
+    view.on("#browseAll", "click").react(viewModel.showTableOfContents);
+    view.on("#tableOfContentsOverlay", "click").react(viewModel.hideTableOfContents);
 
-    this.bind(viewModel.tableOfContentVisible).to(function(visible){
+    view.bind(viewModel.tableOfContentVisible).to(function(visible){
         var $tableOfContents = $("#tableOfContents");
         if (visible) {
             $tableOfContents.css("height", ($("#result").height() - 50) + "px");
@@ -78,7 +78,7 @@ ApplicationView.prototype.init = function(viewModel){
         }
     });
 
-    this.bind(viewModel.contentWidth).to(function(width){
+    view.bind(viewModel.contentWidth).to(function(width){
         var clientWidth = width - 40;
 
         $appContent.css("width", width + "px");
@@ -87,7 +87,7 @@ ApplicationView.prototype.init = function(viewModel){
 
     });
 
-    this.bind(viewModel.contentHeight).to(function(height){
+    view.bind(viewModel.contentHeight).to(function(height){
         $fullHeight.css("height", height + "px");
         $sourceContent.css("height", (height - 30 * 2)/2);
     });
