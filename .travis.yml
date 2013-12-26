@@ -16,7 +16,7 @@ before_script:
     - export TEMP_TOOLS="${HOME}/temp_tools"
     - npm install -g typescript@0.9.1-1
     - npm install -g jake
-    - npm install jade
+    - npm install jade@0.30.0
     - npm install fs-extra
     - npm install js-yaml
     - npm install optimist
