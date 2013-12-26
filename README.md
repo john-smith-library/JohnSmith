@@ -84,13 +84,13 @@ var PersonView = function(){
     // here we use plain html as view template
     this.template = "<span class='firstName' /> <span class='lastName' />";
 
-    this.init = function() {
+    this.init = function(view) {
         // NOTE that .firstName and .lastName selectors
         // will be searched within the rendered template. It helps
         // to keep the view fully reusable and independent from the outside markup.
 
-        this.bind("John").to(".firstName");
-        this.bind("Smith").to(".lastName");
+        view.bind("John").to(".firstName");
+        view.bind("Smith").to(".lastName");
     };
 };
 ```
@@ -100,9 +100,9 @@ View is supposed to work with a particular *[View Model](#view-model)*:
 ```javascript
 var PersonView = function(){
     this.template = "#personViewTemplate";  // here we use jQuery selector to reference template
-    this.init = function(viewModel) {
-        this.bind(viewModel.firstName).to(".firstName");
-        this.bind(viewModel.lastName).to(".lastName");
+    this.init = function(view, viewModel) {
+        view.bind(viewModel.firstName).to(".firstName");
+        view.bind(viewModel.lastName).to(".lastName");
     };
 };
 ```
