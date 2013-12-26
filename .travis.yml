@@ -5,9 +5,9 @@ env:
   global:
     - secure: "JH7N4LAjAywkt010l+20n3FWsrzX2bjzvm+wKf04+IIoNp6QTkYqRFTT6uII\n1Fqs2x0H5cyPgum/ji++vdFLOKkusKTTUdqDr3a8296wdIxm3VpXCusjHqkP\nnpL5SYGuUPyAfIT5YOstO7kfk11Nuex9bWb1mmF/JcBI7P+AbLI="
     - secure: "Q9rDQLDcsiZvooElo4ztdx7q90B10me5h1kqg/NxjGf52B3M4ruwzX/nk5rm\nUAVPE1pyTt+O/yDoz5uamsTxzMP8wDg4NKZFkPlPBBsWMcjn6dS3h0Tt39md\nAsLp4fDPdS4SfsI8DmydOKyRhrms7KyWtDme9GA3zqoG+77+Xw8="
-    - MAJOR_VERSION: 0
-    - MINOR_VERSION: 3
-    - REVISION: 1
+    - MAJOR_VERSION: 2
+    - MINOR_VERSION: 0
+    - REVISION: 0
 
 before_script:
     - export VERSION="${MAJOR_VERSION}.${MINOR_VERSION}.${REVISION}.${TRAVIS_BUILD_NUMBER}"
