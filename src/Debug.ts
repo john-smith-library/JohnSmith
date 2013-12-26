@@ -6,24 +6,24 @@
 
 // Replace no-op logger with console-based implementation
 JohnSmith.Common.log = {
-    info: function(args) : void {
+    info: function(...args:any[]) : void {
         try
         {
-            console.log.apply(console, arguments);
+            console.log.apply(console, args);
         } catch (Error) {}
     },
 
-    warn: function(args) : void {
+    warn: function(...args:any[]) : void {
         try
         {
-            console.warn.apply(console, arguments);
+            console.warn.apply(console, args);
         } catch (Error) {}
     },
 
-    error: function(args) : void {
+    error: function(...args:any[]) : void {
         try
         {
-            console.error.apply(console, arguments);
+            console.error.apply(console, args);
         } catch (Error) {}
     }
 }
