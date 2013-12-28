@@ -42,7 +42,7 @@ testCase.prototype.testValueView_UnrenderConfigured_ShouldCallUnrenderOnViewObje
     bindable.setValue("value1");
     bindable.setValue("value2");
     assertNotUndefined("Unrender context", this.unrenderSpy.firstCall.thisValue);
-    assertTrue("Unrender called on view object", this.unrenderSpy.firstCall.thisValue.renderTo !== null);
+    assertNotUndefined("Unrender called on view object", this.unrenderSpy.firstCall.thisValue.template);
 };
 
 testCase.prototype.testListView_UnrenderConfigured_ShouldCallUnrenderOnDeletingItems = function(){

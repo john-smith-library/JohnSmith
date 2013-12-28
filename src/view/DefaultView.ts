@@ -160,7 +160,7 @@ module JohnSmith.View {
 
         public unrenderView() {
             if (this._data.unrender) {
-                this._data.unrender.call(this);
+                this._data.unrender();
             } else {
                 this.getRootElement().remove();
             }
