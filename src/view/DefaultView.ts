@@ -1,4 +1,5 @@
 /// <reference path="../Common.ts"/>
+/// <reference path="../Events.ts"/>
 /// <reference path="../binding/Contracts.ts"/>
 /// <reference path="../command/Contracts.ts"/>
 /// <reference path="Contracts.ts"/>
@@ -26,6 +27,7 @@ module JohnSmith.View {
         private _rootElement: JohnSmith.Common.IElement;
         private _bindings: Binding.BindingConfig[];
         private _commands: Command.CommandConfig[];
+        private _unrender: Events.Event<IViewContext>;
 
         constructor (
             bindableManager: Binding.IBindableManager,
@@ -48,6 +50,7 @@ module JohnSmith.View {
 
             this._bindings = [];
             this._commands = [];
+            this._unrender = new Events.Event<IViewContext>();
         }
 
         // todo write tests for this
@@ -86,6 +89,10 @@ module JohnSmith.View {
             var root = destinationElement.appendHtml(templateHtml);
 
             this.attachViewToRoot(root);
+        }
+
+        public onUnrender():Events.IEvent<IViewContext> {
+            return this._unrender;
         }
 
         private attachViewToRoot(root: JohnSmith.Common.IElement):void {
@@ -159,11 +166,16 @@ module JohnSmith.View {
         }
 
         public unrenderView() {
-            if (this._data.unrender) {
-                this._data.unrender();
+            if (this._unrender.hasListeners()){
+                this._unrender.trigger(this);
             } else {
                 this.getRootElement().remove();
             }
+//            if (this._data.unrender) {
+//                this._data.unrender();
+//            } else {
+//                this.getRootElement().remove();
+//            }
         }
 
         public dispose(): void {

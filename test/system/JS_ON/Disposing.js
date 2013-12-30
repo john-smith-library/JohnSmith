@@ -5,10 +5,10 @@
         this.template = "<a id='button'>click me</a>";
         this.init = function(c){
             c.on("#button", "click").react(function(){});
-        };
 
-        /* override unrender function to prevent DOM clearing */
-        this.unrender = function(){
+            /* override unrender function to prevent DOM clearing */
+            c.onUnrender().listen(function(){
+            });
         };
     };
 

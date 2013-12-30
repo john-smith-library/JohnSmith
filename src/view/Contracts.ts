@@ -1,4 +1,5 @@
 /// <reference path="../Common.ts"/>
+/// <reference path="../Events.ts"/>
 /// <reference path="../binding/Contracts.ts"/>
 
 module JohnSmith.View {
@@ -24,6 +25,7 @@ module JohnSmith.View {
         bind: (bindable: any) => Binding.BindingConfig;
         on: (...causeArguments: any[]) => Command.CommandConfig;
         getRootElement: () => Common.IElement;
+        onUnrender: () => Events.IEvent<IViewContext>;
     }
 
     /**

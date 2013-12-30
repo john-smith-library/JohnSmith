@@ -15,7 +15,9 @@ testCase.prototype.setUp = function(){
     this.unrenderSpy = unrenderSpy;
     this.view = function(){
         this.template = "#viewTemplate";
-        this.unrender = unrenderSpy;
+        this.init = function(view){
+            view.onUnrender().listen(unrenderSpy);
+        };
     };
 };
 
@@ -34,15 +36,15 @@ testCase.prototype.testValueView_UnrenderConfigured_ShouldCallUnrenderOnChange =
     assertTrue("Unrender called on every next set", this.unrenderSpy.calledTwice);
 };
 
-testCase.prototype.testValueView_UnrenderConfigured_ShouldCallUnrenderOnViewObject = function(){
+testCase.prototype.testValueView_UnrenderConfigured_ShouldCallUnrenderOnViewContextObject = function(){
     var bindable = js.bindableValue();
 
     js.bind(bindable).to("#viewDestination", this.view);
 
     bindable.setValue("value1");
     bindable.setValue("value2");
-    assertNotUndefined("Unrender context", this.unrenderSpy.firstCall.thisValue);
-    assertNotUndefined("Unrender called on view object", this.unrenderSpy.firstCall.thisValue.template);
+    assertNotUndefined("Unrender context", this.unrenderSpy.firstCall.args[0]);
+    assertNotUndefined("Unrender called on view object", this.unrenderSpy.firstCall.args[0].renderTo);
 };
 
 testCase.prototype.testListView_UnrenderConfigured_ShouldCallUnrenderOnDeletingItems = function(){
