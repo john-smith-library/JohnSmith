@@ -8,6 +8,7 @@ test:
   - system/JS_CREATE_VIEW/*.js
   - system/JS_BIND/*.js
   - system/JS_ON/*.js
+  - unit/*.js
   - unit/binding/*.js
   - unit/views/*.js
   - unit/jquery/*.js

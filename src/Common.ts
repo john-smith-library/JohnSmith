@@ -29,6 +29,22 @@ module JohnSmith.Common {
         }
     }
 
+    export class ArrayUtils
+    {
+        public static removeItem<T>(array: T[], itemToRemove:T):void {
+            var indexToRemove: number = -1;
+            for (var i = 0; i < array.length; i++) {
+                if (array[i] === itemToRemove) {
+                    indexToRemove = i;
+                }
+            }
+
+            if (indexToRemove >= 0) {
+                array.splice(indexToRemove, 1);
+            }
+        }
+    }
+
     /**
      * Process an argument passed to BindableManager as handler data.
      */
