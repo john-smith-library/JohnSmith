@@ -113,9 +113,9 @@ module JohnSmith.Common {
 
     // Using no-op logger by default
     export var log:ILogger = {
-        info: function(message:any) : void {},
-        warn: function(message:any) : void {},
-        error: function(message:any) : void {}
+        info: function(...args:any[]) : void {},
+        warn: function(...args:any[]) : void {},
+        error: function(...args:any[]) : void {}
     };
 
     /////////////////////////////////

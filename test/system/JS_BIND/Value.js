@@ -56,6 +56,9 @@ testCase.prototype.testCustomFormatterShouldRenderValue = function(){
 };
 
 testCase.prototype.testCustomFormatterReturnsJQueryObjectShouldRenderValue = function(){
+    console.log('html before: ' + $("#testDynamicBinding")[0].outerHTML);
+
+    $("#testDynamicBinding").empty();
     js.bind(this.foo).to({
         to: "#testDynamicBinding",
         valueType: "unknown",
@@ -70,6 +73,7 @@ testCase.prototype.testCustomFormatterReturnsJQueryObjectShouldRenderValue = fun
 
     this.foo.setValue("bar");
 
+    console.log('html is: ' + $("#testDynamicBinding")[0].outerHTML);
     assertEquals("Count of span elements", 1, $("#testDynamicBinding").find("span").length);
     assertEquals("Bound value", "bar", $("#testDynamicBinding").find("span").text());
     assertNotUndefined("Bound value", $("#testDynamicBinding").find("span").css("color"));

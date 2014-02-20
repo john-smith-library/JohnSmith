@@ -43,9 +43,10 @@ module JohnSmith.Binding {
 
             if (value !== null && value !== undefined) {
                 this._currentValue = this._valueRenderer.render(value, this._contentDestination);
-            } else {
-                this._contentDestination.empty();
             }
+            /*else {
+                this._contentDestination.empty();
+            }*/
         }
 
         private disposeCurrentValue(){

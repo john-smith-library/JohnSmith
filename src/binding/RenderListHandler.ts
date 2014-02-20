@@ -68,7 +68,7 @@ module JohnSmith.Binding {
         }
 
         private doRender(value: any, reason:DataChangeReason):void {
-            var items:Array = value;
+            var items:any[] = value;
 
             if (reason == DataChangeReason.remove){
                 for (var i = 0; i < items.length; i++){
@@ -88,7 +88,7 @@ module JohnSmith.Binding {
             }
         }
 
-        private appendItems(items:Array):void {
+        private appendItems(items:any[]):void {
             if (!items) {
                 return;
             }

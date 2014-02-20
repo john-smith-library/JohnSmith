@@ -23,7 +23,7 @@ module JohnSmith.Binding {
         }
 
         public add(...args:any[]): void {
-            var array:Array = this.getValue();
+            var array:any[] = this.getValue();
             for (var i = 0; i < args.length; i++){
                 array.push(args[i]);
             }
@@ -32,7 +32,7 @@ module JohnSmith.Binding {
         }
 
         public remove(...args:any[]):void {
-            var array:Array = this.getValue();
+            var array:any[] = this.getValue();
             for (var i = 0; i < args.length; i++){
                 var indexToRemove:number = -1;
                 for (var j = 0; j < array.length; j++){
@@ -65,7 +65,7 @@ module JohnSmith.Binding {
         }
 
         public forEach(callback, thisArg){
-            var array:Array = this.getValue();
+            var array:any[] = this.getValue();
             array.forEach(callback, thisArg);
         }
 

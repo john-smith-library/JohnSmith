@@ -14,7 +14,7 @@ before_script:
     - export JS_TEST_DRIVER="${HOME}/temp_tools/JsTestDriver-1.3.3d.jar"
     - export NUGET="${HOME}/temp_tools/NuGet.exe"
     - export TEMP_TOOLS="${HOME}/temp_tools"
-    - npm install -g typescript@0.9.1-1
+    - npm install -g typescript@0.9.5.0
     - npm install -g jake
     - npm install jade@0.30.0
     - npm install fs-extra

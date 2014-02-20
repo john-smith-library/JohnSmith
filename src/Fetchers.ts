@@ -23,7 +23,7 @@ module JohnSmith.Fetchers {
             if (nodeName) {
                 nodeName = nodeName.toUpperCase();
 
-                if (nodeName === "TEXTAREA") {
+                if (nodeName === "TEXTAREA" || nodeName === "SELECT") {
                     return true;
                 }
 
