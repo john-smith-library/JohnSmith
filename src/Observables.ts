@@ -72,7 +72,83 @@ class ObservableValue<T> implements IObservable<T> {
 }
 
 class ObservableList<T> extends ObservableValue<T[]> {
-    test() {
-        alert('hello!  ');
+    private _count: ObservableValue<number>;
+
+    constructor(){
+        super();
+        super.setValue([]);
+    }
+
+    public setValue(value: T[]) {
+        if (value){
+            if (!(value instanceof Array)){
+                throw new Error("Observable list supports only array values");
+            }
+        }
+
+        super.setValue(value);
+        this.notifyCountListeners();
+    }
+
+    public add(...args:T[]): void {
+        var array:T[] = this.getValue();
+        for (var i = 0; i < args.length; i++){
+            array.push(args[i]);
+        }
+
+        this.reactOnChange(args, DataChangeReason.add);
+    }
+
+    public remove(...args:T[]):void {
+        var array:T[] = this.getValue();
+        for (var i = 0; i < args.length; i++){
+            var indexToRemove:number = -1;
+            for (var j = 0; j < array.length; j++){
+                if (array[j] == args[i]){
+                    indexToRemove = j;
+                }
+            }
+
+            if (indexToRemove >= 0){
+                array.splice(indexToRemove, 1);
+            }
+        }
+
+        this.reactOnChange(args, DataChangeReason.remove);
+    }
+
+    /** Removes all items from the list */
+    public clear(): void {
+        var removed = this.getValue().splice(0, this.getValue().length);
+        this.reactOnChange(removed, DataChangeReason.remove);
+    }
+
+    /** Returns a bindable value that stores size of the list */
+    public count():ObservableValue<number> {
+        if (!this._count) {
+            this._count = new ObservableValue<number>();
+        }
+
+        return this._count;
+    }
+
+    public forEach(callback, thisArg){
+        var array:T[] = this.getValue();
+        array.forEach(callback, thisArg);
+    }
+
+    private reactOnChange(items: T[], reason:DataChangeReason):void{
+        super.notifyListeners(items, reason);
+        this.notifyCountListeners();
+    }
+
+    private notifyCountListeners():void {
+        if (this._count){
+            if (this.getValue()) {
+                this._count.setValue(this.getValue().length);
+            } else {
+                this._count.setValue(0);
+            }
+        }
     }
 }
