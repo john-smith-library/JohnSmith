@@ -8,7 +8,7 @@
         var observable;
 
         beforeEach(function(){
-            observable = new ObservableList();
+            observable = new js.ObservableList();
         });
 
         /**
@@ -72,7 +72,7 @@
             observable.add('foo', 'bar');
 
             expect(listener.calledOnce);
-            expect(listener.calledWithMatch(['foo', 'bar'], [], DataChangeReason.add));
+            expect(listener.calledWithMatch(['foo', 'bar'], [], js.DataChangeReason.add));
         });
 
         it('notifies listeners on remove', function(){
@@ -83,7 +83,7 @@
             observable.remove(1, 3, 5, 7, 9);
 
             expect(listener.calledOnce);
-            expect(listener.calledWithMatch([1, 3, 5, 7, 9], [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], DataChangeReason.remove));
+            expect(listener.calledWithMatch([1, 3, 5, 7, 9], [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], js.DataChangeReason.remove));
         });
 
         it('notifies listeners on clear', function(){
@@ -94,7 +94,7 @@
             observable.clear();
 
             expect(listener.calledOnce);
-            expect(listener.calledWithMatch([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], DataChangeReason.remove));
+            expect(listener.calledWithMatch([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], js.DataChangeReason.remove));
         });
 
         it('deletes all items on clear', function(){

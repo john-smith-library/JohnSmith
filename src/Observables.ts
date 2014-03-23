@@ -1,18 +1,21 @@
-enum DataChangeReason {
+/// <reference path="Common.ts"/>
+
+export enum DataChangeReason {
     replace,
     add,
     remove,
 }
 
-interface IListenerCallback<T> {
+export interface IListenerCallback<T> {
     (value: T, oldValue: T, reason: DataChangeReason): void;
 }
 
-interface IObservable<T> {
+export interface IObservable<T> {
+    getValue(): T;
     listen(listener:  IListenerCallback<T>): IDisposable;
 }
 
-class ListenerLink<T> implements IDisposable {
+export class ListenerLink<T> implements IDisposable {
     constructor(private allListeners:  IListenerCallback<T>[], private currentListener: IListenerCallback<T>){
     }
 
@@ -30,7 +33,7 @@ class ListenerLink<T> implements IDisposable {
     }
 }
 
-class ObservableValue<T> implements IObservable<T> {
+export class ObservableValue<T> implements IObservable<T> {
     private _listeners: IListenerCallback<T>[];
     private _value: T ;
 
@@ -71,7 +74,7 @@ class ObservableValue<T> implements IObservable<T> {
     }
 }
 
-class ObservableList<T> extends ObservableValue<T[]> {
+export class ObservableList<T> extends ObservableValue<T[]> {
     private _count: ObservableValue<number>;
 
     constructor(){
@@ -150,5 +153,18 @@ class ObservableList<T> extends ObservableValue<T[]> {
                 this._count.setValue(0);
             }
         }
+    }
+}
+
+export class StaticObservableValue<T> implements IObservable<T> {
+    constructor(private _value:T) {
+    }
+
+    public getValue(): T {
+        return this._value;
+    }
+
+    listen(listener:IListenerCallback<T>):IDisposable {
+        return { dispose: function(){} };
     }
 }

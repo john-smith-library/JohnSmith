@@ -16,7 +16,11 @@ module.exports = function(config) {
     // list of files / patterns to load in the browser
     files: [
       'libs/sinon-1.7.1.js',
-      'out/Observables.js',
+      'libs/underscore-min.js',
+      'libs/testHelpers.js',
+      'libs/neckbeard.js',
+      'libs/jquery-2.0.0.js',
+      'out/john-smith-latest.js',
       'test/**/*.js'
     ],
 

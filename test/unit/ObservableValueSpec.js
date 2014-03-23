@@ -5,7 +5,7 @@
         var observable;
 
         beforeEach(function(){
-            observable = new ObservableValue();
+            observable = new js.ObservableValue();
         });
 
         it('can attach listeners', function(){

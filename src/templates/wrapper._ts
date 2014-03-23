@@ -1,0 +1,7 @@
+/// <reference path="../libs/jquery.d.ts"/>
+
+module js {
+    <%= contents %>
+}
+
+js.init(js);
