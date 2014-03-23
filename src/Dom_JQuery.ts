@@ -19,7 +19,7 @@ export class JQueryElement implements IElement {
     }
 
     public appendHtml(html:string) : IElement{
-        if (!html) {
+        if (html === null || html === undefined) {
             throw new Error("Could not append empty string!")
         }
 

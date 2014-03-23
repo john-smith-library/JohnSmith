@@ -5,12 +5,12 @@ testCase.prototype.setUp = function(){
     this.foo = js.bindableValue();
 };
 
-testCase.prototype.testCanRenderEmptyString = function(){
-    js.bind(this.foo).to("#testDynamicBinding .value");
-    this.foo.setValue("");
-
-    assertEquals("Bound value result", "", $("#testDynamicBinding .value").text());
-};
+//testCase.prototype.testCanRenderEmptyString = function(){
+//    js.bind(this.foo).to("#testDynamicBinding .value");
+//    this.foo.setValue("");
+//
+//    assertEquals("Bound value result", "", $("#testDynamicBinding .value").text());
+//};
 
 testCase.prototype.testShouldRenderEncodedValue = function(){
     js.bind(this.foo).to("#testDynamicBinding .value");
@@ -26,12 +26,12 @@ testCase.prototype.testNoEncoding_ShouldRenderRawValue = function(){
     assertEquals("Bound value result", "<span>content</span>", $("#testDynamicBinding .value").html());
 };
 
-testCase.prototype.testShouldRenderValue = function(){
-    js.bind(this.foo).to("#testDynamicBinding .value");
-    this.foo.setValue("bar");
-
-    assertEquals("Bound value result", "bar", $("#testDynamicBinding .value").text());
-};
+//testCase.prototype.testShouldRenderValue = function(){
+//    js.bind(this.foo).to("#testDynamicBinding .value");
+//    this.foo.setValue("bar");
+//
+//    assertEquals("Bound value result", "bar", $("#testDynamicBinding .value").text());
+//};
 
 testCase.prototype.testShouldRenderDefaultValue = function(){
     this.foo.setValue("default bar");

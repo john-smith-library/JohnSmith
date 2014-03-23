@@ -21,12 +21,28 @@ function aliases(){
     return new AliasesHolder();
 }
 
+function alias(description) {
+    var result = {};
+    result.description = description;
+    result.tail = [];
+    for (var i = 1; i < arguments.length; i++) {
+        result.tail.push(arguments[i]);
+    }
+
+    return result;
+}
+
 function AliasesHolder() {
     var that = this;
 
     this.items = [];
 
     this.add = function(){
+        if (arguments.length === 1 && arguments[0].description) {
+            that.items.push(arguments[0]);
+            return that;
+        }
+
         var description = arguments[0];
         var tail = [];
         for (var i = 1; i < arguments.length; i++) {
