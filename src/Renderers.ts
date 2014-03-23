@@ -77,3 +77,20 @@ export class HtmlRenderer extends FormatterBasedRenderer {
         return destination.appendHtml(formattedValue);
     }
 }
+
+/**
+ * Appends html markup to destination element.
+ */
+export class ResolvableMarkupRenderer extends FormatterBasedRenderer {
+    private _markupResolver: IMarkupResolver;
+
+    constructor(formatter:IValueFormatter, markupResolver:IMarkupResolver){
+        super(formatter);
+        this._markupResolver = markupResolver;
+    }
+
+    public doRender(formattedValue:string, destination: IElement) : IElement {
+        var markup = this._markupResolver.resolve(formattedValue);
+        return destination.appendHtml(markup);
+    }
+}

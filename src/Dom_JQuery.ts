@@ -135,3 +135,34 @@ export class JQueryElement implements IElement {
         this._target.prop(property, value);
     }
 }
+
+export class JQueryMarkupResolver implements IMarkupResolver {
+    public resolve(markup: any): string {
+        var $markup;
+        if (markup instanceof jQuery) {
+            $markup = markup;
+        } else {
+            try {
+                $markup = $(markup);
+            }
+            catch(error) {
+                return markup;
+            }
+
+        }
+
+        if ($markup.parent().length > 0){
+            return $markup.html();
+        }
+
+        if (typeof markup === "string") {
+            return markup;
+        }
+
+        if (markup instanceof jQuery) {
+            return $("<p>").append(markup).html();
+        }
+
+        throw new Error("Could not resolve markup by object " + markup);
+    }
+}

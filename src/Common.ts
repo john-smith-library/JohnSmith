@@ -72,3 +72,11 @@ export class ValueType {
     /** The value contains an object that could be transformed to html */
     public static unknown = "unknown";
 }
+
+export interface IMarkupResolver {
+    /**
+     * Resolves markup object and returns valid html string.
+     * @param markup
+     */
+    resolve(markup: any): string;
+}

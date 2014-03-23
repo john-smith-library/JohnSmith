@@ -130,6 +130,37 @@
                     callback('<span>content</span>', { encode: false });
                     expect($('#target').html()).toBe('<span>content</span>');
                 });
+
+                it('Should use custom formatter if it\'s defined in options', function(){
+                    var observable = js.observableValue();
+                    callback(
+                        observable,
+                        {
+                            formatter: function(value){
+                                return '$' + value;
+                            }
+                        });
+
+                    observable.setValue('42');
+
+                    expect($('#target').text()).toBe('$42');
+                });
+
+                it('Formatter can return jQuery object', function(){
+                    var observable = js.observableValue();
+                    callback(
+                        observable,
+                        {
+                            //valueType: "unknown",
+                            formatter: function(value){
+                                return $("<span></span>").addClass("bar").text(value);
+                            }
+                        });
+
+                    observable.setValue('foo');
+
+                    expect($('#target').find('.bar').length).toBe(1);
+                });
             });
 
         /**
