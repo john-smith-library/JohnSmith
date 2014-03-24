@@ -52,11 +52,12 @@ export class DomWrapper {
     constructor(
         private _rootElement: IElement,
         private _manager: IManager,
-        private _renderListenerFactory: RenderListenerFactory) {
+        private _renderListenerFactory: RenderListenerFactory,
+        private _viewFactory: IViewFactory) {
     }
 
     public find(selector: string): IListenerDom {
-        var dom = new ListenerDom(this._rootElement.findRelative(selector), this._manager, this._renderListenerFactory);
+        var dom = new ListenerDom(this._rootElement.findRelative(selector), this._manager, this._renderListenerFactory, this._viewFactory);
         return <IListenerDom> Utils.wrapObjectWithSelfFunction(
             dom,
             function(d, value: any, options: any){
@@ -73,7 +74,8 @@ export class ListenerDom {
     constructor(
         private _rootElement: IElement,
         private _manager: IManager,
-        private _renderListenerFactory: RenderListenerFactory){
+        private _renderListenerFactory: RenderListenerFactory,
+        private _viewFactory: IViewFactory){
 
         var textConfig = new ObservationConfig(this._manager, (observable:IObservable<Object>) => this.createRenderListener(observable, { valueType: ValueType.text}));
         var htmlConfig = new ObservationConfig(this._manager, (observable:IObservable<Object>) => this.createRenderListener(observable, { valueType: ValueType.html}));
@@ -98,6 +100,11 @@ export class ListenerDom {
         var wire = this.createRenderListener(observable, options);
 
         this._manager.manage(wire);
+    }
+
+    render(view, viewModel?:IViewModel) {
+        var composedView = this._viewFactory.resolve(this._rootElement, view, viewModel);
+        this._manager.manage(composedView);
     }
 
     private createRenderListener(observable:IObservable<Object>, options: ListenerOptions){

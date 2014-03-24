@@ -18,7 +18,11 @@ export interface IView<TViewModel extends IViewModel> {
  * Resolves provided vew descriptor and creates view.
  */
 export interface IViewFactory {
-    resolve<TViewModel extends IViewModel>(dataDescriptor: any, viewModel: any): IView<TViewModel>;
+    resolve<TViewModel extends IViewModel>(destination: IElement, dataDescriptor: any, viewModel: any): IComposedView;
+}
+
+export interface IComposedView extends IManageable {
+
 }
 
 /*
@@ -28,7 +32,7 @@ export interface IChildView {
     viewModel: any;
 }*/
 
-export class ComposedView<TViewModel  extends IViewModel> implements IManager, IManageable {
+export class ComposedView<TViewModel  extends IViewModel> implements IManager, IComposedView {
     private _slaves: IManageable[];
     private _root: IElement;
 
@@ -96,7 +100,7 @@ export class ComposedView<TViewModel  extends IViewModel> implements IManager, I
 
         if (this._viewData.init){
             var dom: IDom = <IDom>
-                Utils.wrapObjectWithSelfFunction(new DomWrapper(this._root, this, this._renderListenerFactory), (dom:DomWrapper, selector: string) => dom.find(selector))
+                Utils.wrapObjectWithSelfFunction(new DomWrapper(this._root, this, this._renderListenerFactory, this._viewFactory), (dom:DomWrapper, selector: string) => dom.find(selector))
 
             this._viewData.init(dom, this._viewModel);
         }
@@ -191,4 +195,41 @@ export class ComposedView<TViewModel  extends IViewModel> implements IManager, I
 //    private hasChildren():boolean {
 //        return this._children != null;
 //    }
+}
+
+/**
+ * Default implementation of IViewFactory
+ */
+export class DefaultViewFactory implements IViewFactory {
+    constructor (
+        private _markupResolver: IMarkupResolver,
+        private _renderListenerFactory: RenderListenerFactory){
+    }
+
+    public resolve(destination: IElement, dataDescriptor: any, viewModel: any) : IComposedView {
+        if (!dataDescriptor){
+            throw new Error("Expected view data object was not defined")
+        }
+
+        if (Utils.isFunction(dataDescriptor)){
+            var newInstance = new dataDescriptor();
+            return this.resolve(destination, newInstance, viewModel);
+        }
+
+        if (dataDescriptor.template){
+            return new ComposedView(
+                dataDescriptor,
+                viewModel,
+                this,
+                this._markupResolver,
+                destination,
+                this._renderListenerFactory);
+        }
+
+        if (dataDescriptor.renderTo && dataDescriptor.getRootElement){
+            return <IComposedView> dataDescriptor;
+        }
+
+        throw new Error("Could not resolve view data by provided descriptor");
+    }
 }
