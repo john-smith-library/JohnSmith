@@ -43,6 +43,17 @@
             });
         });
 
+        describe('count', function(){
+            it('Should be 0 by default', function(){
+                expect(observable.count().getValue()).toBe(0);
+            });
+
+            it('Should be equal to items count', function(){
+                observable.setValue([1, 2, 3]);
+                expect(observable.count().getValue()).toBe(3);
+            });
+        });
+
         it('has value by default', function(){
             expect(observable.getValue()).toBeTruthy();
             expect(observable.getValue().length).toBe(0);

@@ -127,9 +127,10 @@ export class ObservableList<T> extends ObservableValue<T[]> {
     }
 
     /** Returns a bindable value that stores size of the list */
-    public count():ObservableValue<number> {
+    public count(): ObservableValue<number> {
         if (!this._count) {
             this._count = new ObservableValue<number>();
+            this.notifyCountListeners();
         }
 
         return this._count;

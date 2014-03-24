@@ -25,6 +25,11 @@ export interface IListener {
     observes<T>(value: T): void;
 }
 
+export interface IDom {
+    (selector: string): IListenerDom;
+    find(selector: string): IListenerDom;
+}
+
 export interface IListenerDom {
     $: JQuery;
 
@@ -50,9 +55,9 @@ export class DomWrapper {
         private _renderListenerFactory: RenderListenerFactory) {
     }
 
-    public find(selector: string):ListenerDom {
+    public find(selector: string): IListenerDom {
         var dom = new ListenerDom(this._rootElement.findRelative(selector), this._manager, this._renderListenerFactory);
-        return Utils.wrapObjectWithSelfFunction(
+        return <IListenerDom> Utils.wrapObjectWithSelfFunction(
             dom,
             function(d, value: any, options: any){
                 d.observes(value, options);
