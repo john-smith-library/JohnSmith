@@ -156,9 +156,9 @@ export class ComposedView<TViewModel  extends IViewModel> implements IManager, I
         /*
         if (this._unrender.hasListeners()){
             this._unrender.trigger(this);
-        } else {
+        } else {*/
             this.getRootElement().remove();
-        }*/
+        /*}*/
     }
 
     public dispose(): void {

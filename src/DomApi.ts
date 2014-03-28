@@ -48,7 +48,7 @@ export interface IContextualDom {
     manage(manageable: IManageable);
 }
 
-export class DomWrapper {
+export class DomWrapper implements IDisposable {
     constructor(
         private _rootElement: IElement,
         private _manager: IManager,
@@ -63,6 +63,10 @@ export class DomWrapper {
             function(d, value: any, options: any){
                 d.observes(value, options);
             });
+    }
+
+    public dispose(){
+        this._manager.dispose();
     }
 }
 

@@ -16,10 +16,6 @@ config.srcWrapper = path.join(config.src, 'templates/wrapper._ts');
 config.out = 'out/';
 config.outAllSrc = "john-smith-latest.ts";
 
-gulp.task('generateTestSpecs', function(){
-    jasmineSeed.generate('test', 'test/specs.js');
-});
-
 gulp.task('join', function() {
     return gulp.src([config.srcTypeScript])
         .pipe(concat(config.outAllSrc))
@@ -34,6 +30,5 @@ gulp.task('compileJoined', ['join'], function() {
 });
 
 gulp.task('watch', function() {
-    //gulp.watch('src/**/*.ts', ['compileJoined']);
-    gulp.watch('test/**/*SpecDef.js', ['generateTestSpecs']);
+    return gulp.watch('src/**/*.ts', ['compileJoined']);
 });
