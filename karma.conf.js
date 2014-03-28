@@ -21,13 +21,15 @@ module.exports = function(config) {
       'libs/neckbeard.js',
       'libs/jquery-2.0.0.js',
       'out/john-smith-latest.js',
-      'test/**/*.js'
+      'test/unit/**/*.js',
+      'test/api/**/*.js'
     ],
 
 
     // list of files to exclude
     exclude: [
-       'test/old/**/*.js'
+       'test/old/**/*.js',
+       'test/**/*SpecDef.js'
     ],
 
 
@@ -41,8 +43,12 @@ module.exports = function(config) {
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['progress', 'coverage'],
+    reporters: ['progress', 'coverage', 'html', 'dots'],
 
+    htmlReporter: {
+        outputDir: 'out',
+        templatePath: 'libs/jasmine_template.html'
+    },
 
     // web server port
     port: 9876,

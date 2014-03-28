@@ -8,7 +8,7 @@ test:
   - system/JS_CREATE_VIEW/*.js
   - system/JS_BIND/*.js
   - system/JS_ON/*.js
-  - unit/*.js
-  - unit/binding/*.js
-  - unit/views/*.js
-  - unit/jquery/*.js
+  - migrate_2/*.js
+  - migrate_2/binding/*.js
+  - migrate_2/views/*.js
+  - migrate_2/jquery/*.js

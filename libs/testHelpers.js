@@ -1,19 +1,48 @@
 function ui(content){
-    var $content = content;
+    var $content = $(content);
     $('body').html($content);
     return $content;
 }
 
+var context = {
+    inputs: []
+};
 
-function describeAliases(aliases, payload){
-    for(var alias in aliases) {
-        (function(a){
-            describe(a, function(){
-                var arg = aliases[a]();
-                payload(arg);
+function input(description){
+    context.inputs.push({
+        description: description,
+        inputArgs: Array.prototype.slice.call(arguments, 1)
+    });
+}
+
+function describeInputs(description, specDefinition){
+    for (var i = 0; i < context.inputs.length; i++) {
+        var inputItem = context.inputs[i];
+        (function(item){
+            describe(description + inputItem.description, function(){
+                specDefinition.apply(this, item.inputArgs);
             });
-        })(alias);
+        })(inputItem);
+    }
 
+    context.inputs = [];
+}
+
+function describeNested(){
+    var specDefinitions = arguments[1];
+    var descr = arguments[0];
+
+    if (arguments.length === 2) {
+        describe(descr, specDefinitions);
+    } else {
+        var newArgs = [];
+        for (var i = 1; i < arguments.length; i++) {
+            newArgs.push(arguments[i]);
+        }
+
+        describe(descr, function(){
+            describeNested.apply(this, newArgs);
+        });
     }
 }
 

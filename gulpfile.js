@@ -3,7 +3,11 @@ var gulp = require('gulp'),
     concat = require('gulp-concat'),
     wrap = require("gulp-wrap"),
     path = require('path'),
-    fs = require('fs');
+    fs = require('fs-extra'),
+    vm = require('vm'),
+    util = require('util'),
+    jasmineSeed = require('./libs/jasmine-seed.js'),
+    endOfLine = require('os').EOL;
 
 var config = {};
 config.src = 'src';
@@ -11,6 +15,10 @@ config.srcTypeScript = path.join(config.src, '**/*.ts');
 config.srcWrapper = path.join(config.src, 'templates/wrapper._ts');
 config.out = 'out/';
 config.outAllSrc = "john-smith-latest.ts";
+
+gulp.task('generateTestSpecs', function(){
+    jasmineSeed.generate('test', 'test/specs.js');
+});
 
 gulp.task('join', function() {
     return gulp.src([config.srcTypeScript])
@@ -26,5 +34,6 @@ gulp.task('compileJoined', ['join'], function() {
 });
 
 gulp.task('watch', function() {
-    return gulp.watch('src/**/*.ts', ['compileJoined']);
+    //gulp.watch('src/**/*.ts', ['compileJoined']);
+    gulp.watch('test/**/*SpecDef.js', ['generateTestSpecs']);
 });
