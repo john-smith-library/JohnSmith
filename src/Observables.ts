@@ -1,4 +1,5 @@
 /// <reference path="Common.ts"/>
+/// <reference path="Utils.ts"/>
 
 export enum DataChangeReason {
     replace,
@@ -20,16 +21,7 @@ export class ListenerLink<T> implements IDisposable {
     }
 
     dispose(){
-        var indexToRemove: number = -1;
-        for (var i = 0; i < this.allListeners.length; i++) {
-            if (this.allListeners[i] == this.currentListener) {
-                indexToRemove = i;
-            }
-        }
-
-        if (indexToRemove >= 0) {
-            this.allListeners.splice(indexToRemove, 1);
-        }
+        ArrayUtils.removeItem(this.allListeners, this.currentListener);
     }
 }
 

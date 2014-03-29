@@ -62,15 +62,15 @@ export interface IElement {
 /**
  * Describes the type of string value
  */
-export class ValueType {
+export module ValueType {
     /** The value contains plain text */
-    public static text = "text";
+    export var text = "text";
 
     /** The value contains prepared html */
-    public static html = "html";
+    export var html = "html";
 
     /** The value contains an object that could be transformed to html */
-    public static unknown = "unknown";
+    export var unknown = "unknown";
 }
 
 export interface IMarkupResolver {

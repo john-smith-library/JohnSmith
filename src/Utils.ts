@@ -25,3 +25,19 @@ export module Utils {
         return result;
     }
 }
+
+export module ArrayUtils
+{
+    export var removeItem = function<T>(array: T[], itemToRemove:T):void {
+        var indexToRemove: number = -1;
+        for (var i = 0; i < array.length; i++) {
+            if (array[i] === itemToRemove) {
+                indexToRemove = i;
+            }
+        }
+
+        if (indexToRemove >= 0) {
+            array.splice(indexToRemove, 1);
+        }
+    }
+}

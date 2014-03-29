@@ -30,5 +30,5 @@ export var init = function(api){
 
     api.dom = Utils.wrapObjectWithSelfFunction(actualDom, (dom:DomWrapper, selector: string) => dom.find(selector));
     api.observableValue = () => new ObservableValue();
-    api.observableList = () => new ObservableValue();
+    api.observableList = () => new ObservableList();
 }
