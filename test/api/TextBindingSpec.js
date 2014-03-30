@@ -55,6 +55,11 @@
             expect($('#target').text()).toBe('');
         });
 
+        it('Can render null', function(){
+            callback(null);
+            expect($('#target').text()).toBe('');
+        });
+
         it('Should update text on change', function(){
             var observable = js.observableValue();
             callback(observable);

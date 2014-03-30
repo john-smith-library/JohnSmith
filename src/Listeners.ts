@@ -36,7 +36,8 @@ export class RenderValueListener<T> implements IManageable {
 export class RenderListenerFactory {
     constructor(
         private _defaultFormatter: IValueFormatter,
-        private _markupResolver: IMarkupResolver){}
+        private _markupResolver: IMarkupResolver,
+        private _viewFactory: IViewFactory){}
 
     public createListener(observable:IObservable<Object>, root:IElement, options: ListenerOptions): IManageable {
         if (!options) {
@@ -46,8 +47,7 @@ export class RenderListenerFactory {
         if (!options.renderer) {
             /** try to resolve view first */
             if (options.view) {
-                // todo
-                // options.renderer = new View.ViewValueRenderer(this._viewFactory, options.view);
+                options.renderer = new ViewValueRenderer(this._viewFactory, options.view);
             } else {
                 /** use default renderer if no view in options */
                 if (!options.valueType) {

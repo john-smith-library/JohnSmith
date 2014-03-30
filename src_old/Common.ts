@@ -180,8 +180,8 @@ module JohnSmith.Common {
     }
 
     export interface IElement {
-        isEmpty: () => boolean;
-        empty: () => void;
+        //isEmpty: () => boolean;
+        //empty: () => void;
         appendHtml: (html:string) => IElement;
         appendText: (text:string) => IElement;
         getHtml: () => string;
@@ -192,8 +192,8 @@ module JohnSmith.Common {
         addClass: (className: string) => void;
         removeClass: (className: string) => void;
 
-        setHtml(html:string);
-        setText(text: string);
+//        setHtml(html:string);
+//        setText(text: string);
 
         getValue: () => string;
         setValue(value: string);

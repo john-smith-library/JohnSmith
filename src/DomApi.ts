@@ -101,6 +101,12 @@ export class ListenerDom {
     observes(value: any, options?: ListenerOptions): void
     {
         var observable:IObservable<Object> = ListenerUtils.getObservable(value);
+        if (options && Utils.isFunction(options)) {
+            var view = options;
+            options = {
+                view: view
+            }
+        }
         var wire = this.createRenderListener(observable, options);
 
         this._manager.manage(wire);
@@ -130,12 +136,31 @@ export class ObservationConfig {
     }
 }
 
-class ListenerUtils {
-    public static getObservable(candidate):IObservable<Object> {
+module ListenerUtils {
+    export var getObservable = function(candidate):IObservable<Object> {
         if (candidate && candidate.getValue && candidate.listen) {
             return <IObservable<Object>> candidate;
         }
 
         return new StaticObservableValue<Object>(candidate);
+    }
+}
+
+export interface IDomFactory {
+    create(root: IElement, manager: IManager): IDom;
+}
+
+export class DomFactory implements IDomFactory {
+    constructor(private _renderListenerFactory: RenderListenerFactory, private _viewFactory:IViewFactory){
+
+    }
+
+    public create(root: IElement, manager: IManager): IDom {
+        var actualDom = new DomWrapper(
+            root, manager,
+            this._renderListenerFactory,
+            this._viewFactory);
+
+        return <IDom> Utils.wrapObjectWithSelfFunction(actualDom, (dom:DomWrapper, selector: string) => dom.find(selector));
     }
 }

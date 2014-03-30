@@ -22,7 +22,7 @@ export interface IViewFactory {
 }
 
 export interface IComposedView extends IManageable {
-
+    getRootElement():IElement;
 }
 
 /*
@@ -41,10 +41,9 @@ export class ComposedView<TViewModel  extends IViewModel> implements IManager, I
     constructor (
         private _viewData: IView<TViewModel>,
         private _viewModel:TViewModel,
-        private _viewFactory: IViewFactory,
         private _markupResolver: IMarkupResolver,
         private _destination: IElement,
-        private _renderListenerFactory: RenderListenerFactory) {
+        private _domFactory: IDomFactory) {
 
         this._slaves = [];
         //this._unrender = new Events.Event<IViewContext>();
@@ -99,8 +98,10 @@ export class ComposedView<TViewModel  extends IViewModel> implements IManager, I
         this._root = root;
 
         if (this._viewData.init){
-            var dom: IDom = <IDom>
-                Utils.wrapObjectWithSelfFunction(new DomWrapper(this._root, this, this._renderListenerFactory, this._viewFactory), (dom:DomWrapper, selector: string) => dom.find(selector))
+            var dom = this._domFactory.create(this._root, this);
+
+//            var dom: IDom = <IDom>
+//                Utils.wrapObjectWithSelfFunction(new DomWrapper(this._root, this, this._renderListenerFactory, this._viewFactory), (dom:DomWrapper, selector: string) => dom.find(selector))
 
             this._viewData.init(dom, this._viewModel);
         }
@@ -201,9 +202,14 @@ export class ComposedView<TViewModel  extends IViewModel> implements IManager, I
  * Default implementation of IViewFactory
  */
 export class DefaultViewFactory implements IViewFactory {
+    private _domFactory: IDomFactory;
+
     constructor (
-        private _markupResolver: IMarkupResolver,
-        private _renderListenerFactory: RenderListenerFactory){
+        private _markupResolver: IMarkupResolver){
+    }
+
+    public setDomFactory(domFactory: IDomFactory){
+        this._domFactory = domFactory;
     }
 
     public resolve(destination: IElement, dataDescriptor: any, viewModel: any) : IComposedView {
@@ -220,10 +226,9 @@ export class DefaultViewFactory implements IViewFactory {
             return new ComposedView(
                 dataDescriptor,
                 viewModel,
-                this,
                 this._markupResolver,
                 destination,
-                this._renderListenerFactory);
+                this._domFactory);
         }
 
         if (dataDescriptor.renderTo && dataDescriptor.getRootElement){

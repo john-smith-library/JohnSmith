@@ -94,3 +94,25 @@ export class ResolvableMarkupRenderer extends FormatterBasedRenderer {
         return destination.appendHtml(markup);
     }
 }
+
+export class ViewValueRenderer implements IValueRenderer {
+    private _viewFactory: any;
+    private _viewDescriptor: IViewFactory;
+
+    constructor(viewFactory: IViewFactory, viewDescriptor: any){
+        this._viewFactory = viewFactory;
+        this._viewDescriptor = viewDescriptor;
+    }
+
+    public render(value: any, destination: IElement): IRenderedValue {
+        var currentView = this._viewFactory.resolve(destination, this._viewDescriptor, value);
+        currentView.init();
+
+        return {
+            element: currentView.getRootElement(),
+            dispose: function(){
+                currentView.dispose();
+            }
+        };
+    }
+}

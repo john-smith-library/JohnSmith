@@ -10,13 +10,13 @@ export class JQueryElement implements IElement {
         this._target = target;
     }
 
-    public isEmpty(): boolean{
-        return this._target.length == 0;
-    }
-
-    public empty(): void{
-        this._target.empty();
-    }
+//    public isEmpty(): boolean{
+//        return this._target.length == 0;
+//    }
+//
+//    public empty(): void{
+//        this._target.empty();
+//    }
 
     public appendHtml(html:string) : IElement{
         if (html === null || html === undefined) {
@@ -52,9 +52,9 @@ export class JQueryElement implements IElement {
         return this.appendHtml(encodedHtml);
     }
 
-    public getHtml() : string {
-        return this._target.html();
-    }
+//    public getHtml() : string {
+//        return this._target.html();
+//    }
 
     public getNodeName(): string {
         if (this._target.length == 1) {
@@ -81,13 +81,13 @@ export class JQueryElement implements IElement {
         return this._target;
     }
 
-    public setText(text:string) {
-        this._target.text(text);
-    }
-
-    public setHtml(html:string) {
-        this._target.html(html);
-    }
+//    public setText(text:string) {
+//        this._target.text(text);
+//    }
+//
+//    public setHtml(html:string) {
+//        this._target.html(html);
+//    }
 
     public addClass(className: string) : void {
         this._target.addClass(className);
