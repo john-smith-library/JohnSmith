@@ -24,7 +24,7 @@ describe('unit - observable - ObservableList', function(){
             observable.setValue(['foo']);
             observable.forEach(callback, context);
 
-            expect(callback.calledOn(context));
+            expect(callback.calledOn(context)).toBe(true);
         });
     });
 
@@ -76,35 +76,36 @@ describe('unit - observable - ObservableList', function(){
     });
 
     it('notifies listeners on add', function(){
-        var listener = sinon.spy();
+        var listener = jasmine.createSpy('listener');
 
+        observable.add('baz');
         observable.listen(listener);
         observable.add('foo', 'bar');
 
-        expect(listener.calledOnce);
-        expect(listener.calledWithMatch(['foo', 'bar'], [], js.DataChangeReason.add));
+        expect(listener).toHaveBeenCalled();
+        expect(listener).toHaveBeenCalledWith(['baz', 'foo', 'bar'], ['baz'], { reason: js.DataChangeReason.add, portion: ['foo', 'bar']});
     });
 
     it('notifies listeners on remove', function(){
-        var listener = sinon.spy();
+        var listener = jasmine.createSpy('listener');
 
         observable.setValue([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
         observable.listen(listener);
         observable.remove(1, 3, 5, 7, 9);
 
-        expect(listener.calledOnce);
-        expect(listener.calledWithMatch([1, 3, 5, 7, 9], [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], js.DataChangeReason.remove));
+        expect(listener).toHaveBeenCalled();
+        expect(listener).toHaveBeenCalledWith([2, 4, 6, 8, 10], [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], { reason: js.DataChangeReason.remove, portion: [1, 3, 5, 7, 9] });
     });
 
     it('notifies listeners on clear', function(){
-        var listener = sinon.spy();
+        var listener = jasmine.createSpy('listener');
 
         observable.setValue([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
         observable.listen(listener);
         observable.clear();
 
-        expect(listener.calledOnce);
-        expect(listener.calledWithMatch([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], js.DataChangeReason.remove));
+        expect(listener).toHaveBeenCalled();
+        expect(listener).toHaveBeenCalledWith([], [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], { reason: js.DataChangeReason.remove, portion: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]});
     });
 
     it('deletes all items on clear', function(){

@@ -7,8 +7,13 @@ export enum DataChangeReason {
     remove,
 }
 
+export interface IChangeDetails<T> {
+    reason: DataChangeReason;
+    portion: T;
+}
+
 export interface IListenerCallback<T> {
-    (value: T, oldValue: T, reason: DataChangeReason): void;
+    (value: T, oldValue?: T, details?: IChangeDetails<T>): void;
 }
 
 export interface IObservable<T> {
@@ -38,8 +43,9 @@ export class ObservableValue<T> implements IObservable<T> {
     }
 
     public setValue(value: T) {
-        this.notifyListeners(value, DataChangeReason.replace);
+        var oldValue = this._value;
         this._value = value;
+        this.notifyListeners(value, oldValue, { reason: DataChangeReason.replace, portion: value } );
     }
 
     public listen(listener: IListenerCallback<T>): IDisposable {
@@ -51,9 +57,9 @@ export class ObservableValue<T> implements IObservable<T> {
         return this._listeners.length;
     }
 
-    public notifyListeners(newValue:T, reason:DataChangeReason): void {
+    public notifyListeners(newValue:T, oldValue:T, details: IChangeDetails<T>): void {
         for (var i = 0; i < this._listeners.length; i++) {
-            this._listeners[i](newValue, this._value, reason);
+            this._listeners[i](newValue, oldValue, details);
         }
     }
 
@@ -86,15 +92,17 @@ export class ObservableList<T> extends ObservableValue<T[]> {
     }
 
     public add(...args:T[]): void {
+        var oldValue = this.getValue().slice(0);
         var array:T[] = this.getValue();
         for (var i = 0; i < args.length; i++){
             array.push(args[i]);
         }
 
-        this.reactOnChange(args, DataChangeReason.add);
+        this.reactOnChange(this.getValue(), oldValue, { reason: DataChangeReason.add, portion: args } );
     }
 
     public remove(...args:T[]):void {
+        var oldValue = this.getValue().slice(0);
         var array:T[] = this.getValue();
         for (var i = 0; i < args.length; i++){
             var indexToRemove:number = -1;
@@ -109,13 +117,13 @@ export class ObservableList<T> extends ObservableValue<T[]> {
             }
         }
 
-        this.reactOnChange(args, DataChangeReason.remove);
+        this.reactOnChange(this.getValue(), oldValue, { reason: DataChangeReason.remove, portion: args } );
     }
 
     /** Removes all items from the list */
     public clear(): void {
         var removed = this.getValue().splice(0, this.getValue().length);
-        this.reactOnChange(removed, DataChangeReason.remove);
+        this.reactOnChange(this.getValue(), removed, { reason: DataChangeReason.remove, portion: removed } );
     }
 
     /** Returns a bindable value that stores size of the list */
@@ -133,8 +141,8 @@ export class ObservableList<T> extends ObservableValue<T[]> {
         array.forEach(callback, thisArg);
     }
 
-    private reactOnChange(items: T[], reason:DataChangeReason):void{
-        super.notifyListeners(items, reason);
+    private reactOnChange(newItems: T[], oldItems: T[], details: IChangeDetails<T[]>):void{
+        super.notifyListeners(newItems, oldItems, details);
         this.notifyCountListeners();
     }
 

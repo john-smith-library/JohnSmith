@@ -26,16 +26,37 @@ describe('unit - observable - ObservableValue', function(){
         observable.listen(callback);
         observable.setValue('foo');
 
-        expect(callback.calledOnce);
+        expect(callback.calledOnce).toBe(true);
     });
 
-    it('passes new and old values to listener', function(){
-        var callback = sinon.spy();
+    it('passes new value to listener', function(){
+        var listener = jasmine.createSpy('listener');
         observable.setValue('foo');
-        observable.listen(callback);
+        observable.listen(listener);
         observable.setValue('bar');
 
-        expect(callback.calledWith('bar', 'foo'));
+        expect(listener).toHaveBeenCalled();
+        expect(listener.calls.mostRecent().args[0]).toBe('bar');
+    });
+
+    it('passes old value to listener', function(){
+        var listener = jasmine.createSpy('listener');
+        observable.setValue('foo');
+        observable.listen(listener);
+        observable.setValue('bar');
+
+        expect(listener).toHaveBeenCalled();
+        expect(listener.calls.mostRecent().args[1]).toBe('foo');
+    });
+
+    it('passes changes details to listener', function(){
+        var listener = jasmine.createSpy('listener');
+
+        observable.setValue('foo');
+        observable.listen(listener);
+        observable.setValue('bar');
+
+        expect(listener).toHaveBeenCalledWith(jasmine.any(String), jasmine.any(String), { reason: js.DataChangeReason.replace, portion: 'bar' });
     });
 
     describe('hasValue', function(){
@@ -51,7 +72,7 @@ describe('unit - observable - ObservableValue', function(){
 
         it('returns true if value is foo', function(){
             observable.setValue('foo');
-            expect(observable.hasValue());
+            expect(observable.hasValue()).toBe(true);
         });
     });
 });
