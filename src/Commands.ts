@@ -1,3 +1,7 @@
+export interface ICommandOptions {
+    fetch?: string;
+}
+
 export interface ICommandArgumentFetcher {
     (target:IElement): any;
 }
@@ -6,11 +10,25 @@ export class CommandConfig {
     constructor(
         private _manager: IManager,
         private _event: string,
-        private _target: IElement){
+        private _target: IElement,
+        private _options: ICommandOptions,
+        private _fetcherFactory: IFetcherFactory){
     }
 
     react(callback: Function, context: any): void {
-        this._manager.manage(new CommandWire(null, this._event, callback, this._target, context))
+        var fetcher: IFetcher = null;
+        if (this._options && this._options.fetch) {
+            fetcher = this._fetcherFactory.getByKey(this._options.fetch);
+        } else {
+            fetcher = this._fetcherFactory.getForElement(this._target);
+        }
+
+        var argumentFetcher: ICommandArgumentFetcher = null;
+        if (fetcher) {
+            argumentFetcher = (target: IElement) => fetcher.valueFromElement(target);
+        }
+
+        this._manager.manage(new CommandWire(argumentFetcher, this._event, callback, this._target, context))
     }
 }
 
@@ -33,9 +51,9 @@ export class CommandWire implements IManageable {
         this._handlerRef = this._target.attachEventHandler(this._eventType, () => {
             var commandArgument = this._argumentFetcher == null ? null : this._argumentFetcher(this._target);
             if (commandArgument == null) {
-                this._callback.call(this._context, commandArgument);
-            } else {
                 this._callback.call(this._context);
+            } else {
+                this._callback.call(this._context, commandArgument);
             }
         });
     }

@@ -5,6 +5,7 @@
 /// <reference path="Renderers.ts"/>
 /// <reference path="Dom_JQuery.ts"/>
 /// <reference path="Commands.ts"/>
+/// <reference path="Fetchers.ts"/>
 /// <reference path="Utils.ts"/>
 
 export interface ListenerOptions  {
@@ -54,19 +55,18 @@ export class DomWrapper implements IDisposable {
         private _rootElement: IElement,
         private _manager: IManager,
         private _renderListenerFactory: RenderListenerFactory,
-        private _viewFactory: IViewFactory) {
+        private _viewFactory: IViewFactory,
+        private _fetcherFactory: IFetcherFactory) {
     }
 
     public find(selector: string): IListenerDom {
-        var dom = new ListenerDom(this._rootElement.findRelative(selector), this._manager, this._renderListenerFactory, this._viewFactory);
+        var dom = new ListenerDom(this._rootElement.findRelative(selector), this._manager, this._renderListenerFactory, this._viewFactory, this._fetcherFactory);
         return <IListenerDom> Utils.wrapObjectWithSelfFunction(
             dom,
             function(d, value: any, options: any){
                 d.observes(value, options);
             });
     }
-
-
 
     public dispose(){
         this._manager.dispose();
@@ -82,7 +82,8 @@ export class ListenerDom {
         private _rootElement: IElement,
         private _manager: IManager,
         private _renderListenerFactory: RenderListenerFactory,
-        private _viewFactory: IViewFactory){
+        private _viewFactory: IViewFactory,
+        private _fetcherFactory: IFetcherFactory){
 
         var textConfig = new ObservationConfig(this._manager, (observable:IObservable<Object>) => this.createRenderListener(observable, { valueType: ValueType.text}));
         var htmlConfig = new ObservationConfig(this._manager, (observable:IObservable<Object>) => this.createRenderListener(observable, { valueType: ValueType.html}));
@@ -120,11 +121,13 @@ export class ListenerDom {
         this._manager.manage(composedView);
     }
 
-    public on(event: string): CommandConfig {
+    public on(event: string, options: ICommandOptions): CommandConfig {
         return new CommandConfig(
             this._manager,
             event,
-            this._rootElement);
+            this._rootElement,
+            options,
+            this._fetcherFactory);
     }
 
     private createRenderListener(observable:IObservable<Object>, options: ListenerOptions){
@@ -161,15 +164,18 @@ export interface IDomFactory {
 }
 
 export class DomFactory implements IDomFactory {
-    constructor(private _renderListenerFactory: RenderListenerFactory, private _viewFactory:IViewFactory){
-
+    constructor(
+        private _renderListenerFactory: RenderListenerFactory,
+        private _viewFactory:IViewFactory,
+        private _fetcherFactory:IFetcherFactory){
     }
 
     public create(root: IElement, manager: IManager): IDom {
         var actualDom = new DomWrapper(
             root, manager,
             this._renderListenerFactory,
-            this._viewFactory);
+            this._viewFactory,
+            this._fetcherFactory);
 
         return <IDom> Utils.wrapObjectWithSelfFunction(actualDom, (dom:DomWrapper, selector: string) => dom.find(selector));
     }
