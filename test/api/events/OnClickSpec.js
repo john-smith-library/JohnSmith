@@ -1,4 +1,4 @@
-describe('api - js.dom(selector).on(\'click\')', function(){
+describe('api - js.dom(selector).on("click")', function(){
     "use strict";
 
     beforeEach(function(){
@@ -15,5 +15,20 @@ describe('api - js.dom(selector).on(\'click\')', function(){
         doClick();
 
         expect(callback).toHaveBeenCalled();
+    });
+
+    it('should respect context', function(){
+        var ViewModel = function(){
+            this.foo = 'bar';
+            this.callback = function(){
+                expect(this).toBeDefined();
+                expect(this.foo).toBe('bar');
+            };
+        };
+
+        var viewModel = new ViewModel();
+
+        js.dom('#send').on('click').react(viewModel.callback, viewModel);
+        doClick();
     });
 });

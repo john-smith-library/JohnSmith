@@ -4,6 +4,7 @@
 /// <reference path="Observables.ts"/>
 /// <reference path="Renderers.ts"/>
 /// <reference path="Dom_JQuery.ts"/>
+/// <reference path="Commands.ts"/>
 /// <reference path="Utils.ts"/>
 
 export interface ListenerOptions  {
@@ -65,6 +66,8 @@ export class DomWrapper implements IDisposable {
             });
     }
 
+
+
     public dispose(){
         this._manager.dispose();
     }
@@ -112,9 +115,16 @@ export class ListenerDom {
         this._manager.manage(wire);
     }
 
-    render(view, viewModel?:IViewModel) {
+    public render(view, viewModel?:IViewModel) {
         var composedView = this._viewFactory.resolve(this._rootElement, view, viewModel);
         this._manager.manage(composedView);
+    }
+
+    public on(event: string): CommandConfig {
+        return new CommandConfig(
+            this._manager,
+            event,
+            this._rootElement);
     }
 
     private createRenderListener(observable:IObservable<Object>, options: ListenerOptions){
