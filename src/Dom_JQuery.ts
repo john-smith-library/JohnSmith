@@ -14,9 +14,9 @@ export class JQueryElement implements IElement {
 //        return this._target.length == 0;
 //    }
 //
-//    public empty(): void{
-//        this._target.empty();
-//    }
+    public empty(): void{
+        this._target.empty();
+    }
 
     public appendHtml(html:string) : IElement{
         if (html === null || html === undefined) {

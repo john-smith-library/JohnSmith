@@ -99,10 +99,6 @@ export class ComposedView<TViewModel  extends IViewModel> implements IManager, I
 
         if (this._viewData.init){
             var dom = this._domFactory.create(this._root, this);
-
-//            var dom: IDom = <IDom>
-//                Utils.wrapObjectWithSelfFunction(new DomWrapper(this._root, this, this._renderListenerFactory, this._viewFactory), (dom:DomWrapper, selector: string) => dom.find(selector))
-
             this._viewData.init(dom, this._viewModel);
         }
 

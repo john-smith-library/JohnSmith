@@ -32,7 +32,7 @@ export interface IManager extends IDisposable {
 export interface IElement {
     $: any;
 //    isEmpty: () => boolean;
-//    empty: () => void;
+    empty: () => void;
     appendHtml: (html:string) => IElement;
     appendText: (text:string) => IElement;
 //    getHtml: () => string;
