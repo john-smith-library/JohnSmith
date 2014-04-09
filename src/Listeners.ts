@@ -136,7 +136,8 @@ export class RenderListenerFactory {
     constructor(
         private _defaultFormatter: IValueFormatter,
         private _markupResolver: IMarkupResolver,
-        private _viewFactory: IViewFactory){}
+        private _viewFactory: IViewFactory,
+        private _fetcherFactory: IFetcherFactory){}
 
     public createListener(observable:IObservable<Object>, root:IElement, options: ListenerOptions): IManageable {
         if (!options) {
@@ -167,7 +168,7 @@ export class RenderListenerFactory {
                     options.formatter = this._defaultFormatter;
                 }
 
-                options.renderer = this.getRenderer(options /*, commandHost, bindable*/);
+                options.renderer = this.getRenderer(options, root);
             }
         }
 
@@ -178,37 +179,38 @@ export class RenderListenerFactory {
         return new RenderValueListener(observable, root, options.renderer);
     }
 
-    private getRenderer(options:ListenerOptions /*, commandHost:Command.ICommandHost, bindable:IBindable*/) : IValueRenderer{
-//        var fetcher:Fetchers.IFetcher = null;
-//
-//        if (options.fetch) {
-//            fetcher = this._fetcherFactory.getByKey(options.fetch);
-//            if (!fetcher) {
-//                throw new Error("Fetcher " + options.fetch + " not found");
-//            }
-//        } else {
-//            fetcher = this._fetcherFactory.getForElement(options.contentDestination);
-//        }
-//
-//        if (fetcher) {
-//            if (options.bidirectional !== false){
-//                var command = options.command;
-//                var context = options.commandContext;
-//                var event = options.event || "change";
-//
-//                var bindableObject: IChangeable = <IChangeable> bindable;
-//                if((!command) && bindableObject.setValue) {
-//                    command = bindableObject.setValue;
-//                    context = bindableObject;
-//                }
-//
-//                if (command) {
-//                    commandHost.on(options.to, event).react(command, context);
-//                }
-//            }
-//
-//            return new FetcherToRendererAdapter(fetcher);
-//        }
+    private getRenderer(options:ListenerOptions, root:IElement) : IValueRenderer{
+        var fetcher:IFetcher = null;
+
+        if (options.fetch) {
+            fetcher = this._fetcherFactory.getByKey(options.fetch);
+            if (!fetcher) {
+                throw new Error("Fetcher " + options.fetch + " not found");
+            }
+        } else {
+            fetcher = this._fetcherFactory.getForElement(root);
+        }
+
+        if (fetcher) {
+            /*
+            if (options.bidirectional !== false){
+                var command = options.command;
+                var context = options.commandContext;
+                var event = options.event || "change";
+
+                var bindableObject: IChangeable = <IChangeable> bindable;
+                if((!command) && bindableObject.setValue) {
+                    command = bindableObject.setValue;
+                    context = bindableObject;
+                }
+
+                if (command) {
+                    commandHost.on(options.to, event).react(command, context);
+                }
+            }*/
+
+            return new FetcherToRendererAdapter(fetcher);
+        }
 
         switch (options.valueType) {
             case ValueType.text:

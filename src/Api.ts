@@ -26,7 +26,7 @@ export var init = function(api){
         .registerFetcher(FetcherType.CheckedAttribute, new CheckedAttributeFetcher());
 
     var viewFactory: DefaultViewFactory = new DefaultViewFactory(markupResolver);
-    var renderListenerFactory: RenderListenerFactory = new RenderListenerFactory(defaultFormatter, markupResolver, viewFactory);
+    var renderListenerFactory: RenderListenerFactory = new RenderListenerFactory(defaultFormatter, markupResolver, viewFactory, fetcherFactory);
     var domFactory: IDomFactory = new DomFactory(renderListenerFactory, <IViewFactory>viewFactory, fetcherFactory)
 
     viewFactory.setDomFactory(domFactory);  // todo: avoid this bidirectional link

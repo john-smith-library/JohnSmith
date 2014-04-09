@@ -116,3 +116,21 @@ export class ViewValueRenderer implements IValueRenderer {
         };
     }
 }
+
+export class FetcherToRendererAdapter implements IValueRenderer {
+    private _fetcher:IFetcher;
+
+    constructor(fetcher:IFetcher){
+        this._fetcher = fetcher;
+    }
+
+    public render(formattedValue:string, destination: IElement) : IRenderedValue {
+        this._fetcher.valueToElement(formattedValue, destination);
+        return {
+            element: destination,
+            dispose: function(){
+                /* do not need to dispose fetcher-based values because no markup produced */
+            }
+        };
+    }
+}
