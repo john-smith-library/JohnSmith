@@ -1,0 +1,146 @@
+<!DOCTYPE html><head><title>JohnSmith Framework - Rendering bindable lists</title><meta charset="UTF-8"><!--[if lt IE 9]><script type="text/javascript" src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]--><link rel="stylesheet" href="assets/styles/googlecode.css"><link rel="stylesheet" href="assets/styles/samples_hub.css"><link rel="stylesheet" href="assets/styles/tooltipster.css"><link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,700" type="text/css"><script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><script src="john-smith.debug.js"></script><script src="assets/scripts/highlight.pack.js"></script><script src="assets/scripts/jquery.tooltipster.min.js"></script><script src="assets/scripts/samples_hub.js"></script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-41108809-1', 'john-smith-js.com');
+ga('send', 'pageview');</script></head><html><body id="application"><header id="mainHeader"><div class="appContent"><div class="container"><img id="johnSmith" src="assets/images/john_head_small.png"><div id="links"><a href="https://github.com/guryanovev/JohnSmith"><img src="assets/images/github.png"></a></div><div id="logo"><span>JohnSmith</span>&nbsp;Samples Hub</div></div></div></header><section id="page" class="appContent"><div itemscope itemtype="http://schema.org/Article" class="container"><header id="contentHeader"><h1 itemprop="name">Rendering bindable lists</h1></header><nav id="mainNavigation"><div class="content"><a id="prevLink" href="view_use_for_bindable.html" title="Previous sample: Using a view for rendering bindable value">&lt;</a><a id="nextLink" href="list_interactions.html" title="Next sample: List binding interaction">&gt;</a><a id="browseAll" href="#"><span>Browse all</span></a></div><div class="bg"><span class="left"></span><span class="right"></span><span class="center"><span></span></span></div></nav><section id="source" class="fullHeight"><section id="javaScript"><header>JavaScript</header><section class="sourceContent"><pre><code class="javascript">/* Create a bindable list */
+var friends = js.bindableList();
+
+/* View */
+var FriendView = function(){
+    this.template = &quot;#friendRowTemplate&quot;;
+    this.init = function(view, viewModel){
+        view.bind(viewModel.firstName).to(&quot;.firstName&quot;);
+        view.bind(viewModel.lastName).to(&quot;.lastName&quot;);
+    };
+}
+
+js.bind(friends).to(&quot;#friendsTable tbody&quot;, FriendView);
+
+friends.setValue([
+    { firstName: &quot;Joe&quot;, lastName: &quot;Bloggs&quot;},
+    { firstName: &quot;Fred&quot;, lastName: &quot;Bloggs&quot;},
+    { firstName: &quot;Bob&quot;, lastName: &quot;Soap&quot;}
+]);</code></pre></section></section><section id="html"><header>HTML</header><section class="sourceContent"><pre><code class="html">&lt;script id='friendRowTemplate' type='text/view'&gt;
+    &lt;tr class='friend'&gt;
+        &lt;td&gt;
+            &lt;input type=&quot;checkbox&quot; /&gt;
+        &lt;/td&gt;
+        &lt;td class='firstName'&gt;&lt;/td&gt;
+        &lt;td class='lastName'&gt;&lt;/td&gt;
+        &lt;td&gt;
+            &lt;a href=&quot;#&quot;&gt;view details&lt;/a&gt;
+        &lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/script&gt;
+
+&lt;table id=&quot;friendsTable&quot; class=&quot;table table-bordered table-striped&quot;&gt;
+    &lt;thead&gt;
+    &lt;tr&gt;
+        &lt;th&gt;&lt;/th&gt;
+        &lt;th&gt;First name&lt;/th&gt;
+        &lt;th&gt;Last name&lt;/th&gt;
+        &lt;th&gt;&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+    &lt;/tbody&gt;
+&lt;/table&gt;</code></pre></section></section></section><section id="result" class="fullHeight"><section id="tableOfContents" style="height: 0"><div class="content"><ul class="navLevel0"><li><span>Home Page Samples</span><ul class="navLevel1"><li><a href="index.html" id="indexLink" class="topicLink ">User Greeter</a></li><li><a href="filetree.html" id="filetreeLink" class="topicLink ">File System Tree</a></li></ul></li><li><span>Binding</span><ul class="navLevel1"><li><a href="static_binding.html" id="static_bindingLink" class="topicLink ">Static value binding</a></li><li><a href="dynamic_binding.html" id="dynamic_bindingLink" class="topicLink ">Dynamic value binding</a></li><li><a href="display_current_time.html" id="display_current_timeLink" class="topicLink ">Display current time</a></li><li><a href="viewModel.html" id="viewModelLink" class="topicLink ">View model</a></li><li><a href="custom_callback.html" id="custom_callbackLink" class="topicLink ">Using callback function</a></li><li><a href="bidirectionalBinding.html" id="bidirectionalBindingLink" class="topicLink ">Bidirectional binding</a></li></ul></li><li><span>Introducing view</span><ul class="navLevel1"><li><a href="view_simple.html" id="view_simpleLink" class="topicLink ">Simple vew</a></li><li><a href="view_init_state.html" id="view_init_stateLink" class="topicLink ">Using initState method</a></li><li><a href="view_use_for_bindable.html" id="view_use_for_bindableLink" class="topicLink ">Using a view for rendering bindable value</a></li></ul></li><li><span>List binding</span><ul class="navLevel1"><li><a href="view_use_for_list.html" id="view_use_for_listLink" class="topicLink selected">Rendering bindable lists</a></li><li><a href="list_interactions.html" id="list_interactionsLink" class="topicLink ">List binding interaction</a></li><li><a href="list_size.html" id="list_sizeLink" class="topicLink ">Rendering list size</a></li></ul></li><li><span>Samples ported from another frameworks</span><ul class="navLevel1"><li><a href="knockout_hello_world.html" id="knockout_hello_worldLink" class="topicLink ">Knockout Hello World</a></li><li><a href="knockout_click_counter.html" id="knockout_click_counterLink" class="topicLink ">Knockout Click Counter</a></li><li><a href="react_seconds_elapsed.html" id="react_seconds_elapsedLink" class="topicLink ">React Seconds Elapsed</a></li></ul></li></ul></div></section><section id="tableOfContentsOverlay"></section><div class="scroller"><div id="description"><p>
+    You can create bindable collections using <code>js.bindableList</code> method. BindableList acts like a
+    regular bindable value, but it has a few additional methods. BindableList could be bound to markup element
+    using regular View. In this case, the View will be rendered for every list item.
+</p></div><h3>Result:</h3><div id="destination"><script id='friendRowTemplate' type='text/view'>
+    <tr class='friend'>
+        <td>
+            <input type="checkbox" />
+        </td>
+        <td class='firstName'></td>
+        <td class='lastName'></td>
+        <td>
+            <a href="#">view details</a>
+        </td>
+    </tr>
+</script>
+
+<table id="friendsTable" class="table table-bordered table-striped">
+    <thead>
+    <tr>
+        <th></th>
+        <th>First name</th>
+        <th>Last name</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table><script>(function(){/* Create a bindable list */
+var friends = js.bindableList();
+
+/* View */
+var FriendView = function(){
+    this.template = "#friendRowTemplate";
+    this.init = function(view, viewModel){
+        view.bind(viewModel.firstName).to(".firstName");
+        view.bind(viewModel.lastName).to(".lastName");
+    };
+}
+
+js.bind(friends).to("#friendsTable tbody", FriendView);
+
+friends.setValue([
+    { firstName: "Joe", lastName: "Bloggs"},
+    { firstName: "Fred", lastName: "Bloggs"},
+    { firstName: "Bob", lastName: "Soap"}
+]);}());</script></div><form id="sendToJsFiddle" action="http://jsfiddle.net/api/post/jquery/2.0/" method="POST" target="_blank"><input id="formJs" type="hidden" value="/* Create a bindable list */
+var friends = js.bindableList();
+
+/* View */
+var FriendView = function(){
+    this.template = &quot;#friendRowTemplate&quot;;
+    this.init = function(view, viewModel){
+        view.bind(viewModel.firstName).to(&quot;.firstName&quot;);
+        view.bind(viewModel.lastName).to(&quot;.lastName&quot;);
+    };
+}
+
+js.bind(friends).to(&quot;#friendsTable tbody&quot;, FriendView);
+
+friends.setValue([
+    { firstName: &quot;Joe&quot;, lastName: &quot;Bloggs&quot;},
+    { firstName: &quot;Fred&quot;, lastName: &quot;Bloggs&quot;},
+    { firstName: &quot;Bob&quot;, lastName: &quot;Soap&quot;}
+]);" name="js"><input id="formHtml" type="hidden" value="&lt;script id='friendRowTemplate' type='text/view'&gt;
+    &lt;tr class='friend'&gt;
+        &lt;td&gt;
+            &lt;input type=&quot;checkbox&quot; /&gt;
+        &lt;/td&gt;
+        &lt;td class='firstName'&gt;&lt;/td&gt;
+        &lt;td class='lastName'&gt;&lt;/td&gt;
+        &lt;td&gt;
+            &lt;a href=&quot;#&quot;&gt;view details&lt;/a&gt;
+        &lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/script&gt;
+
+&lt;table id=&quot;friendsTable&quot; class=&quot;table table-bordered table-striped&quot;&gt;
+    &lt;thead&gt;
+    &lt;tr&gt;
+        &lt;th&gt;&lt;/th&gt;
+        &lt;th&gt;First name&lt;/th&gt;
+        &lt;th&gt;Last name&lt;/th&gt;
+        &lt;th&gt;&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+    &lt;/tbody&gt;
+&lt;/table&gt;" name="html"><input type="hidden" value="d" name="wrap"><input type="hidden" value="http://john-smith-js.com/john-smith.debug.js" name="resources"><input id="sendButton" type="submit" value="Open in jsFiddle"></form></div></section></div></section><footer id="mainFooter" class="appContent"><div class="container"><section id="ci"><a href="https://travis-ci.org/guryanovev/JohnSmith" title="Travis CI Build Status"><img src="https://travis-ci.org/guryanovev/JohnSmith.png" alt="Build Status"></a></section><section class="info">v2.1.1.152</section><section id="footerLinks">Get JohnSmith:&nbsp;<a href="john-smith-2.1.1.152.min.js">Download Minified</a><span>&nbsp;|&nbsp;</span><a href="john-smith-2.1.1.152.debug.js">Download Debug</a><span>&nbsp;|&nbsp;</span><a href="http://www.nuget.org/packages/JohnSmith/">NuGet package</a></section></div></footer><script>$(function(){
+    runApplication();
+    //hljs.initHighlightingOnLoad();
+    $('pre code').each(function(i, e) {hljs.highlightBlock(e)});
+    //setTimeout(function(){
+        $('.codeAnnotation').tooltipster({
+            maxWidth: 300,
+            position: 'right'
+        });
+    //}, 3000);
+});</script></body></html>

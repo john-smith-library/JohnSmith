@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?><testsuite name="Safari_53434_Linux.system.JS_BIND.List_Count" errors="0" failures="0" tests="4" time="0.002">
+<testcase classname="Safari_53434_Linux.system.JS_BIND.List_Count" name="testSetValue_ShouldChangeCount" time="0.001"/>
+<testcase classname="Safari_53434_Linux.system.JS_BIND.List_Count" name="testAddItems_ShouldChangeCount" time="0.0"/>
+<testcase classname="Safari_53434_Linux.system.JS_BIND.List_Count" name="testRemoveItems_ShouldChangeCount" time="0.001"/>
+<testcase classname="Safari_53434_Linux.system.JS_BIND.List_Count" name="testSetValueToNull_ShouldChangeCount" time="0.0"/>
+</testsuite>

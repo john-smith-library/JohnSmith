@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?><testsuite name="Safari_53434_Linux.system.JS_BIND.Value" errors="0" failures="0" tests="7" time="0.004">
+<testcase classname="Safari_53434_Linux.system.JS_BIND.Value" name="testCanRenderEmptyString" time="0.001"/>
+<testcase classname="Safari_53434_Linux.system.JS_BIND.Value" name="testShouldRenderEncodedValue" time="0.0"/>
+<testcase classname="Safari_53434_Linux.system.JS_BIND.Value" name="testNoEncoding_ShouldRenderRawValue" time="0.0"/>
+<testcase classname="Safari_53434_Linux.system.JS_BIND.Value" name="testShouldRenderValue" time="0.001"/>
+<testcase classname="Safari_53434_Linux.system.JS_BIND.Value" name="testShouldRenderDefaultValue" time="0.0"/>
+<testcase classname="Safari_53434_Linux.system.JS_BIND.Value" name="testCustomFormatterShouldRenderValue" time="0.001"/>
+<testcase classname="Safari_53434_Linux.system.JS_BIND.Value" name="testCustomFormatterReturnsJQueryObjectShouldRenderValue" time="0.001"/>
+</testsuite>

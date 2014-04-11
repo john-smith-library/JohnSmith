@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?><testsuite name="Safari_53434_Linux.unit.binding.BindableValue" errors="0" failures="0" tests="8" time="0.001">
+<testcase classname="Safari_53434_Linux.unit.binding.BindableValue" name="testCanAddListener" time="0.0"/>
+<testcase classname="Safari_53434_Linux.unit.binding.BindableValue" name="testCanDeleteListener" time="0.0"/>
+<testcase classname="Safari_53434_Linux.unit.binding.BindableValue" name="testCanReturnValue" time="0.0"/>
+<testcase classname="Safari_53434_Linux.unit.binding.BindableValue" name="testCallListenerOnValueChange" time="0.0"/>
+<testcase classname="Safari_53434_Linux.unit.binding.BindableValue" name="testPassNewAndOldValuesToListener" time="0.0"/>
+<testcase classname="Safari_53434_Linux.unit.binding.BindableValue" name="testHasValue_null_shouldReturnFalse" time="0.001"/>
+<testcase classname="Safari_53434_Linux.unit.binding.BindableValue" name="testHasValue_undefined_shouldReturnFalse" time="0.0"/>
+<testcase classname="Safari_53434_Linux.unit.binding.BindableValue" name="testHasValue_stringValueValue_shouldReturnTrue" time="0.0"/>
+</testsuite>

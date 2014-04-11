@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?><testsuite name="Safari_53434_Linux.unit.views.DefaultViewFactory" errors="0" failures="0" tests="3" time="0.001">
+<testcase classname="Safari_53434_Linux.unit.views.DefaultViewFactory" name="testCreateView_ObjectViewData_ShouldCreateView" time="0.001"/>
+<testcase classname="Safari_53434_Linux.unit.views.DefaultViewFactory" name="testCreateView_ClassViewData_ShouldCreateView" time="0.0"/>
+<testcase classname="Safari_53434_Linux.unit.views.DefaultViewFactory" name="testCreateView_ClassInstanceViewData_ShouldCreateView" time="0.0"/>
+</testsuite>

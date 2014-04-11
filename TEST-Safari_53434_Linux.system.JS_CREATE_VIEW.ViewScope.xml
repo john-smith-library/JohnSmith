@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?><testsuite name="Safari_53434_Linux.system.JS_CREATE_VIEW.ViewScope" errors="0" failures="0" tests="1" time="0.001">
+<testcase classname="Safari_53434_Linux.system.JS_CREATE_VIEW.ViewScope" name="test_bindShouldNotChangeMarkupWhileInsideInitFunction" time="0.001"/>
+</testsuite>
