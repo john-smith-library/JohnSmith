@@ -9,6 +9,10 @@ env:
     - MINOR_VERSION: 1
     - REVISION: 1
 
+branches:
+  only:
+    - master
+
 before_script:
     - export VERSION="${MAJOR_VERSION}.${MINOR_VERSION}.${REVISION}.${TRAVIS_BUILD_NUMBER}"
     - export JS_TEST_DRIVER="${HOME}/temp_tools/JsTestDriver-1.3.3d.jar"
