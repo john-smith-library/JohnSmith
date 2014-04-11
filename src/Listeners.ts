@@ -139,7 +139,9 @@ export class RenderListenerFactory {
         private _viewFactory: IViewFactory,
         private _fetcherFactory: IFetcherFactory){}
 
-    public createListener(observable:IObservable<Object>, root:IElement, options: ListenerOptions): IManageable {
+    public createListener(observable:IObservable<Object>, dom:ListenerDom, options: ListenerOptions): IManageable {
+        var root = dom.root;
+
         if (!options) {
             options = {};
         }
@@ -168,7 +170,7 @@ export class RenderListenerFactory {
                     options.formatter = this._defaultFormatter;
                 }
 
-                options.renderer = this.getRenderer(options, root);
+                options.renderer = this.getRenderer(options, dom, observable);
             }
         }
 
@@ -179,7 +181,7 @@ export class RenderListenerFactory {
         return new RenderValueListener(observable, root, options.renderer);
     }
 
-    private getRenderer(options:ListenerOptions, root:IElement) : IValueRenderer{
+    private getRenderer(options:ListenerOptions, dom:ListenerDom, observable: IObservable<Object>) : IValueRenderer{
         var fetcher:IFetcher = null;
 
         if (options.fetch) {
@@ -188,27 +190,25 @@ export class RenderListenerFactory {
                 throw new Error("Fetcher " + options.fetch + " not found");
             }
         } else {
-            fetcher = this._fetcherFactory.getForElement(root);
-        }
-
-        if (fetcher) {
-            /*
+            fetcher = this._fetcherFactory.getForElement(dom.root);
             if (options.bidirectional !== false){
                 var command = options.command;
                 var context = options.commandContext;
                 var event = options.event || "change";
 
-                var bindableObject: IChangeable = <IChangeable> bindable;
+                var bindableObject: any = observable;
                 if((!command) && bindableObject.setValue) {
                     command = bindableObject.setValue;
                     context = bindableObject;
                 }
 
                 if (command) {
-                    commandHost.on(options.to, event).react(command, context);
+                    dom.on(event).react(command, context);
                 }
-            }*/
+            }
+        }
 
+        if (fetcher) {
             return new FetcherToRendererAdapter(fetcher);
         }
 

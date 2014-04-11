@@ -11,13 +11,14 @@ testCase.prototype.setUp = function(){
 testCase.prototype.changeTextbox = function(value){
     $("#textbox").val(value).change();
 };
-
+/*
 testCase.prototype.testTextBidirectional_NoOptions_ShouldChangeValue = function(){
     js.bind(this.bindable).to("#textbox");
     this.changeTextbox("bar");
     assertEquals("Bindable value", "bar", this.bindable.getValue());
-};
+};*/
 
+/*
 testCase.prototype.testTextBidirectional_CustomCommand_ShouldCallCommand = function(){
     var command = sinon.spy();
 
@@ -25,7 +26,7 @@ testCase.prototype.testTextBidirectional_CustomCommand_ShouldCallCommand = funct
     this.changeTextbox("bar");
     assertTrue("Custom command was called", command.calledOnce);
     assertTrue("Custom command was called with value", command.calledWithExactly("bar"));
-};
+};*/
 
 testCase.prototype.testTextBidirectional_CustomCommandAndContext_ShouldCallCommandOnContext = function(){
     var viewModel = {

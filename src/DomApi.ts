@@ -17,6 +17,10 @@ export interface ListenerOptions  {
     type?: string;
     encode?: boolean;
     bidirectional?: boolean;
+
+    event?: string;
+    command?: Function;
+    commandContext?: any;
 }
 
 export interface IListener {
@@ -77,6 +81,7 @@ export class ListenerDom {
     public $: JQuery;
     public text: any;
     public html: any;
+    public root: IElement;
 
     constructor(
         private _rootElement: IElement,
@@ -84,6 +89,8 @@ export class ListenerDom {
         private _renderListenerFactory: RenderListenerFactory,
         private _viewFactory: IViewFactory,
         private _fetcherFactory: IFetcherFactory){
+
+        this.root = _rootElement;
 
         var textConfig = new ObservationConfig(this._manager, (observable:IObservable<Object>) => this.createRenderListener(observable, { valueType: ValueType.text}));
         var htmlConfig = new ObservationConfig(this._manager, (observable:IObservable<Object>) => this.createRenderListener(observable, { valueType: ValueType.html}));
@@ -121,7 +128,7 @@ export class ListenerDom {
         this._manager.manage(composedView);
     }
 
-    public on(event: string, options: ICommandOptions): CommandConfig {
+    public on(event: string, options?: ICommandOptions): CommandConfig {
         return new CommandConfig(
             this._manager,
             event,
@@ -131,7 +138,7 @@ export class ListenerDom {
     }
 
     private createRenderListener(observable:IObservable<Object>, options: ListenerOptions){
-        return this._renderListenerFactory.createListener(observable, this._rootElement, options);
+        return this._renderListenerFactory.createListener(observable, this, options);
     }
 }
 

@@ -16,6 +16,9 @@
     "fs-extra": "^0.8.1",
     "karma-html-reporter": "^0.2.3",
     "qunitjs": "^1.12.0",
-    "karma-qunit": "^0.1.1"
+    "karma-qunit": "^0.1.1",
+    "gulp-closure-compiler": "^0.2.0",
+    "gulp-exec": "^1.0.4",
+    "gulp-rename": "^1.2.0"
   }
 }
