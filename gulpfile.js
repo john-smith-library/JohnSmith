@@ -27,7 +27,7 @@ gulp.task('join', function() {
 
 gulp.task('compileJoined', ['join'], function() {
     return gulp.src([path.join(config.out, config.outAllSrc)])
-        .pipe(typescript({emitError: false}))
+        .pipe(typescript({emitError: false, declaration:true}))
         .pipe(gulp.dest(config.out));
 });
 
@@ -48,6 +48,13 @@ gulp.task('tag', ['minify'], function() {
             path.basename = path.basename.replace('latest', version);
         }))
         .pipe(gulp.dest(config.out));
+});
+
+gulp.task('sanitizeDeclarations', ['compileJoined'], function() {
+    var declarationContent = fs.readFileSync('out/john-smith-latest.d.ts', 'utf-8');
+
+    declarationContent = declarationContent.replace(/private _.*;/g, '/* removed*/');
+    fs.outputFileSync('out/john-smith-latest.d.ts', declarationContent);
 });
 
 gulp.task('watch', function() {

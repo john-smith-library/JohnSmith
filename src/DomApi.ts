@@ -31,7 +31,7 @@ export interface IListener {
     observes<T>(value: T): void;
 }
 
-export interface IDom {
+export interface IDom extends IDisposable {
     (selector: string): IListenerDom;
     find(selector: string): IListenerDom;
 }

@@ -4,4 +4,4 @@ module js {
     <%= contents %>
 }
 
-js.init(js);
+js.init();

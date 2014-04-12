@@ -17,7 +17,11 @@ export class ExplicitManager implements IManager {
     }
 }
 
-export var init = function(api){
+export var dom:IDom;
+export var observableValue: <T>() => ObservableValue<T>;
+export var observableList: <T>() => ObservableList<T>;
+
+export var init = function(){
     var markupResolver: IMarkupResolver = new JQueryMarkupResolver();
     var defaultFormatter: IValueFormatter = value => value.toString();
 
@@ -31,7 +35,7 @@ export var init = function(api){
 
     viewFactory.setDomFactory(domFactory);  // todo: avoid this bidirectional link
 
-    api.dom = domFactory.create(new JQueryElement($(document)), new ExplicitManager());
-    api.observableValue = () => new ObservableValue();
-    api.observableList = () => new ObservableList();
+    dom = domFactory.create(new JQueryElement($(document)), new ExplicitManager());
+    observableValue = () => new ObservableValue();
+    observableList = () => new ObservableList();
 }
