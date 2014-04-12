@@ -3,10 +3,11 @@
 /// <reference path="Listeners.ts"/>
 /// <reference path="Observables.ts"/>
 /// <reference path="Renderers.ts"/>
-/// <reference path="Dom_JQuery.ts"/>
+/// <reference path="JQuery.ts"/>
 /// <reference path="Commands.ts"/>
 /// <reference path="Fetchers.ts"/>
 /// <reference path="Utils.ts"/>
+/// <reference path="Views.ts"/>
 
 export interface ListenerOptions  {
     renderer?: IValueRenderer;

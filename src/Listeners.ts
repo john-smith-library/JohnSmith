@@ -10,8 +10,7 @@ export class RenderValueListener<T> implements IManageable {
 
     public init(): void {
         this.doRender(this._observable.getValue());
-        this._observable.listen((value: T) => this.doRender(value));
-        /* todo: why we do not assign _link here??? */
+        this._link = this._observable.listen((value: T) => this.doRender(value));
     }
 
     public dispose(): void {
@@ -69,7 +68,7 @@ export class RenderListHandler<T> implements IManageable {
 
     init():void {
         this.doRender(this._observable.getValue(), DataChangeReason.replace);
-        this._observable.listen((value: T[], oldValue: T[], details: IChangeDetails<T[]>) => this.doRender(details.portion, details.reason));
+        this._link = this._observable.listen((value: T[], oldValue: T[], details: IChangeDetails<T[]>) => this.doRender(details.portion, details.reason));
     }
 
     private findRenderedValue(value: any) :IRenderedValue{
