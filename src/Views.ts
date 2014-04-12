@@ -25,13 +25,6 @@ export interface IComposedView extends IManageable {
     getRootElement():IElement;
 }
 
-/*
-export interface IChildView {
-    child: IView;
-    destination: any;
-    viewModel: any;
-}*/
-
 export class ComposedView<TViewModel  extends IViewModel> implements IManager, IComposedView {
     private _slaves: IManageable[];
     private _root: IElement;
@@ -61,39 +54,6 @@ export class ComposedView<TViewModel  extends IViewModel> implements IManager, I
         this.attachViewToRoot(root);
     }
 
-    /*
-    public addChild(destination:any, child:IView, viewModel: any){
-        if (!this.hasChildren()) {
-            this._children = [];
-        }
-
-        this._children.push({
-            child: child,
-            destination: destination,
-            viewModel: viewModel
-        });
-    }*/
-
-    /*
-    // todo write tests for this
-    public attachTo(destination:any):void {
-        var destinationElement = typeof destination == "string" ?
-            this._elementFactory.createElement(destination) :
-            destination;
-
-        this.attachViewToRoot(destinationElement);
-    }*/
-
-    /*
-    public renderTo(destination:any):void {
-
-    }*/
-
-    /*
-    public onUnrender():Events.IEvent<IViewContext> {
-        return this._unrender;
-    }*/
-
     private attachViewToRoot(root: IElement):void {
         this._root = root;
 
@@ -106,44 +66,10 @@ export class ComposedView<TViewModel  extends IViewModel> implements IManager, I
             this._slaves[i].init();
         }
 
-//        if (this.hasChildren()){
-//            for (var i = 0; i < this._children.length; i++) {
-//                var childData = this._children[i];
-//                var viewModel = childData.viewModel;
-//                var child = this._viewFactory.resolve(childData.child, viewModel);
-//                child.renderTo(this._rootElement.findRelative(childData.destination));
-//            }
-//        }
-
         if (this._viewModel && this._viewModel.initState){
             this._viewModel.initState();
         }
     }
-
-//    public bind(bindable: any): Binding.BindingConfig {
-//        var binding = new Binding.BindingConfig(
-//            this._bindableManager,
-//            bindable,
-//            this._rootElement,
-//            this,
-//            false);
-//
-//        this._bindings.push(binding);
-//
-//        return  binding;
-//    }
-
-//    public on(...causeArguments: any[]): Command.CommandConfig {
-//        var commandConfig = new Command.CommandConfig(
-//            causeArguments,
-//            this._commandManager,
-//            this.getRootElement(),
-//            this._viewModel);
-//
-//        this._commands.push(commandConfig);
-//
-//        return  commandConfig;
-//    }
 
     public getRootElement(): IElement {
         return this._root;
@@ -170,28 +96,7 @@ export class ComposedView<TViewModel  extends IViewModel> implements IManager, I
         for (var i = 0; i < this._slaves.length; i++) {
             this._slaves[i].dispose();
         }
-
-        /* dispose children */
-//        if (this.hasChildren()){
-//            for (var i = 0; i < this._children.length; i++){
-//                this._children[i].child.dispose();
-//            }
-//        }
-
-        /* dispose bindings */
-//        for (var i = 0; i < this._bindings.length; i++) {
-//            this._bindings[i].dispose();
-//        }
-
-        /* dispose commands */
-//        for (var i = 0; i < this._commands.length; i++) {
-//            this._commands[i].dispose();
-//        }
     }
-
-//    private hasChildren():boolean {
-//        return this._children != null;
-//    }
 }
 
 /**

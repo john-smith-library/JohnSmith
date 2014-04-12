@@ -23,14 +23,6 @@ export interface ListenerOptions  {
     commandContext?: any;
 }
 
-export interface IListener {
-    <T>(observable:IObservable<T>): void;
-    <T>(value:T): void;
-
-    observes<T>(observable:IObservable<T>): void;
-    observes<T>(value: T): void;
-}
-
 export interface IDom extends IDisposable {
     (selector: string): IListenerDom;
     find(selector: string): IListenerDom;
@@ -38,23 +30,18 @@ export interface IDom extends IDisposable {
 
 export interface IListenerDom {
     $: JQuery;
+    root: IElement;
 
     <T>(observable:IObservable<T>): void;
     <T>(value:T): void;
 
     observes<T>(observable:IObservable<T>): void;
     observes<T>(value: T): void;
+
+    on(event: string, options?: ICommandOptions): CommandConfig;
 }
 
-export interface IContextualDom {
-    (selector: string): IListenerDom;
-
-    root: IListenerDom;
-
-    manage(manageable: IManageable);
-}
-
-export class DomWrapper implements IDisposable {
+class DomWrapper implements IDisposable {
     constructor(
         private _rootElement: IElement,
         private _manager: IManager,
@@ -77,7 +64,7 @@ export class DomWrapper implements IDisposable {
     }
 }
 
-export class ListenerDom {
+class ListenerDom {
     public $: JQuery;
     public text: any;
     public html: any;
@@ -138,7 +125,8 @@ export class ListenerDom {
     }
 
     private createRenderListener(observable:IObservable<Object>, options: ListenerOptions){
-        return this._renderListenerFactory.createListener(observable, this, options);
+        var listener: any = this;
+        return this._renderListenerFactory.createListener(observable, <IListenerDom>listener, options);
     }
 }
 

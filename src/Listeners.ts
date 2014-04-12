@@ -139,7 +139,7 @@ export class RenderListenerFactory {
         private _viewFactory: IViewFactory,
         private _fetcherFactory: IFetcherFactory){}
 
-    public createListener(observable:IObservable<Object>, dom:ListenerDom, options: ListenerOptions): IManageable {
+    public createListener(observable:IObservable<Object>, dom:IListenerDom, options: ListenerOptions): IManageable {
         var root = dom.root;
 
         if (!options) {
@@ -181,7 +181,7 @@ export class RenderListenerFactory {
         return new RenderValueListener(observable, root, options.renderer);
     }
 
-    private getRenderer(options:ListenerOptions, dom:ListenerDom, observable: IObservable<Object>) : IValueRenderer{
+    private getRenderer(options:ListenerOptions, dom:IListenerDom, observable: IObservable<Object>) : IValueRenderer{
         var fetcher:IFetcher = null;
 
         if (options.fetch) {
