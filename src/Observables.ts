@@ -5,6 +5,7 @@ export enum DataChangeReason {
     replace,
     add,
     remove,
+    initial
 }
 
 export interface IChangeDetails<T> {
@@ -18,7 +19,7 @@ export interface IListenerCallback<T> {
 
 export interface IObservable<T> {
     getValue(): T;
-    listen(listener:  IListenerCallback<T>): IDisposable;
+    listen(listener:  IListenerCallback<T>, raiseInitial?: boolean): IDisposable;
 }
 
 export class ListenerLink<T> implements IDisposable {
@@ -48,8 +49,12 @@ export class ObservableValue<T> implements IObservable<T> {
         this.notifyListeners(value, oldValue, { reason: DataChangeReason.replace, portion: value } );
     }
 
-    public listen(listener: IListenerCallback<T>): IDisposable {
+    public listen(listener: IListenerCallback<T>, raiseInitial?: boolean): IDisposable {
         this._listeners.push(listener);
+        if (raiseInitial === undefined || raiseInitial === true) {
+            this.notifyListeners(this.getValue(), this.getValue(), { reason: DataChangeReason.initial, portion: this.getValue() });
+        }
+
         return new ListenerLink(this._listeners, listener);
     }
 

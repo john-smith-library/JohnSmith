@@ -17,22 +17,31 @@ describe('unit - observable - ObservableValue', function(){
     });
 
     it('stores value', function(){
-        observable.setValue("foo");
-        expect(observable.getValue()).toBe("foo");
+        observable.setValue('foo');
+        expect(observable.getValue()).toBe('foo');
     });
 
-    it('notifies listeners on value change', function(){
-        var callback = sinon.spy();
-        observable.listen(callback);
+    it('notifies listeners about initial value by default', function(){
+        var callback = jasmine.createSpy('listener');
         observable.setValue('foo');
+        observable.listen(callback);
 
-        expect(callback.calledOnce).toBe(true);
+        expect(callback).toHaveBeenCalled();
+        expect(callback.calls.mostRecent().args[0]).toBe('foo');
+    });
+
+    it('does not notify listeners about initial if flag set', function(){
+        var callback = jasmine.createSpy();
+        observable.setValue('foo');
+        observable.listen(callback, false);
+
+        expect(callback).not.toHaveBeenCalled();
     });
 
     it('passes new value to listener', function(){
         var listener = jasmine.createSpy('listener');
         observable.setValue('foo');
-        observable.listen(listener);
+        observable.listen(listener, false);
         observable.setValue('bar');
 
         expect(listener).toHaveBeenCalled();
@@ -42,7 +51,7 @@ describe('unit - observable - ObservableValue', function(){
     it('passes old value to listener', function(){
         var listener = jasmine.createSpy('listener');
         observable.setValue('foo');
-        observable.listen(listener);
+        observable.listen(listener, false);
         observable.setValue('bar');
 
         expect(listener).toHaveBeenCalled();
@@ -53,7 +62,7 @@ describe('unit - observable - ObservableValue', function(){
         var listener = jasmine.createSpy('listener');
 
         observable.setValue('foo');
-        observable.listen(listener);
+        observable.listen(listener, false);
         observable.setValue('bar');
 
         expect(listener).toHaveBeenCalledWith(jasmine.any(String), jasmine.any(String), { reason: js.DataChangeReason.replace, portion: 'bar' });
