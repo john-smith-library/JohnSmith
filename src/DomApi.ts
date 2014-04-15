@@ -25,6 +25,9 @@ export interface ListenerOptions  {
 }
 
 export interface IDom extends IDisposable {
+    $: JQuery;
+    root: IElement;
+
     (selector: string): IListenerDom;
     find(selector: string): IListenerDom;
 }
@@ -36,19 +39,30 @@ export interface IListenerDom {
     <T>(observable:IObservable<T>): void;
     <T>(value:T): void;
 
-    observes<T>(observable:IObservable<T>): void;
-    observes<T>(value: T): void;
+    observes<T>(observable:IObservable<T>, viewClass: Function): void;
+    observes<T>(observable:IObservable<T>, options: any): void;
+    observes<T>(value: T, viewClass: Function): void;
+    observes<T>(value: T, options?: ListenerOptions): void;
+    observes(value: any, options?: ListenerOptions): void;
 
     on(event: string, options?: ICommandOptions): CommandConfig;
+
+    render(view, viewModel?:IViewModel);
 }
 
 class DomWrapper implements IDisposable {
+    $: JQuery;
+    root: IElement;
+
     constructor(
         private _rootElement: IElement,
         private _manager: IManager,
         private _renderListenerFactory: RenderListenerFactory,
         private _viewFactory: IViewFactory,
         private _fetcherFactory: IFetcherFactory) {
+
+        this.root = _rootElement;
+        this.$ = _rootElement.$;
     }
 
     public find(selector: string): IListenerDom {

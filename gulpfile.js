@@ -57,6 +57,8 @@ gulp.task('sanitizeDeclarations', ['compileJoined'], function() {
     fs.outputFileSync('out/john-smith-latest.d.ts', declarationContent);
 });
 
+gulp.task('fullBuild', ['tag', 'sanitizeDeclarations'], function(){});
+
 gulp.task('watch', function() {
     return gulp.watch('src/**/*.ts', ['compileJoined']);
 });
