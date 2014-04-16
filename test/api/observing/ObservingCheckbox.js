@@ -26,4 +26,24 @@ describe('api - js.dom(checkbox).observes(target)', function(){
         foo.setValue(false);
         expect($("#checkbox").is(':checked')).toBe(false);
     });
+
+    it('should be bidirectional and set value to true if checked', function(){
+        var observable = js.observableValue();
+
+        js.dom('#checkbox').observes(observable);
+
+        $('#checkbox').attr('checked', true).change();
+
+        expect(observable.getValue()).toBe(true);
+    });
+
+    it('should be bidirectional and set value to false if not checked', function(){
+        var observable = js.observableValue();
+
+        js.dom('#checkbox').observes(observable);
+
+        $('#checkbox').attr('checked', false).change();
+
+        expect(observable.getValue()).toBe(false);
+    });
 });
