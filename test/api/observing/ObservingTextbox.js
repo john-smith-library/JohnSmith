@@ -40,4 +40,25 @@ describe('api - js.dom(textbox).observes(target)', function(){
         expect(command).toHaveBeenCalled();
         expect(command).toHaveBeenCalledWith('bar');
     });
+
+    it('should not be bidirectional if option flag is false', function(){
+        observable.setValue('foo');
+
+        js.dom('#textbox').observes(observable, { bidirectional: false });
+
+        changeTextbox('bar');
+        expect(observable.getValue()).toBe('foo');
+    });
+
+    it('should use custom event if set', function(){
+        observable.setValue('foo');
+
+        js.dom('#textbox').observes(observable, { event: 'keyup' });
+
+        changeTextbox('bar');
+        expect(observable.getValue()).toBe('foo');
+
+        $('#textbox').trigger('keyup');
+        expect(observable.getValue()).toBe('bar');
+    });
 });
