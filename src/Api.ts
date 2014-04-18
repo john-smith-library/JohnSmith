@@ -1,4 +1,4 @@
-export class ExplicitManager implements IManager {
+export class ExplicitManager implements IDomManager {
     _slaves: IManageable[];
 
     constructor(){
@@ -14,6 +14,14 @@ export class ExplicitManager implements IManager {
         for (var i = 0; i < this._slaves.length; i++) {
             this._slaves[i].dispose();
         }
+    }
+
+    getViewModel(): any {
+        return null;
+    }
+
+    getParent():IDomManager {
+        return null;
     }
 }
 

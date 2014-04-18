@@ -27,6 +27,7 @@ export interface ListenerOptions  {
 export interface IDom extends IDisposable {
     $: JQuery;
     root: IElement;
+    manager: IDomManager;
 
     (selector: string): IListenerDom;
     find(selector: string): IListenerDom;
@@ -35,6 +36,7 @@ export interface IDom extends IDisposable {
 export interface IListenerDom {
     $: JQuery;
     root: IElement;
+    manager: IDomManager;
 
     <T>(observable:IObservable<T>): void;
     <T>(value:T): void;
@@ -53,16 +55,18 @@ export interface IListenerDom {
 class DomWrapper implements IDisposable {
     $: JQuery;
     root: IElement;
+    manager: IDomManager;
 
     constructor(
         private _rootElement: IElement,
-        private _manager: IManager,
+        private _manager: IDomManager,
         private _renderListenerFactory: RenderListenerFactory,
         private _viewFactory: IViewFactory,
         private _fetcherFactory: IFetcherFactory) {
 
         this.root = _rootElement;
         this.$ = _rootElement.$;
+        this.manager = _manager;
     }
 
     public find(selector: string): IListenerDom {
@@ -77,6 +81,8 @@ class DomWrapper implements IDisposable {
     public dispose(){
         this._manager.dispose();
     }
+
+
 }
 
 class ListenerDom {
@@ -87,7 +93,7 @@ class ListenerDom {
 
     constructor(
         private _rootElement: IElement,
-        private _manager: IManager,
+        private _manager: IDomManager,
         private _renderListenerFactory: RenderListenerFactory,
         private _viewFactory: IViewFactory,
         private _fetcherFactory: IFetcherFactory){
@@ -126,7 +132,7 @@ class ListenerDom {
     }
 
     public render(view, viewModel?:IViewModel) {
-        var composedView = this._viewFactory.resolve(this._rootElement, view, viewModel);
+        var composedView = this._viewFactory.resolve(this._rootElement, view, viewModel, this._manager);
         this._manager.manage(composedView);
     }
 
@@ -170,7 +176,7 @@ module ListenerUtils {
 }
 
 export interface IDomFactory {
-    create(root: IElement, manager: IManager): IDom;
+    create(root: IElement, manager: IDomManager): IDom;
 }
 
 export class DomFactory implements IDomFactory {
@@ -180,7 +186,7 @@ export class DomFactory implements IDomFactory {
         private _fetcherFactory:IFetcherFactory){
     }
 
-    public create(root: IElement, manager: IManager): IDom {
+    public create(root: IElement, manager: IDomManager): IDom {
         var actualDom = new DomWrapper(
             root, manager,
             this._renderListenerFactory,

@@ -1,3 +1,8 @@
+export interface IDomManager extends IManager {
+    getViewModel(): any;
+    getParent(): IDomManager;
+}
+
 /**
  * Optional view model interface
  */
@@ -11,6 +16,7 @@ export interface IViewModel {
  */
 export interface IView<TViewModel extends IViewModel> {
     template: any;
+    deep?: number;
     init?: (dom: IDom, viewModel: TViewModel) => void;
 }
 
@@ -18,14 +24,14 @@ export interface IView<TViewModel extends IViewModel> {
  * Resolves provided vew descriptor and creates view.
  */
 export interface IViewFactory {
-    resolve<TViewModel extends IViewModel>(destination: IElement, dataDescriptor: any, viewModel: any): IComposedView;
+    resolve<TViewModel extends IViewModel>(destination: IElement, dataDescriptor: any, viewModel: any, parent: IDomManager): IComposedView;
 }
 
 export interface IComposedView extends IManageable {
     getRootElement():IElement;
 }
 
-export class ComposedView<TViewModel  extends IViewModel> implements IManager, IComposedView {
+export class ComposedView<TViewModel  extends IViewModel> implements IDomManager, IComposedView {
     private _slaves: IManageable[];
     private _root: IElement;
 
@@ -36,7 +42,8 @@ export class ComposedView<TViewModel  extends IViewModel> implements IManager, I
         private _viewModel:TViewModel,
         private _markupResolver: IMarkupResolver,
         private _destination: IElement,
-        private _domFactory: IDomFactory) {
+        private _domFactory: IDomFactory,
+        private _parent: IDomManager) {
 
         this._slaves = [];
         //this._unrender = new Events.Event<IViewContext>();
@@ -54,12 +61,27 @@ export class ComposedView<TViewModel  extends IViewModel> implements IManager, I
         this.attachViewToRoot(root);
     }
 
+    getViewModel(): any {
+        return this._viewModel;
+    }
+
+    getParent():IDomManager {
+        return this._parent;
+    }
+
     private attachViewToRoot(root: IElement):void {
         this._root = root;
 
         if (this._viewData.init){
             var dom = this._domFactory.create(this._root, this);
-            this._viewData.init(dom, this._viewModel);
+            if (this._viewData.deep > 0) {
+                var viewModelsOfLevelDeep = this.fetchViewModels(this._viewData.deep);
+                viewModelsOfLevelDeep.splice(0, 0, this._viewModel);
+                viewModelsOfLevelDeep.splice(0, 0, dom);
+                this._viewData.init.apply(this._viewData, viewModelsOfLevelDeep);
+            } else {
+                this._viewData.init(dom, this._viewModel);
+            }
         }
 
         for (var i = 0; i < this._slaves.length; i++) {
@@ -97,6 +119,22 @@ export class ComposedView<TViewModel  extends IViewModel> implements IManager, I
             this._slaves[i].dispose();
         }
     }
+
+    private fetchViewModels(deep: number): any[] {
+        var result = [];
+        var currentManager = this.getParent();
+        var currentLevel = 1;
+
+        while(currentLevel <= deep && currentManager !== null) {
+
+            result.push(currentManager.getViewModel());
+            currentManager = currentManager.getParent();
+
+            currentLevel++;
+        }
+
+        return result;
+    }
 }
 
 /**
@@ -113,14 +151,14 @@ export class DefaultViewFactory implements IViewFactory {
         this._domFactory = domFactory;
     }
 
-    public resolve(destination: IElement, dataDescriptor: any, viewModel: any) : IComposedView {
+    public resolve(destination: IElement, dataDescriptor: any, viewModel: any, parent: IDomManager) : IComposedView {
         if (!dataDescriptor){
             throw new Error("Expected view data object was not defined")
         }
 
         if (Utils.isFunction(dataDescriptor)){
             var newInstance = new dataDescriptor();
-            return this.resolve(destination, newInstance, viewModel);
+            return this.resolve(destination, newInstance, viewModel, parent);
         }
 
         if (dataDescriptor.template){
@@ -129,7 +167,8 @@ export class DefaultViewFactory implements IViewFactory {
                 viewModel,
                 this._markupResolver,
                 destination,
-                this._domFactory);
+                this._domFactory,
+                parent);
         }
 
         if (dataDescriptor.renderTo && dataDescriptor.getRootElement){

@@ -99,13 +99,13 @@ export class ViewValueRenderer implements IValueRenderer {
     private _viewFactory: any;
     private _viewDescriptor: IViewFactory;
 
-    constructor(viewFactory: IViewFactory, viewDescriptor: any){
+    constructor(viewFactory: IViewFactory, viewDescriptor: any, private _parent: IDomManager){
         this._viewFactory = viewFactory;
         this._viewDescriptor = viewDescriptor;
     }
 
     public render(value: any, destination: IElement): IRenderedValue {
-        var currentView = this._viewFactory.resolve(destination, this._viewDescriptor, value);
+        var currentView = this._viewFactory.resolve(destination, this._viewDescriptor, value, this._parent);
         currentView.init();
 
         return {

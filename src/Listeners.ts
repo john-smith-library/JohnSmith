@@ -148,7 +148,7 @@ export class RenderListenerFactory {
         if (!options.renderer) {
             /** try to resolve view first */
             if (options.view) {
-                options.renderer = new ViewValueRenderer(this._viewFactory, options.view);
+                options.renderer = new ViewValueRenderer(this._viewFactory, options.view, dom.manager);
             } else {
                 /** use default renderer if no view in options */
                 if (!options.valueType) {
