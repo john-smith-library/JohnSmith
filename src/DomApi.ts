@@ -90,6 +90,7 @@ class ListenerDom {
     public text: any;
     public html: any;
     public root: IElement;
+    public manager: IDomManager;
 
     constructor(
         private _rootElement: IElement,
@@ -111,6 +112,8 @@ class ListenerDom {
         this.html = Utils.wrapObjectWithSelfFunction(
             htmlConfig,
             (config:ObservationConfig, value: any) => config.observes(value));
+
+        this.manager = this._manager;
     }
 
     observes<T>(observable:IObservable<T>, viewClass: Function): void;

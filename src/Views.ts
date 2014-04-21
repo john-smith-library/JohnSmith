@@ -17,7 +17,9 @@ export interface IViewModel {
 export interface IView<TViewModel extends IViewModel> {
     template: any;
     deep?: number;
-    init?: (dom: IDom, viewModel: TViewModel) => void;
+
+    init?(dom: IDom, viewModel: TViewModel): void;
+    init?<TParentViewModel>(dom: IDom, viewModel: TViewModel, parentViewModel: TParentViewModel): void;
 }
 
 /**

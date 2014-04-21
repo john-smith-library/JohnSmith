@@ -9,7 +9,6 @@ describe('api - js.dom(selector).render(ViewWithChildrenClass, viewModel)', func
         this.init = function(dom){
             dom('.childTarget').render(ChildView, 'foo');
         };
-
     };
 
     var ChildView = function(){
@@ -42,6 +41,23 @@ describe('api - js.dom(selector).render(ViewWithChildrenClass, viewModel)', func
         childDeep = 1;
 
         js.dom('#target').render(ParentView, 'bar');
+
+        expect(childInitSpy).toHaveBeenCalled();
+        expect(childInitSpy.calls.mostRecent().args[1]).toBe('foo');
+        expect(childInitSpy.calls.mostRecent().args[2]).toBe('bar');
+    });
+
+    it('should pass parent view model to child if deep is 1 and parent observes a value with child', function(){
+        var ParentViewThatObservesWithChild = function(){
+            this.template = '<div class="parent"><section class="childTarget"></section></div>';
+            this.init = function(dom){
+                dom('.childTarget').observes('foo', ChildView);
+            };
+        };
+
+        childDeep = 1;
+
+        js.dom('#target').render(ParentViewThatObservesWithChild, 'bar');
 
         expect(childInitSpy).toHaveBeenCalled();
         expect(childInitSpy.calls.mostRecent().args[1]).toBe('foo');
