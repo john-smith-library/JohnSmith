@@ -43,8 +43,8 @@ export interface IElement {
     addClass: (className: string) => void;
     removeClass: (className: string) => void;
 
-//    setHtml(html:string);
-//    setText(text: string);
+    setHtml(html:string);
+    setText(text: string);
 
     getValue: () => string;
     setValue(value: string);

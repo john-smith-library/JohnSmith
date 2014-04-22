@@ -3,9 +3,9 @@
 // View Model
 
 function ApplicationViewModel(data){
-    this.contentWidth = js.bindableValue();
-    this.contentHeight = js.bindableValue();
-    this.tableOfContentVisible = js.bindableValue();
+    this.contentWidth = js.observableValue();
+    this.contentHeight = js.observableValue();
+    this.tableOfContentVisible = js.observableValue();
 }
 
 ApplicationViewModel.prototype.updateWidth = function(width){
@@ -104,5 +104,5 @@ function runApplication(data){
     var viewModel = new ApplicationViewModel(data);
     var view = new ApplicationView();
 
-    js.createView(view, viewModel).attachTo("#application");
+    view.init()
 }

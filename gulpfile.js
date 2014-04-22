@@ -7,7 +7,8 @@ var gulp = require('gulp'),
     vm = require('vm'),
     util = require('util'),
     exec = require('gulp-exec'),
-    rename = require("gulp-rename");
+    rename = require("gulp-rename"),
+    samplesBuilder = require('./samples/samplesBuilder.js');
 
 var config = {};
 config.src = 'src';
@@ -55,6 +56,10 @@ gulp.task('sanitizeDeclarations', ['compileJoined'], function() {
 
     declarationContent = declarationContent.replace(/private _.*;/g, '/* removed*/');
     fs.outputFileSync('out/john-smith-latest.d.ts', declarationContent);
+});
+
+gulp.task('buildTutorial', function(){
+    samplesBuilder.build('3.0.2');
 });
 
 gulp.task('fullBuild', ['tag', 'sanitizeDeclarations'], function(){});

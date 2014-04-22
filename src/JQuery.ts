@@ -81,13 +81,13 @@ export class JQueryElement implements IElement {
         return this._target;
     }
 
-//    public setText(text:string) {
-//        this._target.text(text);
-//    }
-//
-//    public setHtml(html:string) {
-//        this._target.html(html);
-//    }
+    public setText(text:string) {
+        this._target.text(text);
+    }
+
+    public setHtml(html:string) {
+        this._target.html(html);
+    }
 
     public addClass(className: string) : void {
         this._target.addClass(className);

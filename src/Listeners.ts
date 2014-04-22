@@ -1,3 +1,26 @@
+/*
+export interface IValueRenderer<T> extends IDisposable {
+    render(element: IElement, value: T);
+}
+
+class HtmlRenderer implements IValueRenderer<string> {
+    dispose():void {
+    }
+
+    render(element:IElement, value:string) {
+        element.setHtml(value);
+    }
+}
+
+class TextRenderer implements IValueRenderer<string> {
+    dispose():void {
+    }
+
+    render(element:IElement, value:string) {
+        element.setText(value);
+    }
+}*/
+
 export class RenderValueListener<T> implements IManageable {
     private _currentValue: IRenderedValue;
     private _link: IDisposable;

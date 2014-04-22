@@ -9,8 +9,8 @@ var Topic = function(id){
 };
 
 var TopicViewModel = function(){
-    this.currentTopic = js.bindableValue();
-    this.isLoading = js.bindableValue();
+    this.currentTopic = js.observableValue();
+    this.isLoading = js.observableValue();
 
     this.setCurrentTopic = function(topic){
         var viewModel = this;
@@ -32,7 +32,7 @@ var TopicViewModel = function(){
 };
 
 var AppViewModel = function(){
-    this.clientAreaHeight = js.bindableValue();
+    this.clientAreaHeight = js.observableValue();
 
     this.setHeight = function(height){
         this.clientAreaHeight.setValue(height);
@@ -56,7 +56,7 @@ $(function(){
         return false;
     });
 
-    js.bind(topicViewModel.currentTopic).to(function(topic){
+    topicViewModel.currentTopic.listen(function(topic){
         var $currentTopic = $("#topic");
         $currentTopic.find("h2").text(topic.topicData.title);
         $currentTopic.find(".description .content").html(topic.topicData.description);
@@ -86,7 +86,7 @@ $(function(){
         });
     });
 
-    js.bind(topicViewModel.isLoading).to(function(isLoading){
+    topicViewModel.isLoading.listen(function(isLoading){
         if (isLoading) {
             $("#overlay").show();
         } else {
@@ -98,7 +98,7 @@ $(function(){
     var $sections = $("#topic section");
     var $article = $("#topic #article section");
 
-    js.bind(appViewModel.clientAreaHeight).to(function(height){
+    appViewModel.clientAreaHeight.listen(function(height){
         $mainContainer.height(height);
         $sections.height((height - 70 - 40)/2);
         $article.height(height - 70 - 20);
