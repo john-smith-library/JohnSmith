@@ -2,7 +2,8 @@ describe('api - js.dom(selector).on("click")', function(){
     "use strict";
 
     beforeEach(function(){
-        ui('<a href="#" id="send">click me</a>');
+        ui('<a href="#" id="send">click me</a>' +
+           '<div id="target"></div>');
     });
 
     var doClick = function doClick(){
@@ -30,6 +31,25 @@ describe('api - js.dom(selector).on("click")', function(){
 
         js.dom('#send').on('click').react(viewModel.callback, viewModel);
         doClick();
+    });
+
+    it('should use view model as context if actual context is not set', function(){
+        var wasCalled = false;
+        var View = function(){
+            this.template = '<a href="#" id="sendFromView">click me</a>';
+            this.init = function(dom, viewModel){
+                dom('a').on('click').react(function(){
+                    wasCalled = true;
+                    expect(this).toBeDefined();
+                    expect(this).toBe(viewModel);
+                });
+            };
+        };
+
+        js.dom('#target').render(View, {});
+        $('#sendFromView').trigger('click');
+
+        expect(wasCalled).toBe(true);
     });
 
     it('respects view scope', function(){

@@ -1,26 +1,3 @@
-/*
-export interface IValueRenderer<T> extends IDisposable {
-    render(element: IElement, value: T);
-}
-
-class HtmlRenderer implements IValueRenderer<string> {
-    dispose():void {
-    }
-
-    render(element:IElement, value:string) {
-        element.setHtml(value);
-    }
-}
-
-class TextRenderer implements IValueRenderer<string> {
-    dispose():void {
-    }
-
-    render(element:IElement, value:string) {
-        element.setText(value);
-    }
-}*/
-
 export class RenderValueListener<T> implements IManageable {
     private _currentValue: IRenderedValue;
     private _link: IDisposable;
@@ -215,7 +192,7 @@ export class RenderListenerFactory {
             fetcher = this._fetcherFactory.getForElement(dom.root);
             if (options.bidirectional !== false){
                 var command = options.command;
-                var context = options.commandContext;
+                var context = options.commandContext || dom.manager.getViewModel();
                 var event = options.event || "change";
 
                 var bindableObject: any = observable;
