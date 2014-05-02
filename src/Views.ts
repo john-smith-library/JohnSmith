@@ -1,6 +1,7 @@
 export interface IDomManager extends IManager {
     getViewModel(): any;
     getParent(): IDomManager;
+    onUnrender(): IEvent<any>;
 }
 
 /**
@@ -36,8 +37,7 @@ export interface IComposedView extends IManageable {
 export class ComposedView<TViewModel  extends IViewModel> implements IDomManager, IComposedView {
     private _slaves: IManageable[];
     private _root: IElement;
-
-    //private _unrender: Events.Event<IViewContext>;
+    private _unrender: Event<any>;
 
     constructor (
         private _viewData: IView<TViewModel>,
@@ -48,7 +48,11 @@ export class ComposedView<TViewModel  extends IViewModel> implements IDomManager
         private _parent: IDomManager) {
 
         this._slaves = [];
-        //this._unrender = new Events.Event<IViewContext>();
+        this._unrender = new Event<any>();
+    }
+
+    public onUnrender(): IEvent<any>{
+        return this._unrender;
     }
 
     public manage(manageable: IManageable) {
@@ -100,19 +104,18 @@ export class ComposedView<TViewModel  extends IViewModel> implements IDomManager
     }
 
     public unrenderView() {
-        /*
         if (this._unrender.hasListeners()){
-            this._unrender.trigger(this);
-        } else {*/
+            this._unrender.trigger();
+        } else {
             this.getRootElement().remove();
-        /*}*/
+        }
     }
 
     public dispose(): void {
         this.unrenderView();
 
         /* release viewModel state before disposing
-         *  to make sure the model will not attempt to use bindables */
+         *  to make sure the model will not attempt to use observables */
         if (this._viewModel && this._viewModel.releaseState){
             this._viewModel.releaseState();
         }

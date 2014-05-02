@@ -8,6 +8,7 @@
 /// <reference path="Fetchers.ts"/>
 /// <reference path="Utils.ts"/>
 /// <reference path="Views.ts"/>
+/// <reference path="Events.ts"/>
 
 export interface ListenerOptions  {
     renderer?: IValueRenderer;
@@ -31,6 +32,7 @@ export interface IDom extends IDisposable {
 
     (selector: string): IListenerDom;
     find(selector: string): IListenerDom;
+    onUnrender():IEvent<any>;
 }
 
 export interface IListenerDom {
@@ -82,7 +84,9 @@ class DomWrapper implements IDisposable {
         this._manager.dispose();
     }
 
-
+    public onUnrender():IEvent<any> {
+        return this._manager.onUnrender();
+    }
 }
 
 class ListenerDom {

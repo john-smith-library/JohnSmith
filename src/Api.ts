@@ -23,6 +23,10 @@ export class ExplicitManager implements IDomManager {
     getParent():IDomManager {
         return null;
     }
+
+    onUnrender():IEvent<any> {
+        return new Event<any>();
+    }
 }
 
 export var dom:IDom;
