@@ -30,8 +30,8 @@ export class ExplicitManager implements IDomManager {
 }
 
 export var dom:IDom;
-export var observableValue: <T>() => ObservableValue<T>;
-export var observableList: <T>() => ObservableList<T>;
+export var observableValue: <T>() => ObservableValue<T> = () => new ObservableValue();
+export var observableList: <T>() => ObservableList<T> = () => new ObservableList();
 
 export var init = function(){
     var markupResolver: IMarkupResolver = new JQueryMarkupResolver();
@@ -48,6 +48,4 @@ export var init = function(){
     viewFactory.setDomFactory(domFactory);  // todo: avoid this bidirectional link
 
     dom = domFactory.create(new JQueryElement($(document)), new ExplicitManager());
-    observableValue = () => new ObservableValue();
-    observableList = () => new ObservableList();
 }

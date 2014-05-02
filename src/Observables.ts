@@ -110,16 +110,7 @@ export class ObservableList<T> extends ObservableValue<T[]> {
         var oldValue = this.getValue().slice(0);
         var array:T[] = this.getValue();
         for (var i = 0; i < args.length; i++){
-            var indexToRemove:number = -1;
-            for (var j = 0; j < array.length; j++){
-                if (array[j] == args[i]){
-                    indexToRemove = j;
-                }
-            }
-
-            if (indexToRemove >= 0){
-                array.splice(indexToRemove, 1);
-            }
+            ArrayUtils.removeItem(array, args[i]);
         }
 
         this.reactOnChange(this.getValue(), oldValue, { reason: DataChangeReason.remove, portion: args } );
@@ -171,6 +162,7 @@ export class StaticObservableValue<T> implements IObservable<T> {
     }
 
     listen(listener:IListenerCallback<T>):IDisposable {
+        listener(this.getValue(), null, { reason: DataChangeReason.initial, portion: this.getValue() });
         return { dispose: function(){} };
     }
 }

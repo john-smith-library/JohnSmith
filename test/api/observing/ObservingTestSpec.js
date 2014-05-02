@@ -90,7 +90,9 @@
         it('Could render custom observable', function(){
             var observable = {
                 getValue: sinon.stub().returns('bar'),
-                listen: sinon.spy()
+                listen: function(listener){
+                    listener(this.getValue(), null, {});
+                }
             };
 
             callback(observable);

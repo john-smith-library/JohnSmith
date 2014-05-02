@@ -9,13 +9,10 @@ export class RenderValueListener<T> implements IManageable {
     }
 
     public init(): void {
-        this.doRender(this._observable.getValue());
         this._link = this._observable.listen((value: T) => this.doRender(value));
     }
 
     public dispose(): void {
-        /* todo: test it really disposes */
-        /* todo: check if link is not null on dispose */
         if (this._link) {
             this._link.dispose();
         }
@@ -67,7 +64,6 @@ export class RenderListHandler<T> implements IManageable {
     }
 
     init():void {
-        this.doRender(this._observable.getValue(), DataChangeReason.replace);
         this._link = this._observable.listen((value: T[], oldValue: T[], details: IChangeDetails<T[]>) => this.doRender(details.portion, details.reason));
     }
 
@@ -192,7 +188,7 @@ export class RenderListenerFactory {
             fetcher = this._fetcherFactory.getForElement(dom.root);
             if (options.bidirectional !== false){
                 var command = options.command;
-                var context = options.commandContext || dom.manager.getViewModel();
+                var context = options.commandContext;
                 var event = options.event || "change";
 
                 var bindableObject: any = observable;

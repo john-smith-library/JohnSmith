@@ -8,15 +8,16 @@ export interface ICommandArgumentFetcher {
 
 export class CommandConfig {
     constructor(
-        private _manager: IManager,
+        private _manager: IDomManager,
         private _event: string,
         private _target: IElement,
         private _options: ICommandOptions,
         private _fetcherFactory: IFetcherFactory){
     }
 
-    react(callback: Function, context: any): void {
+    react(callback: Function, context?: any): void {
         var fetcher: IFetcher = null;
+
         if (this._options && this._options.fetch) {
             fetcher = this._fetcherFactory.getByKey(this._options.fetch);
         } else {
@@ -28,7 +29,9 @@ export class CommandConfig {
             argumentFetcher = (target: IElement) => fetcher.valueFromElement(target);
         }
 
-        this._manager.manage(new CommandWire(argumentFetcher, this._event, callback, this._target, context))
+        var actualContext = context || this._manager.getViewModel();
+        var wire = new CommandWire(argumentFetcher, this._event, callback, this._target, actualContext);
+        this._manager.manage(wire)
     }
 }
 
