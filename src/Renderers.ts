@@ -9,10 +9,6 @@ export interface IValueFormatter {
  * Represents rendered value
  */
 export interface IRenderedValue extends IDisposable {
-    /**
-     * A target DOM element this rendered value attached to.
-     */
-    element: IElement;
 }
 
 /**
@@ -34,12 +30,11 @@ export class FormatterBasedRenderer implements IValueRenderer {
     }
 
     public render(value: any, destination: IElement) : IRenderedValue {
-        var formattedValue = this._formatter(value);
+        var formattedValue = this._formatter(Utils.isNullOrUndefined(value) ? '' : value);
+        this.doRender(formattedValue, destination);
+
         return {
-            element: this.doRender(formattedValue, destination),
-            dispose: function(){
-                this.element.remove();
-            }
+            dispose: () => { this.doRender('', destination); }
         };
     }
 
@@ -47,9 +42,7 @@ export class FormatterBasedRenderer implements IValueRenderer {
      * @abstract
      * @param formattedValue
      */
-    public doRender(formattedValue:string, destination: IElement) : IElement {
-        return null;
-    }
+    public doRender(formattedValue:string, destination: IElement): void {}
 }
 
 /**
@@ -60,8 +53,8 @@ export class TextRenderer extends FormatterBasedRenderer {
         super(formatter);
     }
 
-    public doRender(formattedValue:string, destination: IElement) : IElement {
-        return destination.appendText(formattedValue);
+    public doRender(formattedValue:string, destination: IElement): void {
+        destination.setText(formattedValue);
     }
 }
 
@@ -73,8 +66,8 @@ export class HtmlRenderer extends FormatterBasedRenderer {
         super(formatter);
     }
 
-    public doRender(formattedValue:string, destination: IElement) : IElement {
-        return destination.appendHtml(formattedValue);
+    public doRender(formattedValue:string, destination: IElement): void {
+        destination.setHtml(formattedValue);
     }
 }
 
@@ -89,9 +82,9 @@ export class ResolvableMarkupRenderer extends FormatterBasedRenderer {
         this._markupResolver = markupResolver;
     }
 
-    public doRender(formattedValue:string, destination: IElement) : IElement {
+    public doRender(formattedValue:string, destination: IElement): void {
         var markup = this._markupResolver.resolve(formattedValue);
-        return destination.appendHtml(markup);
+        destination.setHtml(markup);
     }
 }
 
@@ -105,11 +98,14 @@ export class ViewValueRenderer implements IValueRenderer {
     }
 
     public render(value: any, destination: IElement): IRenderedValue {
+        if (Utils.isNullOrUndefined(value)) {
+            return DisposingUtils.noopDisposable;
+        }
+
         var currentView = this._viewFactory.resolve(destination, this._viewDescriptor, value, this._parent);
         currentView.init();
 
         return {
-            element: currentView.getRootElement(),
             dispose: function(){
                 currentView.dispose();
             }
@@ -126,11 +122,8 @@ export class FetcherToRendererAdapter implements IValueRenderer {
 
     public render(formattedValue:string, destination: IElement) : IRenderedValue {
         this._fetcher.valueToElement(formattedValue, destination);
-        return {
-            element: destination,
-            dispose: function(){
-                /* do not need to dispose fetcher-based values because no markup produced */
-            }
-        };
+
+        /* do not need to dispose fetcher-based values because no markup produced */
+        return DisposingUtils.noopDisposable;
     }
 }

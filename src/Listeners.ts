@@ -1,3 +1,21 @@
+export interface ICustomListener<T> {
+    (element: IElement, value: T): void;
+}
+
+export class CustomListenerRenderer<T> implements IValueRenderer {
+    constructor(private payload: ICustomListener<T>){
+    }
+
+    render(value: any, destination: IElement): IRenderedValue {
+        this.payload(destination, value);
+
+        return {
+            element: destination,
+            dispose: () => {}
+        }
+    }
+}
+
 export class RenderValueListener<T> implements IManageable {
     private _currentValue: IRenderedValue;
     private _link: IDisposable;
@@ -23,9 +41,9 @@ export class RenderValueListener<T> implements IManageable {
     private doRender(value: T):void {
         this.disposeCurrentValue();
 
-        if (value !== null && value !== undefined) {
+        //if (value !== null && value !== undefined) {
             this._currentValue = this._renderer.render(value, this._contentDestination);
-        }
+        //}
     }
 
     private disposeCurrentValue(){

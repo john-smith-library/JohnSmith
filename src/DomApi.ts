@@ -120,6 +120,12 @@ class ListenerDom {
         this.manager = this._manager;
     }
 
+    listener<T>(listener: ICustomListener<T>): ObservationConfig {
+        return new ObservationConfig(
+            this._manager,
+            (observable:IObservable<Object>) => this.createRenderListener(observable, { renderer: new CustomListenerRenderer<T>(listener) }));
+    }
+
     observes<T>(observable:IObservable<T>, viewClass: Function): void;
     observes<T>(observable:IObservable<T>, options: any): void;
     observes<T>(value: T, viewClass: Function): void;

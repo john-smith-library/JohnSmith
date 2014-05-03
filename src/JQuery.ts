@@ -10,10 +10,6 @@ export class JQueryElement implements IElement {
         this._target = target;
     }
 
-//    public isEmpty(): boolean{
-//        return this._target.length == 0;
-//    }
-//
     public empty(): void{
         this._target.empty();
     }
@@ -32,29 +28,6 @@ export class JQueryElement implements IElement {
         this._target.append(parsedHtml);
         return new JQueryElement(parsedHtml);
     }
-
-    public appendText(text:string) : IElement{
-        if (text === undefined || text == null) {
-            throw new Error("Could not append null object!")
-        }
-
-        if (typeof text !== "string"){
-            throw new Error("Expected string text but was" + text);
-        }
-
-        if (text === ""){
-            this.getTarget().empty();
-            return this;
-        }
-
-        var encodedHtml = $("<div/>").text(text).html();
-
-        return this.appendHtml(encodedHtml);
-    }
-
-//    public getHtml() : string {
-//        return this._target.html();
-//    }
 
     public getNodeName(): string {
         if (this._target.length == 1) {

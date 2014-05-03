@@ -1,4 +1,8 @@
 export module Utils {
+    export var isNullOrUndefined = function(value: any){
+        return value === null || value === undefined;
+    };
+
     /**
      * Checks if provided object is a function.
      * @param target An object to check.
@@ -40,4 +44,11 @@ export module ArrayUtils
             array.splice(indexToRemove, 1);
         }
     }
+}
+
+export module DisposingUtils {
+    export var noop = () => {};
+    export var noopDisposable: IDisposable = {
+        dispose: noop
+    };
 }

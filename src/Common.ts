@@ -31,11 +31,8 @@ export interface IManager extends IDisposable {
  */
 export interface IElement {
     $: any;
-//    isEmpty: () => boolean;
     empty: () => void;
     appendHtml: (html:string) => IElement;
-    appendText: (text:string) => IElement;
-//    getHtml: () => string;
     findRelative: (query:string) => IElement;
     remove: () => void;
     getNodeName: () => string;
