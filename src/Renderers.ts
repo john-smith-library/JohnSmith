@@ -122,8 +122,6 @@ export class FetcherToRendererAdapter implements IValueRenderer {
 
     public render(formattedValue:string, destination: IElement) : IRenderedValue {
         this._fetcher.valueToElement(formattedValue, destination);
-
-        /* do not need to dispose fetcher-based values because no markup produced */
         return DisposingUtils.noopDisposable;
     }
 }

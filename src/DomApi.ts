@@ -126,6 +126,17 @@ class ListenerDom {
             (observable:IObservable<Object>) => this.createRenderListener(observable, { renderer: new CustomListenerRenderer<T>(listener) }));
     }
 
+    className(className: string): ObservationConfig {
+        return this.listener<any>((element: IElement, value: any) => {
+            var hasClass: boolean = !!value;
+            if (hasClass) {
+                element.addClass(className);
+            } else {
+                element.removeClass(className);
+            }
+        });
+    }
+
     observes<T>(observable:IObservable<T>, viewClass: Function): void;
     observes<T>(observable:IObservable<T>, options: any): void;
     observes<T>(value: T, viewClass: Function): void;
