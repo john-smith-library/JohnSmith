@@ -62,6 +62,10 @@ export class ObservableValue<T> implements IObservable<T> {
         return this._listeners.length;
     }
 
+    public getListener(index: number): IListenerCallback<T> {
+        return this._listeners[index];
+    }
+
     public notifyListeners(newValue:T, oldValue:T, details: IChangeDetails<T>): void {
         for (var i = 0; i < this._listeners.length; i++) {
             this._listeners[i](newValue, oldValue, details);
@@ -149,6 +153,59 @@ export class ObservableList<T> extends ObservableValue<T[]> {
             } else {
                 this._count.setValue(0);
             }
+        }
+    }
+}
+
+export class DependentValue<T> extends ObservableValue<T> {
+    private _evaluateValue: () => any;
+    private _dependencies: IObservable<any>[];
+    private _dependencyValues: any[];
+
+    constructor(evaluate: () => any, dependencies: IObservable<any>[]) {
+        super();
+
+        this._dependencies = dependencies;
+        this._evaluateValue = evaluate;
+        this._dependencyValues = [];
+
+        var that = this;
+        for (var i = 0; i < dependencies.length; i++) {
+            var dependency: IObservable<any> = dependencies[i];
+            dependency.listen(function(newValue: Object, oldValue: Object, details: IChangeDetails<any>) {
+                var actualValue = newValue;
+                if (details.reason !== DataChangeReason.replace) {
+                    actualValue = dependency.getValue();
+                }
+
+                that.notifyDependentListeners(dependency, actualValue);
+            }, false);
+
+            this._dependencyValues[i] = dependency.getValue();
+        }
+    }
+
+    public getValue():any {
+        return this._evaluateValue.apply(this, this._dependencyValues);
+    }
+
+    public setValue(value: any) {
+        throw Error("Could not set dependent value");
+    }
+
+    public notifyDependentListeners(causedByDependency:IObservable<any>, newDependencyValue: any): void {
+        var oldValue = this.getValue();
+        for (var i = 0; i < this._dependencies.length; i++) {
+            var dependency = this._dependencies[i];
+            if (dependency === causedByDependency) {
+                this._dependencyValues[i] = newDependencyValue;
+            }
+        }
+
+        var newValue = this.getValue();
+        for (var i = 0; i < this.getListenersCount(); i++) {
+            var listener:IListenerCallback<any>  = this.getListener(i);
+            listener(newValue, oldValue, { portion: newValue, reason: DataChangeReason.replace });
         }
     }
 }
