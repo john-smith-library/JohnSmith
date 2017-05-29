@@ -32,6 +32,8 @@ export class ExplicitManager implements IDomManager {
 export var dom:IDom;
 export var observableValue: <T>() => ObservableValue<T> = () => new ObservableValue();
 export var observableList: <T>() => ObservableList<T> = () => new ObservableList();
+export var dependentValue =
+    (evaluate: Function, ...dependencies: IObservable<any>[]) => new DependentValue(evaluate, dependencies);
 
 export var init = function(){
     var markupResolver: IMarkupResolver = new JQueryMarkupResolver();

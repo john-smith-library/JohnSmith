@@ -169,18 +169,10 @@ export class DependentValue<T> extends ObservableValue<T> {
         this._evaluateValue = evaluate;
         this._dependencyValues = [];
 
-        var that = this;
         for (var i = 0; i < dependencies.length; i++) {
             var dependency: IObservable<any> = dependencies[i];
-            dependency.listen(function(newValue: Object, oldValue: Object, details: IChangeDetails<any>) {
-                var actualValue = newValue;
-                if (details.reason !== DataChangeReason.replace) {
-                    actualValue = dependency.getValue();
-                }
 
-                that.notifyDependentListeners(dependency, actualValue);
-            }, false);
-
+            this.setupListener(dependency);
             this._dependencyValues[i] = dependency.getValue();
         }
     }
@@ -207,6 +199,17 @@ export class DependentValue<T> extends ObservableValue<T> {
             var listener:IListenerCallback<any>  = this.getListener(i);
             listener(newValue, oldValue, { portion: newValue, reason: DataChangeReason.replace });
         }
+    }
+
+    private setupListener(dependency: IObservable<any>) {
+        dependency.listen((newValue: Object, oldValue: Object, details: IChangeDetails<any>) => {
+            var actualValue = newValue;
+            if (details.reason !== DataChangeReason.replace) {
+                actualValue = dependency.getValue();
+            }
+
+            this.notifyDependentListeners(dependency, actualValue);
+        }, false);
     }
 }
 

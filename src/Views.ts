@@ -34,6 +34,16 @@ export interface IComposedView extends IManageable {
     getRootElement():IElement;
 }
 
+class ManagableDisposableAdapter implements IManageable {
+    constructor(private disposable: IDisposable){}
+
+    init() {}
+
+    dispose() {
+        this.disposable.dispose();
+    }
+}
+
 export class ComposedView<TViewModel  extends IViewModel> implements IDomManager, IComposedView {
     private _slaves: IManageable[];
     private _root: IElement;
@@ -55,8 +65,8 @@ export class ComposedView<TViewModel  extends IViewModel> implements IDomManager
         return this._unrender;
     }
 
-    public manage(manageable: IManageable) {
-        this._slaves.push(manageable);
+    public manage(manageable: IManageable|IDisposable) {
+        this._slaves.push(manageable.init ? manageable : new ManagableDisposableAdapter(manageable));
     }
 
     public init(){
@@ -162,7 +172,7 @@ export class DefaultViewFactory implements IViewFactory {
         }
 
         if (Utils.isFunction(dataDescriptor)){
-            var newInstance = new dataDescriptor();
+            var newInstance = new dataDescriptor(viewModel);
             return this.resolve(destination, newInstance, viewModel, parent);
         }
 

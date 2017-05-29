@@ -54,7 +54,7 @@ task("build", { async: true }, function(){
         console.log("    " + allSrcFiles[i]);
     }
 
-    var buildCmd = "tsc --out " + buildOptions.outFileName;
+    var buildCmd = "tsc --module amd --out " + buildOptions.outFileName;
     if (!buildOptions.isDebug){
         buildCmd += " --removeComments";
     }

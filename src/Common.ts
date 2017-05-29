@@ -23,7 +23,7 @@ export interface IManageable extends IDisposable, IInitializable {
  * Someone who can manage.
  */
 export interface IManager extends IDisposable {
-    manage(manageable:IManageable):void;
+    manage(manageable:IManageable|IDisposable):void;
 }
 
 /**

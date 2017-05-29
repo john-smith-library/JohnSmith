@@ -9,6 +9,7 @@ export interface IValueFormatter {
  * Represents rendered value
  */
 export interface IRenderedValue extends IDisposable {
+    [others: string]: any;
 }
 
 /**

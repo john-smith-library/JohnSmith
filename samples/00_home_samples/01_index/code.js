@@ -2,16 +2,15 @@
 var GreeterViewModel = function(){
     this.userName = /*(*/js.observableValue()/*)*/;
 
-    this.greetMessage = /*(*/'js.dependentValue'/*)*/;
-//    (
-//        this.userName,
-//        function(userNameValue){
-//            if (userNameValue) {
-//                return "Hello, " + userNameValue + "!";
-//            }
-//
-//            return "Please, enter your name";
-//        });
+    this.greetMessage = /*(*/js.dependentValue(/*)*/
+        this.userName,
+        function(userNameValue){
+            if (userNameValue) {
+                return "Hello, " + userNameValue + "!";
+            }
+
+            return "Please, enter your name";
+        });
 };
 
 /* Views */

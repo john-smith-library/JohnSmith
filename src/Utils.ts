@@ -17,7 +17,7 @@ export module Utils {
      *
      */
     export var wrapObjectWithSelfFunction = function<TTarget, TFunctionResult>(target: TTarget, payload: Function): any{
-        var result = function (...args: any[]) {
+        var result: any = function (...args: any[]) {
             args.splice(0, 0, result);
             return payload.apply(this, args);
         };
