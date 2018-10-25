@@ -1,0 +1,29 @@
+{
+  "name": "john-smith",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "build": "tsc",
+    "pack": "npm run build && cpx package.json dist/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/guryanovev/JohnSmith.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/guryanovev/JohnSmith/issues"
+  },
+  "homepage": "https://github.com/guryanovev/JohnSmith#readme",
+  "devDependencies": {
+    "@types/jest": "^23.3.7",
+    "cpx": "^1.5.0",
+    "jest": "^23.6.0",
+    "ts-jest": "^23.10.4",
+    "typescript": "^3.1.3"
+  }
+}
