@@ -1,8 +1,8 @@
-import { ChangeDetails, DataChangeReason, ListenerCallback, Observable } from "./listenable";
-import { Disposable } from "../common";
-import { ListenerLink } from "./listener-link";
+import {ChangeDetails, DataChangeReason, ListenerCallback, Observable} from "./listenable";
+import {Disposable } from "../common";
+import {ListenerLink} from "./listener-link";
 
-export class ObservableValue<T> implements Observable<T|null> {
+export class ObservableValue<T> extends Observable<T|null> {
     private _listeners: ListenerCallback<T|null>[] = [];
     private _value: T|null = null;
 
@@ -48,3 +48,4 @@ export class ObservableValue<T> implements Observable<T|null> {
         return true;
     }
 }
+

@@ -4,7 +4,8 @@
     "module": "commonjs",
     "declaration": true,
     "outDir": "./dist",
-    "strict": true
+    "strict": true,
+    "lib": ["dom", "es6"]
   },
   "include": ["src"],
   "exclude": ["node_modules", "src/**/*.spec.ts"]

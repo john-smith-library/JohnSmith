@@ -9,7 +9,7 @@ export enum DataChangeReason {
 
 export interface ChangeDetails<T> {
     reason: DataChangeReason;
-    portion: T;
+    portion?: T;
 }
 
 export interface ListenerCallback<T> {
@@ -20,6 +20,8 @@ export interface Listenable<T> {
     listen(listener:  ListenerCallback<T>, raiseInitial?: boolean): Disposable;
 }
 
-export interface Observable<T> extends Listenable<T> {
-    getValue(): T;
+export abstract class Observable<T> implements Listenable<T> {
+    abstract getValue(): T;
+
+    abstract listen(listener:  ListenerCallback<T>, raiseInitial?: boolean): Disposable;
 }
