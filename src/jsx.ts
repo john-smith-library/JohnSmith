@@ -1,12 +1,14 @@
+import {DefaultIntrinsicElements} from "./default-intristic-element";
+
 declare global {
     namespace JSX {
-        interface IElement {
+        interface IElement extends DefaultIntrinsicElements{
             $className?: any;
             "js-name"?: string;
             [elemName: string]: any;
         }
 
-        interface IntrinsicElements {
+        interface IntrinsicElements  {
             [elemName: string]: IElement;
         }
     }
@@ -14,33 +16,36 @@ declare global {
     const JS: { d: () => HtmlDefinition };
 }
 
-//declare var JS: { d: () => HtmlDefinition };
+import { HtmlDefinition } from "./dom/view";
 
-import {HtmlDefinition} from "./dom/view";
+function domConstruct(): HtmlDefinition {
+    console.log(arguments);
 
-function domConstruct(): HtmlDefinition{
     const
         argsCount = arguments.length,
-        nested = [];
+        nested = []//,
+        //attributes: { [key: string]: any } = (argsCount > 1 ? arguments[1] : null) || {};
+    ;
 
-    for (let i = 2; i < argsCount - 1; i++) {
-        nested.push(arguments[i]);
-    }
+    //let text: string|null = null;
 
-    const
-        lastIsText = typeof arguments[argsCount - 1] === 'string',
-        text = lastIsText ? arguments[argsCount - 1] : null;
-
-    if (!lastIsText) {
-        nested.push(arguments[argsCount - 1]);
+    for (let i = 2; i < argsCount; i++) {
+        // const arg = arguments[i];
+        //
+        // if (arg.listen) {
+        //     attributes['$innerText'] = arg;
+        // } else if (typeof arg === 'string') {
+        //     text = arg
+        // } else {
+            nested.push(arguments[i]);
+        //}
     }
 
     return {
         element: arguments[0],
-        attributes: arguments[1],
-        bindings: {},
-        nested: nested,
-        text: text
+        attributes: argsCount > 1 ? arguments[1] : null,
+        nested: nested//,
+        //text: text
     };
 }
 

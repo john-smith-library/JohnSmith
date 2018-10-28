@@ -1,9 +1,10 @@
+import {Listenable} from "../reactive";
+
 export interface HtmlDefinition {
-    element: string|Function;
-    attributes: { [key: string]: string };
-    bindings: { [key: string]: string };
-    nested: HtmlDefinition[];
-    text?: string|null;
+    element: any;
+    attributes: { [key: string]: any };
+    nested: (HtmlDefinition|string|Listenable<any>|any)[];
+    //text?: string|null;
 }
 
 export interface View<T> {
