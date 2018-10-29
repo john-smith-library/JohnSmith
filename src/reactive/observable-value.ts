@@ -6,11 +6,24 @@ export class ObservableValue<T> extends Observable<T|null> {
     private _listeners: ListenerCallback<T|null>[] = [];
     private _value: T|null = null;
 
+    constructor(value?: T | null) {
+        super();
+        this._value = value || null;
+    }
+
     public getValue(): T|null {
         return this._value;
     }
 
-    public setValue(value: T) {
+    public getRequiredValue(): T {
+        if (this._value === null) {
+            throw new Error('Expected a value but was ');
+        }
+
+        return this._value;
+    }
+
+    public setValue(value: T|null) {
         const oldValue = this._value;
 
         this._value = value;

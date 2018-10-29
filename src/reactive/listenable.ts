@@ -9,7 +9,7 @@ export enum DataChangeReason {
 
 export interface ChangeDetails<T> {
     reason: DataChangeReason;
-    portion?: T;
+    portion?: T|null;
 }
 
 export interface ListenerCallback<T> {
