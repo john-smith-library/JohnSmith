@@ -1,12 +1,12 @@
 import { DomElement } from './element';
 import {Disposable, Owner} from '../common';
-import { HtmlDefinition, View } from './view';
+import {HtmlDefinition, View, ViewConstructor, ViewDefinition} from './view';
 import {DomEngine} from "./dom-engine";
 import {BindingRegistry} from "../binding/registry";
 import {Listenable} from "../reactive";
 
 export interface ViewRenderer {
-    render<ViewModel>(element: DomElement, view: { new(): View<ViewModel> }, viewModel: ViewModel): Disposable;
+    render<ViewModel>(element: DomElement, view: ViewDefinition<ViewModel>, viewModel: ViewModel): Disposable;
 }
 
 export class DefaultViewRenderer implements ViewRenderer {
@@ -17,13 +17,14 @@ export class DefaultViewRenderer implements ViewRenderer {
 
     render<ViewModel>(
         element: DomElement,
-        view: { new(): View<ViewModel> },
+        view: ViewDefinition<ViewModel>,
         viewModel: ViewModel): Disposable {
 
-        const viewInstance = new view();
+        const
+            viewInstance = this.createViewInstance<ViewModel>(view),
+            template = viewInstance.template(viewModel);
 
         const
-            template = viewInstance.template(viewModel),
             initializers: (() => Disposable)[] = [],
             transformedTemplate = this.transformElementsRecursively(element, template, initializers);
 
@@ -43,6 +44,24 @@ export class DefaultViewRenderer implements ViewRenderer {
         // todo: remove element
 
         return result;
+    }
+
+    private isViewConstructor<ViewModel>(
+        viewDefinition: ViewDefinition<ViewModel>): viewDefinition is ViewConstructor<ViewModel> {
+
+        return !!viewDefinition.prototype.template;
+    }
+
+    private createViewInstance<ViewModel>(
+        viewDefinition: ViewDefinition<ViewModel>) : View<ViewModel> {
+
+        if (this.isViewConstructor(viewDefinition)) {
+            return new viewDefinition();
+        }
+
+        return {
+            template: viewDefinition
+        };
     }
 
     private transformElementsRecursively(

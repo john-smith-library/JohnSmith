@@ -1,6 +1,7 @@
 module.exports = {
   preset: 'ts-jest',
-  testEnvironment: 'node',
+  testEnvironment: 'jsdom',
+    testPathIgnorePatterns: ["/node_modules/", '/__tests__/_helpers.ts'],
     globals: {
       'js-test': {
         tsConfig: {
@@ -13,5 +14,8 @@ module.exports = {
             }
         }
       }
-    }
+    },
+    //"testRegex": "(/tests_e2e/.*|\\.(test|spec))\\.(ts|tsx)$",
+    //"testMatch": null,
+    //"moduleFileExtensions": ["js", "json", "jsx"]
 };

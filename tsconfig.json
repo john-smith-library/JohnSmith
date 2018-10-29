@@ -5,7 +5,9 @@
     "declaration": true,
     "outDir": "./dist",
     "strict": true,
-    "lib": ["dom", "es6"]
+    "lib": ["dom", "es6"],
+    "jsx": "react",
+    "jsxFactory": "JS.d"
   },
   "include": ["src"],
   "exclude": ["node_modules", "src/**/*.spec.ts"]

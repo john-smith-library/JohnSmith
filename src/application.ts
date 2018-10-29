@@ -1,4 +1,4 @@
-import {HtmlDefinition, View, DomElement} from "./dom";
+import {HtmlDefinition, View, DomElement, ViewDefinition} from "./dom";
 import {DomEngine} from "./dom/dom-engine";
 import {BindingRegistry, DefaultBindingRegistry} from "./binding/registry";
 import {DefaultViewRenderer, ViewRenderer} from "./dom/view-renderer";
@@ -22,7 +22,7 @@ export class Application {
 
     render<TApplicationViewModel>(
         element: HTMLElement|string,
-        view: { new(): View<TApplicationViewModel> },
+        view: ViewDefinition<TApplicationViewModel>,
         viewModel: TApplicationViewModel): Disposable {
 
         const actualElement: DomElement|null = this._domEngine.resolveElement(element);

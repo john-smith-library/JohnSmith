@@ -7,6 +7,9 @@ export interface HtmlDefinition {
     //text?: string|null;
 }
 
+export type ViewConstructor<T> = { new(): View<T> };
+export type ViewDefinition<T> = ViewConstructor<T>|((vm:T) => HtmlDefinition);
+
 export interface View<T> {
     template(viewModel:T): HtmlDefinition;
 }
