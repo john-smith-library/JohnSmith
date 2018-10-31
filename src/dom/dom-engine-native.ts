@@ -37,6 +37,12 @@ class NativeElement implements DomElement {
     detachEventHandler(event: string, handler: any): void {
         this.element.removeEventListener(event, handler);
     }
+
+    remove(): void {
+        if(this.element.parentNode) {
+            this.element.parentNode.removeChild(this.element);
+        }
+    }
 }
 
 class DomNativeText implements DomText {

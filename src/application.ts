@@ -6,9 +6,9 @@ import {NativeDomEngine} from "./dom/dom-engine-native";
 import {Disposable} from "./common";
 
 export class Application {
-    private _domEngine: DomEngine;
-    private _bindingRegistry: BindingRegistry;
-    private _viewRenderer: ViewRenderer;
+    private readonly _domEngine: DomEngine;
+    private readonly _bindingRegistry: BindingRegistry;
+    private readonly _viewRenderer: ViewRenderer;
 
     constructor(
         domEngine?: DomEngine,
@@ -33,53 +33,5 @@ export class Application {
         // todo: error
 
         return { dispose: () => {} }; // todo
-
-        // const viewInstance = new view();
-        //
-        // const
-        //     template = viewInstance.template(viewModel),
-        //     transformedTemplate = this.transform(template);
-        //
-        // if (transformedTemplate !== null)
-        // {
-        //     element.appendChild(transformedTemplate);
-        // }
     }
-
-    // private transform(source: HtmlDefinition): HTMLElement|null {
-    //     if (typeof source.element === 'string') {
-    //         let result = document.createElement(source.element);
-    //         if (source.text) {
-    //             result.innerText = source.text;
-    //         }
-    //
-    //         if (source.nested && source.nested.length > 0) {
-    //             for (let i = 0; i < source.nested.length; i++){
-    //                 let newChild = this.transform(source.nested[i]);
-    //                 if (newChild !== null)
-    //                 {
-    //                     result.appendChild(newChild);
-    //                 }
-    //             }
-    //         }
-    //
-    //         if (source.bindings['$text']) {
-    //             source.bindings['$text'].listen(value => {
-    //                 result.innerText = value;
-    //             });
-    //         }
-    //
-    //         if (source.attributes && source.attributes['_click']) {
-    //             result.addEventListener('click', () => { source.attributes['_click'](); })
-    //         }
-    //
-    //         return result;
-    //     }
-    //
-    //     if (typeof source.element === 'function') {
-    //
-    //     }
-    //
-    //     return null;
-    // }
 }

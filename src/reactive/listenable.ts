@@ -13,7 +13,7 @@ export interface ChangeDetails<T> {
 }
 
 export interface ListenerCallback<T> {
-    (value: T, oldValue?: T, details?: ChangeDetails<T>): void;
+    (value: T, oldValue: T, details: ChangeDetails<T>): void;
 }
 
 export interface Listenable<T> {

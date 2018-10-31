@@ -1,7 +1,9 @@
 import {ViewDefinition} from "../src/dom";
 import {Application} from "../src";
+import {Disposable} from '../src/common';
 
 export type ContainerCallback = (container: HTMLElement) => void;
+export type ViewCallback<ViewModel> = (container: HTMLElement, viewModel: ViewModel, view: Disposable) => void;
 
 export const setupAppContainer = (callback: ContainerCallback, containerId = 'app') => {
     return () => {
@@ -19,11 +21,11 @@ export const setupAppContainer = (callback: ContainerCallback, containerId = 'ap
 export function setupAppContainerAndRender<ViewModel>(
     viewDefinition: ViewDefinition<ViewModel>,
     viewModel: ViewModel,
-    callback: ContainerCallback,
+    callback: ViewCallback<ViewModel>,
     containerId = 'app') {
 
     return setupAppContainer(container => {
-        new Application().render(container, viewDefinition, viewModel);
-        callback(container);
+        const view = new Application().render(container, viewDefinition, viewModel);
+        callback(container, viewModel, view);
     });
 }

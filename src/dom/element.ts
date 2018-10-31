@@ -22,4 +22,6 @@ export interface DomElement {
     attachEventHandler(event: string, callback: () => void) : any;
 
     detachEventHandler(event: string, handler: any): void;
+
+    remove(): void;
 }
