@@ -43,6 +43,12 @@ class NativeElement implements DomElement {
             this.element.parentNode.removeChild(this.element);
         }
     }
+
+    addClass(className: string): void {
+    }
+
+    removeClass(className: string): void {
+    }
 }
 
 class DomNativeText implements DomText {

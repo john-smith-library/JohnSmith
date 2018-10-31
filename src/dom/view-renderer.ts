@@ -6,6 +6,9 @@ import {BindingRegistry} from "../binding/registry";
 import {Listenable, ObservableList} from '../reactive';
 import {ObservableListViewConnector, ObservableValueViewConnector} from './connectors';
 
+import '../binding/default';
+//import '../binding/ext/class';
+
 export interface ViewRenderer {
     /**
      * Renders a view into a DOM element and returns rendered disposable instance.
@@ -119,7 +122,11 @@ export class DefaultViewRenderer implements ViewRenderer {
     }
 
     private processView(source: HtmlDefinition, bindings: (() => Disposable)[], parent: DomElement) {
-        const viewModel: any = source.nested && source.nested.length > 0 ? source.nested[0] : null;
+        const viewModel: any|null = source.nested && source.nested.length > 0 ? source.nested[0] : null;
+
+        if (viewModel === null) {
+            return;
+        }
 
         if (viewModel.listen) {
             const
@@ -137,10 +144,7 @@ export class DefaultViewRenderer implements ViewRenderer {
             /**
              * Render single view
              */
-            bindings.push(() => this.render(
-                parent,
-                source.element,
-                viewModel));
+            bindings.push(() => this.render(parent, source.element, viewModel));
         }
     }
 

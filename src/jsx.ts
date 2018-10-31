@@ -3,8 +3,6 @@ import {DefaultIntrinsicElements} from "./default-intristic-element";
 declare global {
     namespace JSX {
         interface IElement extends DefaultIntrinsicElements{
-            $className?: any;
-            "js-name"?: string;
             [elemName: string]: any;
         }
 

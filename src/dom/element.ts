@@ -19,6 +19,10 @@ export interface DomElement {
 
     setAttribute(attribute: string, value: any): void;
 
+    addClass(className: string): void;
+
+    removeClass(className: string): void;
+
     attachEventHandler(event: string, callback: () => void) : any;
 
     detachEventHandler(event: string, handler: any): void;

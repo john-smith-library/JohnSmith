@@ -1,10 +1,11 @@
 import {Listenable} from "../reactive";
 
+import '../binding/default';
+
 export interface HtmlDefinition {
     element: any;
     attributes: { [key: string]: any };
     nested: (HtmlDefinition|string|Listenable<any>|any)[];
-    //text?: string|null;
 }
 
 export type ViewConstructor<T> = { new(): View<T> };
