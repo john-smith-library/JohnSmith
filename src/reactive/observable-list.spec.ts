@@ -105,7 +105,16 @@ describe('remove', () => {
         expect(value[4]).toBe(10);
     });
 
-    it('do nothing if value is null', () => {
+    it('does nothing if value not in list', function(){
+        const observable = new ObservableList<number>([1, 2, 3]);
+
+        observable.remove(5);
+
+        const value = observable.getRequiredValue();
+        expect(value.length).toBe(3);
+    });
+
+    it('does nothing if value is null', () => {
         const observable = new ObservableList<number>(null);
         observable.remove(1, 2, 3);
         expect(observable.getValue()).toBeNull();

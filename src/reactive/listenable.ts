@@ -25,3 +25,9 @@ export abstract class Observable<T> implements Listenable<T> {
 
     abstract listen(listener:  ListenerCallback<T>, raiseInitial?: boolean): Disposable;
 }
+
+export const isListenable = <T>(
+    source: (Listenable<T>)|T): source is Listenable<T> => {
+
+    return !!(<Listenable<T>>source).listen;
+};

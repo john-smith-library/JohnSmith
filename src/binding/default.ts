@@ -1,1 +1,2 @@
-import './ext/class';
+import './ext/className';
+import './ext/innerHTML';

@@ -169,6 +169,11 @@ pip-log.txt
 .idea/workspace.xml
 .idea/tasks.xml
 
+#############
+## Testing Artifacts
+#############
+
+coverage
 
 #############
 ## JohnSmith autogenerate

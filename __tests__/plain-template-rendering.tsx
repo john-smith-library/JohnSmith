@@ -50,6 +50,12 @@ it('should render nested markup', setupAppContainer((container) => {
     expect(container.innerHTML).toBe('<div><h1><b>John Smith</b></h1></div>');
 }));
 
+it('should render nested self-closing tg',
+    setupAppContainer((container) => {
+    new Application().render(container, vm => <article/>, {});
+    expect(container.innerHTML).toBe('<article></article>');
+}));
+
 it('should clean on dispose', setupAppContainer((container) => {
     new Application().render(container, ApplicationViewWithAttributes, {});
 

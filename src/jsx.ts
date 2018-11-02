@@ -9,12 +9,22 @@ declare global {
         interface IntrinsicElements  {
             [elemName: string]: IElement;
         }
+
+        interface IntrinsicClassAttributes<T>  {
+            viewModel?: any;
+            listViewModel?: any;
+        }
+
+        interface IntrinsicAttributes {
+            viewModel?: any;
+            listViewModel?: any;
+        }
     }
 
     const JS: { d: () => HtmlDefinition };
 }
 
-import { HtmlDefinition } from "./dom/view";
+import { HtmlDefinition } from './dom';
 
 function domConstruct(): HtmlDefinition {
     const

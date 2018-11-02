@@ -3,11 +3,10 @@ import {Disposable, Owner} from '../common';
 import {HtmlDefinition, View, ViewConstructor, ViewDefinition} from './view';
 import {DomEngine} from "./dom-engine";
 import {BindingRegistry} from "../binding/registry";
-import {Listenable, ObservableList} from '../reactive';
-import {ObservableListViewConnector, ObservableValueViewConnector} from './connectors';
+import {Listenable} from '../reactive';
+import {ObservableListViewConnector, ObservableValueViewConnector, ListenableAttributeConnector, ListenableTextConnector} from './connectors';
 
 import '../binding/default';
-//import '../binding/ext/class';
 
 export interface ViewRenderer {
     /**
@@ -122,29 +121,20 @@ export class DefaultViewRenderer implements ViewRenderer {
     }
 
     private processView(source: HtmlDefinition, bindings: (() => Disposable)[], parent: DomElement) {
-        const viewModel: any|null = source.nested && source.nested.length > 0 ? source.nested[0] : null;
-
-        if (viewModel === null) {
+        if (!source.attributes) {
             return;
         }
 
-        if (viewModel.listen) {
-            const
-                viewModelListenable = <Listenable<any>>viewModel,
-                viewDefinition = source.element;
+        const viewDefinition = source.element;
 
-            if (viewModelListenable instanceof ObservableList) {
-                bindings.push(() => new ObservableListViewConnector(
-                    viewModelListenable, parent, viewDefinition, this));
-            } else {
-                bindings.push(() => new ObservableValueViewConnector(
-                    viewModelListenable, parent, viewDefinition, this));
-            }
+        const viewModel: any|null = source.attributes.viewModel;
+        if (viewModel) {
+            bindings.push(() => new ObservableValueViewConnector(viewModel, parent, viewDefinition, this));
         } else {
-            /**
-             * Render single view
-             */
-            bindings.push(() => this.render(parent, source.element, viewModel));
+            const listViewModel: any|null = source.attributes.listViewModel;
+            if (listViewModel) {
+                bindings.push(() => new ObservableListViewConnector(listViewModel, parent, viewDefinition, this));
+            }
         }
     }
 
@@ -166,11 +156,7 @@ export class DefaultViewRenderer implements ViewRenderer {
 
                 result.appendText(connectorTarget);
 
-                bindings.push(() => {
-                    return connectorSource.listen(v => connectorTarget.setText(v == null ? '' : v.toString()));
-                    // todo: dispose connector target
-                });
-                // todo: handle default binding
+                bindings.push(() => new ListenableTextConnector(connectorSource, connectorTarget));
             } else {
                 /**
                  * All the unknown elements rendered as strings
@@ -181,15 +167,15 @@ export class DefaultViewRenderer implements ViewRenderer {
     }
 
     private processElementAttributes(source: HtmlDefinition, bindings: (() => Disposable)[], result: DomElement) {
-        for (const attributeKey in source.attributes) {
-            const attrPrefix = attributeKey && attributeKey.length > 0 ? attributeKey[0] : null;
-            const attributeValue = source.attributes[attributeKey];
+        for (const attributeName in source.attributes) {
+            const attrPrefix = attributeName && attributeName.length > 0 ? attributeName[0] : null;
+            const attributeValue = source.attributes[attributeName];
 
             if (attrPrefix === '$') {
-                bindings.push(() => this.configureBinding(result, attributeKey, attributeValue));
+                bindings.push(() => this.configureBinding(result, attributeName, attributeValue));
             } else if (attrPrefix === '_') {
                 // todo: events
-                const eventKey = attributeKey.substr(1);
+                const eventKey = attributeName.substr(1);
                 bindings.push(() => {
                     const handle = result.attachEventHandler(eventKey, attributeValue);
 
@@ -198,7 +184,18 @@ export class DefaultViewRenderer implements ViewRenderer {
                     };
                 });
             } else {
-                result.setAttribute(attributeKey, attributeValue);
+                if (typeof attributeValue === 'string') {
+                    /**
+                     * We could avoid this "if" condition because ListenableAttributeConnector
+                     * can handle both static and listenable, but we set string attributes here
+                     * directly because of two reasons:
+                     *  - performance
+                     *  - to avoid confusion with class atribute vs className binding.
+                     */
+                    result.setAttribute(attributeName, attributeValue);
+                } else  {
+                    bindings.push(() => new ListenableAttributeConnector(attributeValue, result, attributeName));
+                }
             }
         }
     }

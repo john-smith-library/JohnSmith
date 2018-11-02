@@ -13,13 +13,7 @@ class ViewModel {
 
 class ApplicationView implements View<ViewModel>{
     template(viewModel: ViewModel){
-        return <div $class={viewModel.status}></div>;
-    }
-}
-
-class ApplicationViewWithCustomClasses implements View<ViewModel>{
-    template(viewModel: ViewModel){
-        return <div class="app" $class={viewModel.status}></div>;
+        return <div class={viewModel.status}></div>;
     }
 }
 
@@ -28,19 +22,14 @@ it('should render initial class attribute',
         expect(container.innerHTML).toBe('<div class="active"></div>');
     }));
 
-it('should update on change',
+it('should update class attribute',
     setupAppContainerAndRender(ApplicationView, new ViewModel('active'),(container, viewModel) => {
-        viewModel.status.setValue('new');
-        expect(container.innerHTML).toBe('<div class="new"></div>');
+        viewModel.status.setValue('updated');
+        expect(container.innerHTML).toBe('<div class="updated"></div>');
     }));
 
-it('should overwrite existing classes',
-    setupAppContainerAndRender(ApplicationViewWithCustomClasses, new ViewModel('active'),(container, viewModel) => {
-        expect(container.innerHTML).toBe('<div class="active"></div>');
-    }));
-
-it('should clear on null',
+it('should remove attribute on null',
     setupAppContainerAndRender(ApplicationView, new ViewModel('active'),(container, viewModel) => {
         viewModel.status.setValue(null);
-        expect(container.innerHTML).toBe('<div class=""></div>');
+        expect(container.innerHTML).toBe('<div></div>');
     }));

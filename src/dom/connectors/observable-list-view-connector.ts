@@ -1,8 +1,9 @@
 import {Disposable} from '../../common';
-import {ObservableList, DataChangeReason} from '../../reactive';
+import {DataChangeReason, Listenable} from '../../reactive';
 import {DomElement} from '../element';
 import {ViewDefinition} from '../view';
 import {ViewRenderer} from '../view-renderer';
+import {isListenable} from '../../reactive';
 
 interface IRenderedValueData {
     value: any;
@@ -14,21 +15,26 @@ interface IRenderedValueData {
  * Renders changed lists items on observable updates.
  */
 export class ObservableListViewConnector<T> implements Disposable {
-    private readonly _link: Disposable;
+    private readonly _link: Disposable|null = null;
 
     private _renderedValues: IRenderedValueData[];
 
     constructor(
-        private _observable: ObservableList<T>,
+        private _observable: Listenable<T[]>|T[],
         private _contentDestination: DomElement,
         private _viewDefinition: ViewDefinition<T>,
         private _viewRenderer: ViewRenderer){
 
         this._renderedValues = [];
-        this._link = _observable.listen(
-            (value, oldValue, details) => {
-                this.doRender(details.portion || [], details.reason);
-            });
+
+        if (_observable !== null && isListenable(_observable)) {
+            this._link = _observable.listen(
+                (value, oldValue, details) => {
+                    this.doRender(details.portion || [], details.reason);
+                });
+        } else {
+            this.doRender(_observable, DataChangeReason.replace);
+        }
     }
 
     dispose():void {

@@ -1,8 +1,14 @@
 /**
  * DomText is a wrapper around browser TextNode
  */
+
 export interface DomText {
     setText(value: string): void;
+}
+
+export interface DomElementClasses {
+    add(className: string): void;
+    remove(className: string): void;
 }
 
 /**
@@ -19,13 +25,15 @@ export interface DomElement {
 
     setAttribute(attribute: string, value: any): void;
 
-    addClass(className: string): void;
-
-    removeClass(className: string): void;
+    removeAttribute(attribute: string): void;
 
     attachEventHandler(event: string, callback: () => void) : any;
 
     detachEventHandler(event: string, handler: any): void;
 
     remove(): void;
+
+    createClassNames(): DomElementClasses;
+
+    setInnerHtml(value: string): void;
 }

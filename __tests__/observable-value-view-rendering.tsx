@@ -26,7 +26,7 @@ class PersonView implements View<PersonViewModel>{
 
 class ApplicationView implements View<ApplicationViewModel>{
     template(viewModel: ApplicationViewModel){
-        return <div><PersonView>{viewModel.person}</PersonView></div>;
+        return <div><PersonView viewModel={viewModel.person}/></div>;
     }
 }
 

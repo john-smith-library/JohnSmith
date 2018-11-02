@@ -1,5 +1,33 @@
-import {DomElement, DomText} from "./element";
+import {DomElement, DomElementClasses, DomText} from "./element";
 import {DomEngine} from "./dom-engine";
+
+class ManualDomElementClasses implements DomElementClasses {
+    private readonly _classNames:string[];
+
+    constructor(private element: HTMLElement){
+        const className = element.className;
+        this._classNames = className === '' ? [] : className.split(' ');
+    }
+
+    add(className: string): void {
+        if (this._classNames.indexOf(className) < 0) {
+            this._classNames.push(className);
+            this.updateElementClass();
+        }
+    }
+
+    remove(className: string): void {
+        const index = this._classNames.indexOf(className);
+        if (index >= 0) {
+            this._classNames.splice(index, 1);
+            this.updateElementClass();
+        }
+    }
+
+    private updateElementClass() {
+        this.element.className = this._classNames.join(' ');
+    }
+}
 
 /**
  * DomElement based on DOM Core level 2 API
@@ -13,6 +41,10 @@ class NativeElement implements DomElement {
         this.element.innerText = value;
     }
 
+    setInnerHtml(value: string): void {
+        this.element.innerHTML = value;
+    }
+
     appendChild(value: DomElement): void {
         this.element.appendChild((<NativeElement>value).element);
     }
@@ -23,6 +55,10 @@ class NativeElement implements DomElement {
 
     setAttribute(attribute: string, value: any): void {
         this.element.setAttribute(attribute, value);
+    }
+
+    removeAttribute(attribute: string): void {
+        this.element.removeAttribute(attribute);
     }
 
     setInnerElement(value: DomElement): void {
@@ -44,10 +80,8 @@ class NativeElement implements DomElement {
         }
     }
 
-    addClass(className: string): void {
-    }
-
-    removeClass(className: string): void {
+    createClassNames(): DomElementClasses {
+        return new ManualDomElementClasses(this.element);
     }
 }
 

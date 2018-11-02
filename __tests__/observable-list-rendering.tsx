@@ -20,7 +20,7 @@ class ItemView implements View<string>{
 
 class ListView implements View<ViewModel>{
     template(viewModel: ViewModel){
-        return <ul><ItemView>{viewModel.items}</ItemView></ul>;
+        return <ul><ItemView listViewModel={viewModel.items}/></ul>;
     }
 }
 
@@ -52,3 +52,10 @@ it('should clean on clear',
        viewModel.items.clear();
        expect(container.innerHTML).toBe('<ul></ul>');
 }));
+
+it('should clean listeners on dispose',
+    setupAppContainerAndRender(ListView, new ViewModel(['1', '2', '3']),(container, viewModel, view) => {
+        expect(viewModel.items.getListenersCount()).toBeGreaterThan(0);
+        view.dispose();
+        expect(viewModel.items.getListenersCount()).toBe(0);
+    }));

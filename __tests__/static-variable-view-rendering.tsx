@@ -23,7 +23,19 @@ class PersonView implements View<Person>{
 
 class ApplicationView implements View<ApplicationViewModel>{
     template(viewModel: ApplicationViewModel){
-        return <div><PersonView>{viewModel.person}</PersonView></div>;
+        return <div><PersonView viewModel={viewModel.person}></PersonView></div>;
+    }
+}
+
+class ApplicationViewNoNestedViewModel implements View<ApplicationViewModel>{
+    template(viewModel: ApplicationViewModel){
+        return <span><PersonView></PersonView></span>;
+    }
+}
+
+class ApplicationViewWithRootNested implements View<ApplicationViewModel>{
+    template(viewModel: ApplicationViewModel){
+        return <PersonView viewModel={viewModel.person}></PersonView>;
     }
 }
 
@@ -34,8 +46,18 @@ it('should render static value',
         expect(container.innerHTML).toBe('<div><article>John Smith</article></div>');
     }));
 
+it('nested view can be the root',
+    setupAppContainerAndRender(ApplicationViewWithRootNested, new ApplicationViewModel(JOHN_SMITH),(container, viewModel) => {
+        expect(container.innerHTML).toBe('<article>John Smith</article>');
+    }));
+
 it('should be empty on null',
     setupAppContainerAndRender(ApplicationView, new ApplicationViewModel(null),(container, viewModel) => {
         expect(container.innerHTML).toBe('<div></div>');
+    }));
+
+it('should be empty if no viewModel provided',
+    setupAppContainerAndRender(ApplicationViewNoNestedViewModel, new ApplicationViewModel(null),(container, viewModel) => {
+        expect(container.innerHTML).toBe('<span></span>');
     }));
 
