@@ -1,7 +1,5 @@
 import {Application} from "../src/application";
-import {HtmlDefinition, View} from "../src/dom/view";
-
-import '../src/jsx';
+import {HtmlDefinition, View} from "../src/view/view-definition";
 
 import {ObservableValue} from "../src/reactive";
 

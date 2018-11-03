@@ -1,6 +1,6 @@
 import { DomElement } from './element';
 import {Disposable, Owner} from '../common';
-import {HtmlDefinition, View, ViewConstructor, ViewDefinition} from './view';
+import {HtmlDefinition, View, ViewConstructor, ViewDefinition} from './view-definition';
 import {DomEngine} from "./dom-engine";
 import {BindingRegistry} from "../binding/registry";
 import {Listenable} from '../reactive';

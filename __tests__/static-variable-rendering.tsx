@@ -1,4 +1,3 @@
-import '../src/jsx';
 import {setupAppContainerAndRender} from "./_helpers";
 
 it('should render static string from vm', setupAppContainerAndRender(

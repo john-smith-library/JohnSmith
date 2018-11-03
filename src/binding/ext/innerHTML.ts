@@ -1,8 +1,8 @@
 import {DefaultBindingRegistry} from "../registry";
-import {DefaultIntrinsicElements} from "../../default-intristic-element";
+import {DefaultIntrinsicElements} from "../../view/jsx/default-intristic-element";
 import {Listenable} from "../../reactive";
-import {DomElement} from "../../dom/element";
-import {AbstractListenableConnector} from '../../dom/connectors/abstract';
+import {DomElement} from "../../view/element";
+import {AbstractListenableConnector} from '../../view/connectors/abstract';
 
 DefaultBindingRegistry.prototype['$innerHTML'] = (element: DomElement, bindingArgs: any) => {
     return new AbstractListenableConnector(bindingArgs, (value: any) => {
@@ -24,7 +24,7 @@ DefaultBindingRegistry.prototype['$innerHTML'] = (element: DomElement, bindingAr
     // return { dispose: () => {} }; // todo
 };
 
-declare module '../../default-intristic-element' {
+declare module '../../view/jsx/default-intristic-element' {
     interface DefaultIntrinsicElements {
         $innerHTML?: Listenable<string|null>|string
     }

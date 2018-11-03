@@ -1,7 +1,6 @@
 import {Application} from "../src/application";
-import {HtmlDefinition, View} from "../src/dom";
+import {HtmlDefinition, View} from "../src/view";
 import {setupAppContainer} from './_helpers';
-import '../src/jsx';
 
 class ApplicationView implements View<{}>{
     template(viewModel: {}): HtmlDefinition {

@@ -1,6 +1,5 @@
-import '../src/jsx';
 import {setupAppContainerAndRender} from "./_helpers";
-import {View} from '../src/dom';
+import {View} from '../src/view';
 
 class ViewModel {
     constructor(public readonly items: number[]|null) {

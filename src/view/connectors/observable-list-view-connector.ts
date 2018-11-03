@@ -1,7 +1,7 @@
 import {Disposable} from '../../common';
 import {DataChangeReason, Listenable} from '../../reactive';
 import {DomElement} from '../element';
-import {ViewDefinition} from '../view';
+import {ViewDefinition} from '../view-definition';
 import {ViewRenderer} from '../view-renderer';
 import {isListenable} from '../../reactive';
 

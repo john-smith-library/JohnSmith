@@ -1,9 +1,10 @@
-import {HtmlDefinition, View, DomElement, ViewDefinition} from "./dom";
-import {DomEngine} from "./dom/dom-engine";
+import {HtmlDefinition, View, DomElement, ViewDefinition} from "./view";
+import {DomEngine} from "./view/dom-engine";
 import {BindingRegistry, DefaultBindingRegistry} from "./binding/registry";
-import {DefaultViewRenderer, ViewRenderer} from "./dom/view-renderer";
-import {NativeDomEngine} from "./dom/dom-engine-native";
+import {DefaultViewRenderer, ViewRenderer} from "./view/view-renderer";
+import {NativeDomEngine} from "./view/dom-engine-native";
 import {Disposable} from "./common";
+import { JxsInitializer } from './view/jsx/initializer';
 
 export class Application {
     private readonly _domEngine: DomEngine;
@@ -18,6 +19,8 @@ export class Application {
         this._domEngine = domEngine || new NativeDomEngine();
         this._bindingRegistry = bindingRegistry || new DefaultBindingRegistry();
         this._viewRenderer = viewRenderer || new DefaultViewRenderer(this._domEngine, this._bindingRegistry);
+
+        JxsInitializer();
     }
 
     render<TApplicationViewModel>(

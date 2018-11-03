@@ -1,7 +1,6 @@
 import {ObservableValue} from '../src/reactive';
 import {setupAppContainerAndRender} from './_helpers';
-import {View} from '../src/dom';
-import '../src/jsx';
+import {View} from '../src/view';
 
 class ViewModel {
     content: ObservableValue<string>;

@@ -1,5 +1,5 @@
 import {Listenable} from '../../reactive';
-import {ViewDefinition} from '../view';
+import {ViewDefinition} from '../view-definition';
 import {ViewRenderer} from '../view-renderer';
 import {DomElement} from '../element';
 import {AbstractListenableConnector} from './abstract';

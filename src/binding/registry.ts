@@ -1,5 +1,5 @@
 import {Disposable} from "../common";
-import {DomElement} from "../dom/element";
+import {DomElement} from "../view/element";
 
 export interface Binding
 {

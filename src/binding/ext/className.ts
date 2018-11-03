@@ -1,7 +1,7 @@
 import {DefaultBindingRegistry} from '../registry';
-import {DomElement} from '../../dom';
+import {DomElement} from '../../view';
 import {Listenable} from '../../reactive';
-import {AbstractListenableConnector} from '../../dom/connectors/abstract';
+import {AbstractListenableConnector} from '../../view/connectors/abstract';
 
 DefaultBindingRegistry.prototype['$className'] = (element: DomElement, bindingArgs: any) => {
     const classNames = element.createClassNames();
@@ -23,7 +23,7 @@ DefaultBindingRegistry.prototype['$className'] = (element: DomElement, bindingAr
         });
 };
 
-declare module '../../default-intristic-element' {
+declare module '../../view/jsx/default-intristic-element' {
     interface DefaultIntrinsicElements {
         $className?: Listenable<string|null>|string
     }

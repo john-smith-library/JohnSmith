@@ -1,4 +1,4 @@
-import {ViewDefinition} from "../src/dom";
+import {ViewDefinition} from "../src/view";
 import {Application} from "../src";
 import {Disposable} from '../src/common';
 
