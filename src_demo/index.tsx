@@ -2,7 +2,6 @@ import {Application} from "../src/application";
 import {HtmlDefinition, View} from "../src/dom/view";
 
 import '../src/jsx';
-import '../src/binding/ext/innerText';
 
 import {ObservableValue} from "../src/reactive";
 

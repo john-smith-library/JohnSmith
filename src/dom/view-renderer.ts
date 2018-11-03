@@ -19,6 +19,8 @@ export interface ViewRenderer {
     render<ViewModel>(element: DomElement, view: ViewDefinition<ViewModel>, viewModel: ViewModel): Disposable;
 }
 
+type ViewRuntimeData = { template: HtmlDefinition, viewInstance?: any /* todo: typings */ };
+
 export class DefaultViewRenderer implements ViewRenderer {
     constructor(
         private domEngine: DomEngine,
@@ -31,8 +33,9 @@ export class DefaultViewRenderer implements ViewRenderer {
         viewModel: ViewModel): Disposable {
 
         const
-            viewInstance = this.createViewInstance<ViewModel>(view),
-            template = viewInstance.template(viewModel);
+            //viewInstance = this.createViewInstance<ViewModel>(view),
+            viewRuntime = this.createViewRuntime(view, viewModel),
+            template = viewRuntime.template; //viewInstance.template(viewModel);
 
         const
             initializers: (() => Disposable)[] = [],
@@ -59,23 +62,43 @@ export class DefaultViewRenderer implements ViewRenderer {
         return result;
     }
 
-    private isViewConstructor<ViewModel>(
-        viewDefinition: ViewDefinition<ViewModel>): viewDefinition is ViewConstructor<ViewModel> {
+    private createViewRuntime<ViewModel> (
+        viewDefinition: ViewDefinition<ViewModel>,
+        viewModel:ViewModel) : ViewRuntimeData {
+        const
+            viewDefinitionUntyped = <any>viewDefinition,
+            instance = new viewDefinitionUntyped(viewModel);
 
-        return !!viewDefinition.prototype.template;
-    }
-
-    private createViewInstance<ViewModel>(
-        viewDefinition: ViewDefinition<ViewModel>) : View<ViewModel> {
-
-        if (this.isViewConstructor(viewDefinition)) {
-            return new viewDefinition();
+        if (instance.template) {
+            return {
+                template: instance.template(viewModel),
+                viewInstance: instance
+            };
         }
 
         return {
-            template: viewDefinition
-        };
+            template: instance
+        }
     }
+
+    // private isViewConstructor<ViewModel>(
+    //     viewDefinition: ViewDefinition<ViewModel>): viewDefinition is ViewConstructor<ViewModel> {
+    //
+    //     return !!viewDefinition.prototype.template;
+    // }
+    //
+    // private createViewInstance<ViewModel>(
+    //     viewDefinition: ViewDefinition<ViewModel>) : View<ViewModel> {
+    //
+    //     const instance = new viewDefinition()
+    //     if (this.isViewConstructor(viewDefinition)) {
+    //         return new viewDefinition();
+    //     }
+    //
+    //     return {
+    //         template: viewDefinition
+    //     };
+    // }
 
     private transformElementsRecursively(
         parent: DomElement,

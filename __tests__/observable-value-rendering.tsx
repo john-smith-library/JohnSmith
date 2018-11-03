@@ -39,3 +39,10 @@ it('can mix text, static variables and observable inside a single element',
        viewModel.message.setValue('updated');
        expect(container.innerHTML).toBe('<div>Message1: updated, message2: static string</div>');
 }));
+
+it('should clean listeners on dispose',
+    setupAppContainerAndRender(TestView, new ViewModel(),(container, viewModel, view) => {
+        expect(viewModel.message.getListenersCount()).toBeGreaterThan(0);
+        view.dispose();
+        expect(viewModel.message.getListenersCount()).toBe(0);
+    }));

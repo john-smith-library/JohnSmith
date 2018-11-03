@@ -33,3 +33,10 @@ it('should remove attribute on null',
         viewModel.status.setValue(null);
         expect(container.innerHTML).toBe('<div></div>');
     }));
+
+it('should clean listeners on dispose',
+    setupAppContainerAndRender(ApplicationView, new ViewModel('active'),(container, viewModel, view) => {
+        expect(viewModel.status.getListenersCount()).toBeGreaterThan(0);
+        view.dispose();
+        expect(viewModel.status.getListenersCount()).toBe(0);
+    }));
