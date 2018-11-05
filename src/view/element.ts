@@ -36,4 +36,12 @@ export interface DomElement {
     createClassNames(): DomElementClasses;
 
     setInnerHtml(value: string): void;
+
+    getValue(): string;
+
+    setValue(value: string): void;
+
+    isChecked(): boolean;
+
+    setChecked(value: boolean): void;
 }

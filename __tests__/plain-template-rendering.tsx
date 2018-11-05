@@ -20,6 +20,12 @@ class ApplicationViewWithNestedMarkup implements View<{}>{
     }
 }
 
+class ApplicationViewWithNoValueAttribute implements View<{}>{
+    template(viewModel: {}): HtmlDefinition {
+        return <input type="checkbox" checked/>;
+    }
+}
+
 const ApplicationViewFunction = (vm: {}) => <div>John Smith Function</div>;
 
 it('should render', setupAppContainer((container) => {
@@ -59,4 +65,10 @@ it('should clean on dispose', setupAppContainer((container) => {
     new Application().render(container, ApplicationViewWithAttributes, {});
 
     expect(container.innerHTML).toBe('<div id="appRoot" class="app-container">John Smith</div>');
+}));
+
+it('should respect no-value attributes', setupAppContainer((container) => {
+    new Application().render(container, ApplicationViewWithNoValueAttribute, {});
+
+    expect(document.getElementsByTagName('input')[0].checked).toBeTruthy();
 }));

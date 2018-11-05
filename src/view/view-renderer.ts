@@ -20,6 +20,8 @@ export interface ViewRenderer {
 }
 
 type ViewRuntimeData = { template: HtmlDefinition, viewInstance?: any /* todo: typings */ };
+type Initializers = (() => Disposable)[];
+type TraversingContext = { viewInstance: any, viewModel: any };
 
 export class DefaultViewRenderer implements ViewRenderer {
     constructor(
@@ -33,13 +35,16 @@ export class DefaultViewRenderer implements ViewRenderer {
         viewModel: ViewModel): Disposable {
 
         const
-            //viewInstance = this.createViewInstance<ViewModel>(view),
             viewRuntime = this.createViewRuntime(view, viewModel),
-            template = viewRuntime.template; //viewInstance.template(viewModel);
+            template = viewRuntime.template;
 
         const
-            initializers: (() => Disposable)[] = [],
-            transformedTemplate = this.transformElementsRecursively(element, template, initializers);
+            initializers: Initializers = [],
+            context: TraversingContext = {
+                viewInstance: viewRuntime.viewInstance,
+                viewModel: viewModel
+            },
+            transformedTemplate = this.transformElementsRecursively(element, template, initializers, context);
 
         const result = new Owner();
 
@@ -81,29 +86,11 @@ export class DefaultViewRenderer implements ViewRenderer {
         }
     }
 
-    // private isViewConstructor<ViewModel>(
-    //     viewDefinition: ViewDefinition<ViewModel>): viewDefinition is ViewConstructor<ViewModel> {
-    //
-    //     return !!viewDefinition.prototype.template;
-    // }
-    //
-    // private createViewInstance<ViewModel>(
-    //     viewDefinition: ViewDefinition<ViewModel>) : View<ViewModel> {
-    //
-    //     const instance = new viewDefinition()
-    //     if (this.isViewConstructor(viewDefinition)) {
-    //         return new viewDefinition();
-    //     }
-    //
-    //     return {
-    //         template: viewDefinition
-    //     };
-    // }
-
     private transformElementsRecursively(
         parent: DomElement,
         source: HtmlDefinition,
-        bindings: (() => Disposable)[]): DomElement | null {
+        bindings: (() => Disposable)[],
+        context: TraversingContext): DomElement | null {
 
         if (typeof source.element === 'string') {
             /**
@@ -116,10 +103,10 @@ export class DefaultViewRenderer implements ViewRenderer {
             let result = this.domEngine.createElement(source.element);
 
             if (source.nested) {
-                this.processElementNested(source, result, bindings);
+                this.processElementNested(source, result, bindings, context);
             }
 
-            this.processElementAttributes(source, bindings, result);
+            this.processElementAttributes(source, bindings, result, context);
 
             return result;
         }
@@ -161,12 +148,17 @@ export class DefaultViewRenderer implements ViewRenderer {
         }
     }
 
-    private processElementNested(source: HtmlDefinition, result: DomElement, bindings: (() => Disposable)[]) {
+    private processElementNested(
+        source: HtmlDefinition,
+        result: DomElement,
+        bindings: (() => Disposable)[],
+        context: TraversingContext) {
+
         for (let i = 0; i < source.nested.length; i++) {
             const nested = source.nested[i];
 
             if (nested.element) {
-                let newChild = this.transformElementsRecursively(result, nested, bindings);
+                let newChild = this.transformElementsRecursively(result, nested, bindings, context);
                 if (newChild !== null) {
                     result.appendChild(newChild);
                 }
@@ -189,7 +181,12 @@ export class DefaultViewRenderer implements ViewRenderer {
         }
     }
 
-    private processElementAttributes(source: HtmlDefinition, bindings: (() => Disposable)[], result: DomElement) {
+    private processElementAttributes(
+        source: HtmlDefinition,
+        bindings: (() => Disposable)[],
+        result: DomElement,
+        context: TraversingContext) {
+
         for (const attributeName in source.attributes) {
             const attrPrefix = attributeName && attributeName.length > 0 ? attributeName[0] : null;
             const attributeValue = source.attributes[attributeName];
@@ -197,15 +194,8 @@ export class DefaultViewRenderer implements ViewRenderer {
             if (attrPrefix === '$') {
                 bindings.push(() => this.configureBinding(result, attributeName, attributeValue));
             } else if (attrPrefix === '_') {
-                // todo: events
-                const eventKey = attributeName.substr(1);
-                bindings.push(() => {
-                    const handle = result.attachEventHandler(eventKey, attributeValue);
+                bindings.push(this.createEventInitializer(result, attributeName, attributeValue, context))
 
-                    return {
-                        dispose: () => result.detachEventHandler(eventKey, handle)
-                    };
-                });
             } else {
                 if (typeof attributeValue === 'string') {
                     /**
@@ -226,5 +216,24 @@ export class DefaultViewRenderer implements ViewRenderer {
     private configureBinding(element: DomElement, bindingCode: string, bindingArgs: any) {
         // todo handle unknown binding issues
         return this.bindingRegistry[bindingCode](element, bindingArgs);
+    }
+
+    private createEventInitializer(result: DomElement, attributeName: string, attributeValue: any, context: TraversingContext): () => Disposable {
+        const { eventKey, eventThis } =
+            attributeName.length > 1 && attributeName[1] === '_' ?
+                { eventKey: attributeName.substr(2), eventThis: context.viewInstance } :
+                { eventKey: attributeName.substr(1), eventThis: context.viewModel };
+
+        return () => {
+            const rawCallback = <Function>attributeValue,
+                eventCallback = function() {
+                    rawCallback.apply(eventThis, arguments);
+                },
+                handle = result.attachEventHandler(eventKey, eventCallback);
+
+            return {
+                dispose: () => result.detachEventHandler(eventKey, handle)
+            };
+        };
     }
 }

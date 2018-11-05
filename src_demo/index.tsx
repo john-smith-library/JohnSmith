@@ -2,6 +2,7 @@ import {Application} from "../src/application";
 import {HtmlDefinition, View} from "../src/view/view-definition";
 
 import {ObservableValue} from "../src/reactive";
+import {BidirectionalValue} from '../src/reactive/bidirectional-value';
 
 
 class DetailsViewModel {
@@ -21,8 +22,9 @@ class DetailsView implements View<DetailsViewModel> {
 }
 
 class ApplicationViewModel {
-    firstName = new ObservableValue();
+    firstName = new BidirectionalValue<string>(() => {});
     lastName = new ObservableValue();
+    rememberMe = new BidirectionalValue<boolean>(() => {});
 
     update() {
         this.firstName.setValue(this.firstName.getValue() + '1');
@@ -46,11 +48,21 @@ class ApplicationView implements View<ApplicationViewModel> {
                 </tr>
             </table>
             <div>
-                <button _click={() => vw.update()}>Update</button>
+                <button _click={vw.update}>Update</button>
             </div>
 
             <section>
                 <DetailsView>{new DetailsViewModel('Hello, John Smith!')}</DetailsView>
+            </section>
+
+            <section>
+                <input $value={[vw.firstName, 'keyup']}/>
+            </section>
+
+            <section>Checked: {vw.rememberMe}</section>
+
+            <section>
+                <input type="checkbox" $checked={vw.rememberMe} />
             </section>
         </section>
 }

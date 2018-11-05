@@ -20,6 +20,10 @@ export interface Listenable<T> {
     listen(listener:  ListenerCallback<T>, raiseInitial?: boolean): Disposable;
 }
 
+export interface BidirectionalListenable<T> extends Listenable<T> {
+    requestUpdate(newValue: T|null): void;
+}
+
 export abstract class Observable<T> implements Listenable<T> {
     abstract getValue(): T;
 

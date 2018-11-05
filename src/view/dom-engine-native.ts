@@ -83,6 +83,22 @@ class NativeElement implements DomElement {
     createClassNames(): DomElementClasses {
         return new ManualDomElementClasses(this.element);
     }
+
+    getValue(): string {
+        return (<HTMLInputElement>this.element).value;
+    }
+
+    setValue(value: string): void {
+        (<HTMLInputElement>this.element).value = value;
+    }
+
+    isChecked(): boolean {
+        return (<HTMLInputElement>this.element).checked;
+    }
+
+    setChecked(value: boolean): void {
+        (<HTMLInputElement>this.element).checked = value;
+    }
 }
 
 class DomNativeText implements DomText {
