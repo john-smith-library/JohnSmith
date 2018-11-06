@@ -1,8 +1,8 @@
 import { ObservableValue } from './observable-value';
 import {BidirectionalListenable} from './listenable';
 
-type ChangeHandlerResult<T> = { newValue: T };
-type ChangeHandler<T> = (value: T|null) => boolean|null|undefined|void|ChangeHandlerResult<T>;
+export type ChangeHandlerResult<T> = { newValue: T };
+export type ChangeHandler<T> = (value: T|null) => boolean|null|undefined|void|ChangeHandlerResult<T>;
 
 export class BidirectionalValue<T> extends ObservableValue<T> implements BidirectionalListenable<T|null> {
     constructor(private changeHandler: ChangeHandler<T>, value?: T | null) {

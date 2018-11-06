@@ -3,6 +3,7 @@ import {HtmlDefinition, View} from "../src/view/view-definition";
 
 import {ObservableValue} from "../src/reactive";
 import {BidirectionalValue} from '../src/reactive/bidirectional-value';
+import {DomElement} from '../src/view';
 
 
 class DetailsViewModel {
@@ -17,8 +18,14 @@ class DetailsView implements View<DetailsViewModel> {
     template = (vm: DetailsViewModel) =>
         <section>
             <header>Details View</header>
-            <section $innerText="test">Details content {vm.message}</section>
-        </section>
+            <section>Details content {vm.message}</section>
+            <section $bind={this.bindSection}></section>
+        </section>;
+
+    bindSection(dom: DomElement, viewModel: DetailsViewModel) {
+        dom.setInnerText('Custom dom manipulation');
+        dom.setAttribute('style', 'color: green');
+    }
 }
 
 class ApplicationViewModel {
@@ -52,7 +59,7 @@ class ApplicationView implements View<ApplicationViewModel> {
             </div>
 
             <section>
-                <DetailsView>{new DetailsViewModel('Hello, John Smith!')}</DetailsView>
+                <DetailsView viewModel={new DetailsViewModel('Hello, John Smith!')}></DetailsView>
             </section>
 
             <section>

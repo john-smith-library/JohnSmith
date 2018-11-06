@@ -1,3 +1,6 @@
+import {DomElement} from '../element';
+import {Disposable} from '../../common';
+
 export interface DefaultIntrinsicElements {
-    test?: string;
+    $bind?: (domElement: DomElement, viewModel: any) => void|Disposable|(Disposable[]);
 }

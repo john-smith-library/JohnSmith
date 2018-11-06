@@ -1,5 +1,5 @@
 import { DomElement } from './element';
-import {Disposable, Owner} from '../common';
+import {Disposable, NoopDisposable, Owner} from '../common';
 import {HtmlDefinition, View, ViewConstructor, ViewDefinition} from './view-definition';
 import {DomEngine} from "./dom-engine";
 import {BindingRegistry} from "../binding/registry";
@@ -191,7 +191,27 @@ export class DefaultViewRenderer implements ViewRenderer {
             const attrPrefix = attributeName && attributeName.length > 0 ? attributeName[0] : null;
             const attributeValue = source.attributes[attributeName];
 
-            if (attrPrefix === '$') {
+            if (attributeName === '$bind') {
+                if (attributeValue) {
+                    bindings.push(() => {
+                        const
+                            bindCallback = <Function>attributeValue,
+                            bindResult = bindCallback.call(context.viewInstance, result, context.viewModel);
+
+                        if (bindResult) {
+                            if (bindResult.dispose) {
+                                return bindResult;
+                            }
+
+                            if (bindResult.length) {
+                                return new Owner(bindResult);
+                            }
+                        }
+
+                        return NoopDisposable;
+                    });
+                }
+            } else if (attrPrefix === '$') {
                 bindings.push(() => this.configureBinding(result, attributeName, attributeValue));
             } else if (attrPrefix === '_') {
                 bindings.push(this.createEventInitializer(result, attributeName, attributeValue, context))

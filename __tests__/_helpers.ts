@@ -29,3 +29,26 @@ export function setupAppContainerAndRender<ViewModel>(
         callback(container, viewModel, view);
     });
 }
+
+export function findInput(id: string): HTMLInputElement {
+    const result = document.getElementById(id);
+    if (result === null) {
+        throw new Error('required input not found');
+    }
+
+    return <HTMLInputElement>result;
+}
+
+export function dispatchChange(element: HTMLElement) {
+    const event = document.createEvent('HTMLEvents');
+    event.initEvent("change", false, true);
+    element.dispatchEvent(event);
+}
+
+export class DisposableStub implements Disposable {
+    disposed: boolean = false;
+
+    dispose(): void {
+        this.disposed = true;
+    }
+}
