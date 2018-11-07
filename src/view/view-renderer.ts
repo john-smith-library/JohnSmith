@@ -1,6 +1,6 @@
 import { DomElement } from './element';
 import {Disposable, NoopDisposable, Owner} from '../common';
-import {HtmlDefinition, View, ViewConstructor, ViewDefinition} from './view-definition';
+import {HtmlDefinition, ViewDefinition} from './view-definition';
 import {DomEngine} from "./dom-engine";
 import {BindingRegistry} from "../binding/registry";
 import {Listenable} from '../reactive';
@@ -29,13 +29,19 @@ export class DefaultViewRenderer implements ViewRenderer {
         private bindingRegistry: BindingRegistry){
     }
 
+    /**
+     * @inheritDoc
+     * @param element @inheritDoc
+     * @param view @inheritDoc
+     * @param viewModel @inheritDoc
+     */
     render<ViewModel>(
         element: DomElement,
         view: ViewDefinition<ViewModel>,
         viewModel: ViewModel): Disposable {
 
         const
-            viewRuntime = this.createViewRuntime(view, viewModel),
+            viewRuntime = DefaultViewRenderer.createViewRuntime(view, viewModel),
             template = viewRuntime.template;
 
         const
@@ -67,7 +73,7 @@ export class DefaultViewRenderer implements ViewRenderer {
         return result;
     }
 
-    private createViewRuntime<ViewModel> (
+    private static createViewRuntime<ViewModel> (
         viewDefinition: ViewDefinition<ViewModel>,
         viewModel:ViewModel) : ViewRuntimeData {
         const

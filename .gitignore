@@ -179,6 +179,7 @@ coverage
 ## JohnSmith autogenerate
 #############
 
+dist_docs
 out
 tools
 node_modules

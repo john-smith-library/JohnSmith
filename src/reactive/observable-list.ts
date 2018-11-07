@@ -1,3 +1,7 @@
+/**
+ * @module reactive
+ */
+
 import {ObservableValue} from './observable-value';
 import {ChangeDetails, DataChangeReason} from './listenable';
 import {ArrayUtils} from '../utils/array';
@@ -25,12 +29,10 @@ export class ObservableList<T> extends ObservableValue<T[]> {
         if (currentValue === null) {
             this.setValue(args);
         } else {
-            const
-                oldValue = currentValue.slice(0),
-                array:T[] = currentValue;
+            const oldValue = currentValue.slice(0);
 
             for (let i = 0; i < args.length; i++){
-                array.push(args[i]);
+                currentValue.push(args[i]);
             }
 
             this.reactOnChange(currentValue, oldValue, { reason: DataChangeReason.add, portion: args } );

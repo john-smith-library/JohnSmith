@@ -1,3 +1,7 @@
+/**
+ * @module reactive
+ */
+
 import { Disposable } from "../common";
 
 export enum DataChangeReason {

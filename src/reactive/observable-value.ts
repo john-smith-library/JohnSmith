@@ -1,3 +1,7 @@
+/**
+ * @module reactive
+ */
+
 import {ChangeDetails, DataChangeReason, ListenerCallback, Observable} from "./listenable";
 import {Disposable } from "../common";
 import {ListenerLink} from "./listener-link";
@@ -17,7 +21,7 @@ export class ObservableValue<T> extends Observable<T|null> {
 
     public getRequiredValue(): T {
         if (this._value === null) {
-            throw new Error('Expected a value but was ');
+            throw new Error('Expected a value but was null');
         }
 
         return this._value;
@@ -54,11 +58,7 @@ export class ObservableValue<T> extends Observable<T|null> {
     }
 
     public hasValue(): boolean {
-        if (this._value == null || this._value == undefined) {
-            return false;
-        }
-
-        return true;
+        return !(this._value == null);
     }
 }
 

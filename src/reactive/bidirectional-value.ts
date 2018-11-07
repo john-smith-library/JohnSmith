@@ -1,3 +1,7 @@
+/**
+ * @module reactive
+ */
+
 import { ObservableValue } from './observable-value';
 import {BidirectionalListenable} from './listenable';
 

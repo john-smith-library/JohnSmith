@@ -1,3 +1,7 @@
+/**
+ * @module reactive
+ */
+
 import {ListenerCallback} from "./listenable";
 import {Disposable} from "../common";
 import {ArrayUtils} from "../utils/array";
