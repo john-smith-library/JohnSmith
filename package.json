@@ -6,7 +6,8 @@
   "scripts": {
     "clean": "rimraf dist",
     "test": "jest",
-    "build": "tsc",
+    "test:coverage": "jest --coverage",
+    "build": "tsc --noEmitHelpers",
     "build_demo": "cd src_demo && webpack",
     "build_docs": "typedoc --exclude \"**/*+(spec|index).ts\" --out dist_doc src",
     "pack": "npm run clean && npm run build && cpx package.json dist/"

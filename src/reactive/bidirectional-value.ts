@@ -3,7 +3,7 @@
  */
 
 import { ObservableValue } from './observable-value';
-import {BidirectionalListenable} from './listenable';
+import { BidirectionalListenable } from './listenable';
 
 export type ChangeHandlerResult<T> = { newValue: T };
 export type ChangeHandler<T> = (value: T|null) => boolean|null|undefined|void|ChangeHandlerResult<T>;

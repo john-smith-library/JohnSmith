@@ -79,7 +79,7 @@ export class ObservableList<T> extends ObservableValue<T[]> {
     }
 
     private reactOnChange(newItems: T[], oldItems: T[], details: ChangeDetails<T[]>):void{
-        super.notifyListeners(newItems, oldItems, details);
+        this._listeners.notify(newItems, oldItems, details);
         this.notifyCountListeners();
     }
 

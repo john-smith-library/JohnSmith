@@ -1,5 +1,5 @@
-import {ObservableValue} from "./observable-value";
-import '../reactive-extensions/observable/combine';
+import {ObservableValue} from "../../observable-value";
+import './combine';
 
 function createCombined() {
     const
@@ -15,15 +15,6 @@ function createCombined() {
 }
 
 describe('combine observable', function () {
-    it('getValue should be transformed', function () {
-        const data = createCombined();
-
-        data.firstName.setValue('John');
-        data.lastName.setValue('Smith');
-
-        expect(data.fullName.getValue()).toBe('John Smith');
-    });
-
     it('should notify on changes', function () {
         const
             data = createCombined(),
