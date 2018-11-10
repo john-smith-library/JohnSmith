@@ -46,7 +46,7 @@ export class ObservableList<T> extends ObservableValue<T[]> {
                 oldValue = currentValue.slice(0),
                 array:T[] = currentValue;
 
-            for (var i = 0; i < args.length; i++){
+            for (let i = 0; i < args.length; i++){
                 ArrayUtils.removeItem(array, args[i]);
             }
 

@@ -1,3 +1,7 @@
+/**
+ * @module reactive
+ */
+
 import {DataChangeReason, Listenable, ListenerCallback } from '../../listenable';
 import {Disposable, Owner} from "../../../common";
 
@@ -21,7 +25,7 @@ declare module '../../listenable' {
          *          lastName,
          *          (firstNameValue, lastNameValue) => (firstNameValue || '') + ' ' + (lastNameValue || ''));
          *
-         *     combined.listen(v => console.log(v);
+         *     combined.listen(v => console.log(v));
          *
          *     firstName.setValue('John');
          *     secondName.setValue('Smith');

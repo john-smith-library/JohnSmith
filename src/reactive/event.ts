@@ -7,6 +7,8 @@ import {Disposable} from '../common';
 
 /**
  * Events are stateless listenables that only notify on incoming data change.
+ *
+ * Use [[trigger]] method to initiate listener notification.
  */
 export class Event<T> extends Listenable<T> {
     private _listeners = new Listeners<T>();

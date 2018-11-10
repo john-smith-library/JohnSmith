@@ -1,7 +1,7 @@
 import {Disposable} from '../../common';
 import {DataChangeReason, Listenable} from '../../reactive';
 import {DomElement} from '../element';
-import {ViewDefinition} from '../view-definition';
+import {ViewDefinition, RenderingContext} from '../view-definition';
 import {ViewRenderer} from '../view-renderer';
 import {isListenable} from '../../reactive';
 
@@ -23,7 +23,8 @@ export class ObservableListViewConnector<T> implements Disposable {
         private _observable: Listenable<T[]>|T[],
         private _contentDestination: DomElement,
         private _viewDefinition: ViewDefinition<T>,
-        private _viewRenderer: ViewRenderer){
+        private _viewRenderer: ViewRenderer,
+        private renderingContext: RenderingContext){
 
         this._renderedValues = [];
 
@@ -110,7 +111,8 @@ export class ObservableListViewConnector<T> implements Disposable {
                 itemRenderedValue = this._viewRenderer.render(
                     this._contentDestination,
                     this._viewDefinition,
-                    item);
+                    item,
+                    this.renderingContext);
 
             this._renderedValues.push({
                 value: item,

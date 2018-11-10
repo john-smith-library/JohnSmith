@@ -1,4 +1,4 @@
-import {DefaultIntrinsicElements} from "./default-intristic-element";
+import {DefaultIntrinsicElements} from "./default-intrinsic-element";
 import {HtmlDefinition} from '../view-definition';
 
 declare global {

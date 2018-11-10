@@ -1,3 +1,7 @@
+/**
+ * @module view
+ */
+
 import {DomElement, DomElementClasses, DomText} from "./element";
 import {DomEngine} from "./dom-engine";
 

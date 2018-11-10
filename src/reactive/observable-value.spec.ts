@@ -95,3 +95,18 @@ describe('hasValue', () => {
         expect(observable.hasValue()).toBe(true);
     });
 });
+
+describe('getRequiredValue', () => {
+    it('returns value if it is set', () => {
+        const observable = new ObservableValue<any>();
+        observable.setValue(0);
+        expect(observable.getRequiredValue()).toBe(0);
+    });
+
+    it('throws error if not set', () => {
+        const observable = new ObservableValue<any>();
+        expect(() => {
+            observable.getRequiredValue();
+        }).toThrow()
+    });
+});

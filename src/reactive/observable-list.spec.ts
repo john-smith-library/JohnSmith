@@ -63,6 +63,12 @@ it('has value by default', function(){
 });
 
 describe('add', () => {
+    it('can add even if initial is null', function(){
+        const observable = new ObservableList<string>(null);
+        observable.add('foo', 'bar');
+        expect(observable.getRequiredValue().length).toBe(2);
+    });
+
     it('can add multiple items', function(){
         const observable = new ObservableList<string>();
         observable.add('foo', 'bar');
@@ -78,7 +84,7 @@ describe('add', () => {
     it('notifies listeners', function(){
         const observable = new ObservableList<string>();
 
-        var listener = jasmine.createSpy('listener');
+        const listener = jasmine.createSpy('listener');
 
         observable.add('baz');
         observable.listen(listener);
@@ -123,7 +129,7 @@ describe('remove', () => {
     it('notifies listeners', function(){
         const observable = new ObservableList<number>();
 
-        var listener = jasmine.createSpy('listener');
+        const listener = jasmine.createSpy('listener');
 
         observable.setValue([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
         observable.listen(listener);

@@ -1,6 +1,10 @@
+/**
+ * @module view
+ */
+
 import { DomElement } from './element';
 import {Disposable, NoopDisposable, Owner} from '../common';
-import {HtmlDefinition, ViewDefinition} from './view-definition';
+import {HtmlDefinition, ViewDefinition, RenderingContext } from './view-definition';
 import {DomEngine} from "./dom-engine";
 import {BindingRegistry} from "../binding/registry";
 import {Listenable} from '../reactive';
@@ -15,8 +19,13 @@ export interface ViewRenderer {
      * @param element - the DOM element to render to
      * @param view - the view definition to render
      * @param viewModel - the view model instance
+     * @param context - rendering context
      */
-    render<ViewModel>(element: DomElement, view: ViewDefinition<ViewModel>, viewModel: ViewModel): Disposable;
+    render<ViewModel>(
+        element: DomElement,
+        view: ViewDefinition<ViewModel>,
+        viewModel: ViewModel,
+        context: RenderingContext): Disposable;
 }
 
 type ViewRuntimeData = { template: HtmlDefinition, viewInstance?: any /* todo: typings */ };
@@ -34,14 +43,16 @@ export class DefaultViewRenderer implements ViewRenderer {
      * @param element @inheritDoc
      * @param view @inheritDoc
      * @param viewModel @inheritDoc
+     * @param renderingContext @inheritDoc
      */
     render<ViewModel>(
         element: DomElement,
         view: ViewDefinition<ViewModel>,
-        viewModel: ViewModel): Disposable {
+        viewModel: ViewModel,
+        renderingContext: RenderingContext): Disposable {
 
         const
-            viewRuntime = DefaultViewRenderer.createViewRuntime(view, viewModel),
+            viewRuntime = DefaultViewRenderer.createViewRuntime(view, viewModel, renderingContext),
             template = viewRuntime.template;
 
         const
@@ -73,16 +84,18 @@ export class DefaultViewRenderer implements ViewRenderer {
         return result;
     }
 
-    private static createViewRuntime<ViewModel> (
+    private static createViewRuntime<ViewModel>(
         viewDefinition: ViewDefinition<ViewModel>,
-        viewModel:ViewModel) : ViewRuntimeData {
+        viewModel: ViewModel,
+        renderingContext: RenderingContext) : ViewRuntimeData {
+
         const
             viewDefinitionUntyped = <any>viewDefinition,
-            instance = new viewDefinitionUntyped(viewModel);
+            instance = new viewDefinitionUntyped(viewModel, renderingContext);
 
         if (instance.template) {
             return {
-                template: instance.template(viewModel),
+                template: instance.template(viewModel, renderingContext),
                 viewInstance: instance
             };
         }
@@ -141,15 +154,21 @@ export class DefaultViewRenderer implements ViewRenderer {
             return;
         }
 
-        const viewDefinition = source.element;
+        const
+            viewDefinition = source.element,
+            nestedRenderingContext: RenderingContext = {
+                inner: source.nested
+            };
 
-        const viewModel: any|null = source.attributes.viewModel;
+        const
+            viewModel: any|null = source.attributes.viewModel;
+
         if (viewModel) {
-            bindings.push(() => new ObservableValueViewConnector(viewModel, parent, viewDefinition, this));
+            bindings.push(() => new ObservableValueViewConnector(viewModel, parent, viewDefinition, this, nestedRenderingContext));
         } else {
             const listViewModel: any|null = source.attributes.listViewModel;
             if (listViewModel) {
-                bindings.push(() => new ObservableListViewConnector(listViewModel, parent, viewDefinition, this));
+                bindings.push(() => new ObservableListViewConnector(listViewModel, parent, viewDefinition, this, nestedRenderingContext));
             }
         }
     }

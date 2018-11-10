@@ -23,7 +23,7 @@ DefaultBindingRegistry.prototype['$className'] = (element: DomElement, bindingAr
         });
 };
 
-declare module '../../view/jsx/default-intristic-element' {
+declare module '../../view/jsx/default-intrinsic-element' {
     interface DefaultIntrinsicElements {
         $className?: Listenable<string|null>|string
     }

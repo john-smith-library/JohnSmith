@@ -14,7 +14,7 @@ DefaultBindingRegistry.prototype['$checked'] = (element: DomElement, bindingArgs
     )
 };
 
-declare module '../../view/jsx/default-intristic-element' {
+declare module '../../view/jsx/default-intrinsic-element' {
     interface DefaultIntrinsicElements {
         $checked?: (BidirectionalListenable<boolean>)|(Listenable<any>)|string
     }

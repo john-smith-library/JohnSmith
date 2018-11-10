@@ -1,4 +1,4 @@
-import {HtmlDefinition, View, DomElement, ViewDefinition} from "./view";
+import {DomElement, ViewDefinition} from "./view";
 import {DomEngine} from "./view/dom-engine";
 import {BindingRegistry, DefaultBindingRegistry} from "./binding/registry";
 import {DefaultViewRenderer, ViewRenderer} from "./view/view-renderer";
@@ -30,7 +30,7 @@ export class Application {
 
         const actualElement: DomElement|null = this._domEngine.resolveElement(element);
         if (actualElement !== null) {
-            return this._viewRenderer.render(actualElement, view, viewModel);
+            return this._viewRenderer.render(actualElement, view, viewModel, {});
         }
 
         // todo: error

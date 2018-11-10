@@ -1,3 +1,7 @@
+/**
+ * @module reactive
+ */
+
 import {Listenable, ListenerCallback} from '../../listenable';
 import {Disposable} from '../../../common';
 
@@ -7,6 +11,20 @@ Listenable.prototype.map = function<TResult>(mapper: (value: any) => TResult) {
 
 declare module '../../listenable' {
     interface Listenable<T> {
+        /**
+         * Creates new listenable that emits values applying the mapper function
+         * to source listenable values.
+         *
+         *     const name = new ObservableValue<string>();
+         *
+         *     const uppercaseName = name.map(n => n == null ? null : n.toUpperCase());
+         *
+         *     uppercaseName.listen(x => console.log(x));
+         *     name.setValue('John');
+         *
+         *     // Outputs: JOHN
+         * @param mapper
+         */
         map<TResult>(mapper: (value: T) => TResult) : Listenable<TResult>;
     }
 }

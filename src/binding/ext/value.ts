@@ -1,7 +1,7 @@
 import {DefaultBindingRegistry} from '../registry';
 import {DomElement} from '../../view';
 import {Listenable} from '../../reactive';
-import {AbstractBidirectionalConnector, AbstractListenableConnector} from '../../view/connectors/abstract';
+import {AbstractBidirectionalConnector} from '../../view/connectors/abstract';
 import {BidirectionalListenable} from '../../reactive';
 
 export type BidirectionalConfig = [BidirectionalListenable<string>, string];
@@ -20,7 +20,7 @@ DefaultBindingRegistry.prototype['$value'] = (element: DomElement, bindingArgs: 
     )
 };
 
-declare module '../../view/jsx/default-intristic-element' {
+declare module '../../view/jsx/default-intrinsic-element' {
     interface DefaultIntrinsicElements {
         $value?: (BidirectionalListenable<string>)|(Listenable<string|null>)|string|([BidirectionalListenable<string|null>, string])
     }

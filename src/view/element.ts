@@ -1,7 +1,10 @@
 /**
- * DomText is a wrapper around browser TextNode
+ * @module view
  */
 
+/**
+ * DomText is a wrapper around browser TextNode
+ */
 export interface DomText {
     setText(value: string): void;
 }
