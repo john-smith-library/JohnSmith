@@ -3,7 +3,9 @@ import {HtmlDefinition, View} from "../src/view/view-definition";
 
 import {ObservableValue} from "../src/reactive";
 import {BidirectionalValue} from '../src/reactive/bidirectional-value';
-import {DomElement} from '../src/view';
+import {DomElement, RenderingContext } from '../src/view';
+import {OnInit} from '../src/view/hooks';
+import {OptionalDisposables} from '../src/common';
 
 
 class DetailsViewModel {
@@ -14,7 +16,7 @@ class DetailsViewModel {
     }
 }
 
-class DetailsView implements View<DetailsViewModel> {
+class DetailsView implements View<DetailsViewModel>, OnInit<DetailsViewModel> {
     template = (vm: DetailsViewModel) =>
         <section>
             <header>Details View</header>
@@ -25,6 +27,9 @@ class DetailsView implements View<DetailsViewModel> {
     bindSection(dom: DomElement, viewModel: DetailsViewModel) {
         dom.setInnerText('Custom dom manipulation');
         dom.setAttribute('style', 'color: green');
+    }
+
+    onInit(viewModel: DetailsViewModel, context: RenderingContext): void {
     }
 }
 
@@ -59,7 +64,7 @@ class ApplicationView implements View<ApplicationViewModel> {
             </div>
 
             <section>
-                <DetailsView viewModel={new DetailsViewModel('Hello, John Smith!')}></DetailsView>
+                <DetailsView viewModel={new DetailsViewModel('Hello, John Smith!')}/>
             </section>
 
             <section>

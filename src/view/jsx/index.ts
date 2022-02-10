@@ -22,5 +22,5 @@ declare global {
         }
     }
 
-    const JS: { d: () => HtmlDefinition };
+    const JS: { d: (...args:any[]) => HtmlDefinition };
 }

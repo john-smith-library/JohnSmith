@@ -2,7 +2,7 @@
  * @module common
  */
 
-import { Disposable } from "./disposable";
+import {Disposable, IsDisposable, OptionalDisposables} from "./disposable";
 
 /**
  * A utility class to treat multiple Disposable objects
@@ -48,6 +48,14 @@ export class Owner implements Disposable {
         return property;
     }
 
+    ownIfNotNull<T extends Disposable>(property: T|null|undefined): T|null|undefined {
+        if (property) {
+            return this.own(property);
+        }
+
+        return property;
+    }
+
     /**
      * Disposes all the nested disposables.
      */
@@ -57,3 +65,15 @@ export class Owner implements Disposable {
         }
     }
 }
+
+export const ToDisposable = (item: OptionalDisposables): Disposable|null => {
+    if (item) {
+        if (IsDisposable(item)) {
+            return item
+        } else if (item.length) {
+            return new Owner(item);
+        }
+    }
+
+    return null;
+};

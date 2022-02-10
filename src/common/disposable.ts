@@ -13,6 +13,11 @@ export interface Disposable {
 }
 
 /**
+ * Defines a type of optional disposable or array of disposables.
+ */
+export type OptionalDisposables = void|undefined|Disposable|(Disposable[]);
+
+/**
  * Disposable implementation that does nothing.
  */
 export const NoopDisposable: Disposable = {
@@ -21,3 +26,20 @@ export const NoopDisposable: Disposable = {
      */
     dispose: () => {}
 };
+
+export const IsDisposable = (item: OptionalDisposables): item is Disposable =>  {
+    return !!(<any>item).dispose;
+};
+
+export const DisposeOptional = (item: OptionalDisposables) => {
+    if (item) {
+        if (IsDisposable(item)) {
+            item.dispose()
+        } else if (item.length) {
+            for (let i = 0; i < item.length; i++) {
+                item[i].dispose();
+            }
+        }
+    }
+};
+

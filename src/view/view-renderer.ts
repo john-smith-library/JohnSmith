@@ -3,7 +3,7 @@
  */
 
 import { DomElement } from './element';
-import {Disposable, NoopDisposable, Owner} from '../common';
+import {Disposable, NoopDisposable, Owner, ToDisposable} from '../common';
 import {HtmlDefinition, ViewDefinition, RenderingContext } from './view-definition';
 import {DomEngine} from "./dom-engine";
 import {BindingRegistry} from "../binding/registry";
@@ -11,6 +11,7 @@ import {Listenable} from '../reactive';
 import {ObservableListViewConnector, ObservableValueViewConnector, ListenableAttributeConnector, ListenableTextConnector} from './connectors';
 
 import '../binding/default';
+import {OnBeforeInit, OnInit, OnUnrender} from './hooks';
 
 export interface ViewRenderer {
     /**
@@ -67,9 +68,8 @@ export class DefaultViewRenderer implements ViewRenderer {
 
         if (transformedTemplate !== null)
         {
-            // todo: init view model
-            // todo: dispose view model (as a first step?)
             element.appendChild(transformedTemplate);
+
             result.own({
                 dispose: () => {
                     transformedTemplate.remove();
@@ -77,8 +77,36 @@ export class DefaultViewRenderer implements ViewRenderer {
             });
         }
 
+        /**
+         * On Before Init
+         */
+        const onBeforeInitViewInstance = (<OnBeforeInit<ViewModel>>context.viewInstance);
+        if (onBeforeInitViewInstance && onBeforeInitViewInstance.onBeforeInit) {
+            result.ownIfNotNull(ToDisposable(onBeforeInitViewInstance.onBeforeInit(viewModel, renderingContext)));
+        }
+
         for (let i = initializers.length - 1; i >= 0 ; i--) {
             result.own(initializers[i]());
+        }
+
+        /**
+         * On Init
+         */
+        const onInitViewInstance = (<OnInit<ViewModel>>context.viewInstance);
+        if (onInitViewInstance && onInitViewInstance.onInit) {
+            result.ownIfNotNull(ToDisposable(onInitViewInstance.onInit(viewModel, renderingContext)));
+        }
+
+        /**
+         * On Unrender
+         */
+        const onUnrenderViewInstance = (<OnUnrender<ViewModel>>context.viewInstance);
+        if (onUnrenderViewInstance && onUnrenderViewInstance.onUnrender){
+            return {
+                dispose: () => {
+                    onUnrenderViewInstance.onUnrender(viewModel, renderingContext, () => { result.dispose(); })
+                }
+            }
         }
 
         return result;
@@ -221,16 +249,17 @@ export class DefaultViewRenderer implements ViewRenderer {
                     bindings.push(() => {
                         const
                             bindCallback = <Function>attributeValue,
-                            bindResult = bindCallback.call(context.viewInstance, result, context.viewModel);
+                            bindResult = ToDisposable(bindCallback.call(context.viewInstance, result, context.viewModel));
 
                         if (bindResult) {
-                            if (bindResult.dispose) {
-                                return bindResult;
-                            }
-
-                            if (bindResult.length) {
-                                return new Owner(bindResult);
-                            }
+                            return bindResult;
+                            // if (bindResult.dispose) {
+                            //     return bindResult;
+                            // }
+                            //
+                            // if (bindResult.length) {
+                            //     return new Owner(bindResult);
+                            // }
                         }
 
                         return NoopDisposable;
