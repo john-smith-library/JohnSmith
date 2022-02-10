@@ -15,7 +15,7 @@ DefaultBindingRegistry.prototype['$value'] = (element: DomElement, bindingArgs: 
         source,
         element,
         (elem: DomElement) => elem.getValue(),
-        (elem: DomElement, value: string) => elem.setValue(value),
+        (elem: DomElement, value: string | null) => elem.setValue(value === null ? '' : value),
         event
     )
 };

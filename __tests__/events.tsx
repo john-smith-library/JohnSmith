@@ -19,7 +19,7 @@ class ApplicationViewDoubleUnderscore implements View<ViewModel>{
 }
 
 describe('single underscore', () => {
-    it('should call', setupAppContainerAndRender(ApplicationView, new ViewModel(jasmine.createSpy()),(container, viewModel) => {
+    it('should call', setupAppContainerAndRender(ApplicationView, new ViewModel(jest.fn()),(container, viewModel) => {
         const anchor = container.getElementsByTagName('a')[0];
         dispatchClick(anchor);
 
@@ -39,7 +39,7 @@ describe('single underscore', () => {
     it('remove listener on view dispose',
         setupAppContainerAndRender(
             ApplicationView,
-            new ViewModel(jasmine.createSpy()),
+            new ViewModel(jest.fn()),
             (container, viewModel, view) => {
 
                 const anchor = container.getElementsByTagName('a')[0];
@@ -52,7 +52,7 @@ describe('single underscore', () => {
 });
 
 describe('double underscore', () => {
-    it('should call', setupAppContainerAndRender(ApplicationViewDoubleUnderscore, new ViewModel(jasmine.createSpy()),(container, viewModel) => {
+    it('should call', setupAppContainerAndRender(ApplicationViewDoubleUnderscore, new ViewModel(jest.fn()),(container, viewModel) => {
         const anchor = container.getElementsByTagName('a')[0];
         dispatchClick(anchor);
 
@@ -72,7 +72,7 @@ describe('double underscore', () => {
     it('remove listener on view dispose',
         setupAppContainerAndRender(
             ApplicationViewDoubleUnderscore,
-            new ViewModel(jasmine.createSpy()),
+            new ViewModel(jest.fn()),
             (container, viewModel, view) => {
 
         const anchor = container.getElementsByTagName('a')[0];

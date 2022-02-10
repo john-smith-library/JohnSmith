@@ -23,18 +23,18 @@ it('stores value', () => {
 
 it('notifies listeners about initial value by default', () => {
     const observable = new ObservableValue();
-    const callback = jasmine.createSpy('listener');
+    const callback = jest.fn();
 
     observable.setValue('foo');
     observable.listen(callback);
 
     expect(callback).toHaveBeenCalled();
-    expect(callback.calls.mostRecent().args[0]).toBe('foo');
+    expect(callback.mock.calls[0][0]).toBe('foo');
 });
 
 it('does not notify listeners about initial if flag set', () => {
     const observable = new ObservableValue();
-    const callback = jasmine.createSpy();
+    const callback = jest.fn();
 
     observable.setValue('foo');
     observable.listen(callback, false);
@@ -44,36 +44,40 @@ it('does not notify listeners about initial if flag set', () => {
 
 it('passes new value to listener', () => {
     const observable = new ObservableValue();
-    const listener = jasmine.createSpy('listener');
+    const listener = jest.fn();
 
     observable.setValue('foo');
     observable.listen(listener, false);
     observable.setValue('bar');
 
     expect(listener).toHaveBeenCalled();
-    expect(listener.calls.mostRecent().args[0]).toBe('bar');
+    expect(listener.mock.calls[0][0]).toBe('bar');
 });
 
 it('passes old value to listener', () => {
     const observable = new ObservableValue();
-    const listener = jasmine.createSpy('listener');
+    const listener = jest.fn();
+
     observable.setValue('foo');
     observable.listen(listener, false);
     observable.setValue('bar');
 
     expect(listener).toHaveBeenCalled();
-    expect(listener.calls.mostRecent().args[1]).toBe('foo');
+    expect(listener.mock.calls[0][1]).toBe('foo');
 });
 
 it('passes changes details to listener', () => {
     const observable = new ObservableValue();
-    const listener = jasmine.createSpy('listener');
+    const listener = jest.fn();
 
     observable.setValue('foo');
     observable.listen(listener, false);
     observable.setValue('bar');
 
-    expect(listener).toHaveBeenCalledWith(jasmine.any(String), jasmine.any(String), { reason: DataChangeReason.replace, portion: 'bar' });
+    expect(listener).toHaveBeenCalledWith(
+        (<any>(expect)).anything(),
+        (<any>(expect)).anything(),
+        { reason: DataChangeReason.replace, portion: 'bar' });
 });
 
 describe('hasValue', () => {

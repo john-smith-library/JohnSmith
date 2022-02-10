@@ -4,13 +4,13 @@ describe('trigger', () => {
     it('passes argument to listener', () => {
         const
             event = new Event<string>(),
-            listener = jasmine.createSpy();
+            listener = jest.fn();
 
         event.listen(listener);
         event.trigger('foo');
 
         expect(listener).toHaveBeenCalled();
-        expect(listener.calls.first().args[0]).toBe('foo');
+        expect(listener.mock.calls[0][0]).toBe('foo');
     });
 });
 

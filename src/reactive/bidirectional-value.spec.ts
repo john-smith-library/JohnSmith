@@ -3,7 +3,7 @@ import {BidirectionalValue} from './bidirectional-value';
 describe('requestChange', () => {
     it ('should call changeHandler', () => {
         const
-            changeHandlerSpy = jasmine.createSpy(),
+            changeHandlerSpy = jest.fn(),
             value = new BidirectionalValue<string>(changeHandlerSpy);
 
         value.requestUpdate('1');

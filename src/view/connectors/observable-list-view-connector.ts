@@ -44,9 +44,7 @@ export class ObservableListViewConnector<T> implements Disposable {
         }
 
         for (let i = 0; i < this._renderedValues.length; i++){
-            if (this._renderedValues[i].renderedValue.dispose){
-                this._renderedValues[i].renderedValue.dispose();
-            }
+            this._renderedValues[i].renderedValue.dispose();
         }
     }
 

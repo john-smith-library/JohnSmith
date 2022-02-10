@@ -13,7 +13,7 @@ class ApplicationView implements View<ViewModel> {
 }
 
 it('should call callback',
-    setupAppContainerAndRender(ApplicationView, new ViewModel(jasmine.createSpy()),(container, viewModel) => {
+    setupAppContainerAndRender(ApplicationView, new ViewModel(jest.fn()),(container, viewModel) => {
 
     expect(viewModel.callback).toHaveBeenCalled();
 }));

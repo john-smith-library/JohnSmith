@@ -84,7 +84,7 @@ describe('add', () => {
     it('notifies listeners', function(){
         const observable = new ObservableList<string>();
 
-        const listener = jasmine.createSpy('listener');
+        const listener = jest.fn();
 
         observable.add('baz');
         observable.listen(listener);
@@ -129,7 +129,7 @@ describe('remove', () => {
     it('notifies listeners', function(){
         const observable = new ObservableList<number>();
 
-        const listener = jasmine.createSpy('listener');
+        const listener = jest.fn();
 
         observable.setValue([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
         observable.listen(listener);
@@ -144,7 +144,7 @@ describe('clear', () => {
     it('notifies listeners', function(){
         const observable = new ObservableList<number>();
 
-        const listener = jasmine.createSpy('listener');
+        const listener = jest.fn();
 
         observable.setValue([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
         observable.listen(listener);
