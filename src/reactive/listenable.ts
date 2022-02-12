@@ -1,7 +1,3 @@
-/**
- * @module reactive
- */
-
 import { Disposable } from "../common";
 import { ArrayUtils } from '../utils/array';
 

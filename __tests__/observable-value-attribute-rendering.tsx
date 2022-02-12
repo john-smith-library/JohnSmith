@@ -1,6 +1,5 @@
 import {ObservableValue} from '../src/reactive';
 import {setupAppContainerAndRender} from './_helpers';
-import {View} from '../src/view';
 
 class ViewModel {
     status: ObservableValue<string>;
@@ -10,11 +9,7 @@ class ViewModel {
     }
 }
 
-class ApplicationView implements View<ViewModel>{
-    template(viewModel: ViewModel){
-        return <div class={viewModel.status}></div>;
-    }
-}
+const ApplicationView = (viewModel: ViewModel) => <div class={viewModel.status}/>;
 
 it('should render initial class attribute',
     setupAppContainerAndRender(ApplicationView, new ViewModel('active'),(container, viewModel) => {

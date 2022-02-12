@@ -1,6 +1,6 @@
 import {setupAppContainerAndRender} from './_helpers';
 import { HtmlDefinition, View } from '../src/view';
-import { DynamicView } from '../src/view/standard';
+import { Value } from '../src/view/components/value';
 
 class Shape {}
 class Rectangle extends Shape {}
@@ -11,11 +11,14 @@ class ViewModel {
     }
 }
 
-class ApplicationView implements View<ViewModel> {
-    template(viewModel: ViewModel): HtmlDefinition {
+class ApplicationView implements View {
+    constructor(private viewModel: ViewModel) {
+    }
+
+    template(): HtmlDefinition {
         return <section>
-                   <DynamicView viewModel={viewModel.shape}>{
-                       (shape: Shape) => {
+                   <Value
+                       view={(shape: Shape) => {
                            if (shape instanceof Circle) {
                                return <span>Circle</span>;
                            }
@@ -24,8 +27,9 @@ class ApplicationView implements View<ViewModel> {
                            }
 
                            return <span>Unknown shape</span>
-                        }
-                   }</DynamicView>
+                       }}
+                       model={this.viewModel.shape}>{
+                   }</Value>
                </section>;
     }
 }

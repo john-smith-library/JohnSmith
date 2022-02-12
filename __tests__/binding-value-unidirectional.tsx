@@ -10,13 +10,10 @@ class ViewModel {
     }
 }
 
-class ApplicationView implements View<ViewModel> {
-    template(viewModel: ViewModel): HtmlDefinition {
-        return <form>
-            <input id="textInput" $value={viewModel.firstName} />
-        </form>;
-    }
-}
+const ApplicationView = (viewModel: ViewModel): HtmlDefinition =>
+    <form>
+        <input id="textInput" $value={viewModel.firstName}/>
+    </form>;
 
 it('should render initial value',
     setupAppContainerAndRender(ApplicationView, new ViewModel('John'),(container, viewModel) => {

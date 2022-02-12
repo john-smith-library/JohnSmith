@@ -6,11 +6,7 @@ class ViewModel {
     }
 }
 
-class ApplicationView implements View<ViewModel> {
-    template(viewModel: ViewModel): HtmlDefinition {
-        return <p $bind={viewModel.callback}></p>;
-    }
-}
+const ApplicationView = (viewModel: ViewModel) => <p $bind={viewModel.callback}/>;
 
 it('should call callback',
     setupAppContainerAndRender(ApplicationView, new ViewModel(jest.fn()),(container, viewModel) => {

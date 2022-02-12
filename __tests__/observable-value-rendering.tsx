@@ -1,7 +1,5 @@
 import {ObservableValue} from '../src/reactive';
 import {setupAppContainerAndRender} from './_helpers';
-import {View} from '../src/view';
-//import '../src/view/jsx';
 
 class ViewModel {
     message = new ObservableValue<string>('initial');
@@ -11,17 +9,10 @@ class ViewModelWithStatic extends ViewModel {
     static = 'static string';
 }
 
-class TestView implements View<ViewModel>{
-    template(viewModel: ViewModel){
-        return <div>{viewModel.message}</div>;
-    }
-}
+const TestView = (viewModel: ViewModel) => <div>{viewModel.message}</div>;
 
-class TestViewWithStatic implements View<ViewModelWithStatic>{
-    template(viewModel: ViewModelWithStatic){
-        return <div>Message1: {viewModel.message}, message2: {viewModel.static}</div>;
-    }
-}
+const TestViewWithStatic = (viewModel: ViewModelWithStatic) =>
+    <div>Message1: {viewModel.message}, message2: {viewModel.static}</div>;
 
 it('should render initial value',
    setupAppContainerAndRender(TestView, new ViewModel(),(container, viewModel) => {

@@ -1,7 +1,3 @@
-/**
- * @module view
- */
-
 import {DomElement, DomText} from "./element";
 
 export interface DomEngine {

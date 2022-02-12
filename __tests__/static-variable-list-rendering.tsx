@@ -1,22 +1,17 @@
 import {setupAppContainerAndRender} from "./_helpers";
-import {View} from '../src/view';
+import {List} from '../src/view/components/list';
 
 class ViewModel {
     constructor(public readonly items: number[]|null) {
     }
 }
 
-class ListItemView implements View<number> {
-    template(vm: number) {
-        return <li>{vm}</li>
-    }
-}
+const ListItemView = (vm: number) => <li>{vm}</li>;
 
-class ListView implements View<ViewModel>{
-    template(viewModel: ViewModel){
-        return <ul><ListItemView listViewModel={viewModel.items}/></ul>;
-    }
-}
+const ListView = (viewModel: ViewModel) =>
+    <ul>
+        <List view={ListItemView} model={viewModel.items}></List>
+    </ul>;
 
 it('should render', setupAppContainerAndRender(
     ListView,

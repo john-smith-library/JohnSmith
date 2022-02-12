@@ -11,13 +11,10 @@ class ViewModel {
     }
 }
 
-class ApplicationView implements View<ViewModel> {
-    template(viewModel: ViewModel): HtmlDefinition {
-        return <form>
-            <input id="textInput" $value={viewModel.firstName} />
-        </form>;
-    }
-}
+const ApplicationView = (viewModel: ViewModel): HtmlDefinition =>
+    <form>
+        <input id="textInput" $value={viewModel.firstName}/>
+    </form>;
 
 it('should update source on input change',
     setupAppContainerAndRender(ApplicationView, new ViewModel(() => {}),(container, viewModel) => {

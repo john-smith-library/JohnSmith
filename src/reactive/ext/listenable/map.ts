@@ -1,7 +1,3 @@
-/**
- * @module reactive
- */
-
 import {Listenable, ListenerCallback} from '../../listenable';
 import {Disposable} from '../../../common';
 

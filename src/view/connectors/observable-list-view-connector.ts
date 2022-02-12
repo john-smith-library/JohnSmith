@@ -20,7 +20,7 @@ export class ObservableListViewConnector<T> implements Disposable {
     private _renderedValues: IRenderedValueData[];
 
     constructor(
-        private _observable: Listenable<T[]>|T[],
+        private _observable: Listenable<T[]|null>|T[]|null,
         private _contentDestination: DomElement,
         private _viewDefinition: ViewDefinition<T>,
         private _viewRenderer: ViewRenderer,
@@ -28,13 +28,15 @@ export class ObservableListViewConnector<T> implements Disposable {
 
         this._renderedValues = [];
 
-        if (_observable !== null && isListenable(_observable)) {
-            this._link = _observable.listen(
-                (value, oldValue, details) => {
-                    this.doRender(details.portion || [], details.reason);
-                });
-        } else {
-            this.doRender(_observable, DataChangeReason.replace);
+        if (_observable != null) {
+            if (isListenable(_observable)) {
+                this._link = _observable.listen(
+                    (value, oldValue, details) => {
+                        this.doRender(details.portion || [], details.reason);
+                    });
+            } else {
+                this.doRender(_observable, DataChangeReason.replace);
+            }
         }
     }
 

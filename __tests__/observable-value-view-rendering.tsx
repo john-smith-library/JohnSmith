@@ -1,6 +1,6 @@
 import {ObservableValue} from '../src/reactive';
 import {setupAppContainerAndRender} from './_helpers';
-import {View} from '../src/view';
+import {Value} from '../src/view/components/value';
 
 class PersonViewModel {
     constructor(
@@ -17,17 +17,13 @@ class ApplicationViewModel {
     }
 }
 
-class PersonView implements View<PersonViewModel>{
-    template(viewModel: PersonViewModel){
-        return <article>{viewModel.firstName} {viewModel.lastName}</article>;
-    }
-}
+const PersonView = (viewModel: PersonViewModel) =>
+    <article>{viewModel.firstName} {viewModel.lastName}</article>;
 
-class ApplicationView implements View<ApplicationViewModel>{
-    template(viewModel: ApplicationViewModel){
-        return <div><PersonView viewModel={viewModel.person}/></div>;
-    }
-}
+const ApplicationView = (viewModel: ApplicationViewModel) =>
+    <div>
+        <Value view={PersonView} model={viewModel.person}/>
+    </div>;
 
 const JOHN_SMITH = new PersonViewModel('John', 'Smith');
 const FRED_BLOGGS = new PersonViewModel('Fred', 'Bloggs');

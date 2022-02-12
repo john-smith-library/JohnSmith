@@ -1,5 +1,6 @@
 import {DefaultIntrinsicElements} from "./default-intrinsic-element";
 import {HtmlDefinition} from '../view-definition';
+import {ViewComponent} from "../view-component";
 
 declare global {
     namespace JSX {
@@ -11,15 +12,22 @@ declare global {
             [elemName: string]: IElement;
         }
 
-        interface IntrinsicClassAttributes<T>  {
-            viewModel?: any;
-            listViewModel?: any;
+        interface ElementAttributesProperty {
+            data: {}; // specify the property name to use
         }
 
-        interface IntrinsicAttributes {
-            viewModel?: any;
-            listViewModel?: any;
+        interface ElementClass extends ViewComponent<any> {
         }
+
+        // interface IntrinsicClassAttributes<T>  {
+        //     viewModel?: any;
+        //     listViewModel?: any;
+        // }
+        //
+        // interface IntrinsicAttributes {
+        //     viewModel?: any;
+        //     listViewModel?: any;
+        // }
     }
 
     const JS: { d: (...args:any[]) => HtmlDefinition };

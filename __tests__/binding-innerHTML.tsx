@@ -10,11 +10,7 @@ class ViewModel {
     }
 }
 
-class ApplicationView implements View<ViewModel>{
-    template(viewModel: ViewModel){
-        return <div $innerHTML={viewModel.content}></div>;
-    }
-}
+const ApplicationView = (viewModel: ViewModel) => <div $innerHTML={viewModel.content}/>;
 
 it('should render initial markup',
     setupAppContainerAndRender(ApplicationView, new ViewModel('<b>markup</b>'),(container, viewModel) => {

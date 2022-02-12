@@ -1,8 +1,4 @@
 /**
- * @module common
- */
-
-/**
  * Provides a way to release resources.
  */
 export interface Disposable {

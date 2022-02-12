@@ -1,7 +1,3 @@
-/**
- * @module reactive
- */
-
 import {DataChangeReason, ListenerCallback, Listeners, ReadonlyObservable} from "./listenable";
 import {Disposable} from '../common';
 

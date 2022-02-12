@@ -1,7 +1,3 @@
-/**
- * @module view
- */
-
 import {HtmlDefinition} from '../view-definition';
 
 export const JxsInitializer = () => {

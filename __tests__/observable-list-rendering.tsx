@@ -1,5 +1,5 @@
 import {setupAppContainerAndRender} from './_helpers';
-import {View} from '../src/view';
+import { List } from '../src/view/components/list';
 import {ObservableList} from '../src/reactive';
 
 class ViewModel {
@@ -10,17 +10,12 @@ class ViewModel {
     }
 }
 
-class ItemView implements View<string>{
-    template(viewModel: string) {
-        return <li>{viewModel}</li>;
-    }
-}
+const ItemView = (viewModel: string) => <li>{viewModel}</li>;
 
-class ListView implements View<ViewModel>{
-    template(viewModel: ViewModel){
-        return <ul><ItemView listViewModel={viewModel.items}/></ul>;
-    }
-}
+const ListView = (viewModel: ViewModel) =>
+    <ul>
+        <List view={ItemView} model={viewModel.items} />
+    </ul>;
 
 it('should render initial value',
    setupAppContainerAndRender(ListView, new ViewModel(['initial 1', 'initial 2']),(container, viewModel) => {

@@ -2,29 +2,19 @@ import {Application} from "../src/application";
 import {HtmlDefinition, View} from "../src/view";
 import {setupAppContainer} from './_helpers';
 
-class ApplicationView implements View<{}>{
-    template(viewModel: {}): HtmlDefinition {
-        return <div>John Smith</div>;
-    }
-}
+const ApplicationView = (viewModel: {}): HtmlDefinition =>
+    <div>John Smith</div>;
 
-class ApplicationViewWithAttributes implements View<{}>{
-    template(viewModel: {}): HtmlDefinition {
-        return <div id="appRoot" class="app-container">John Smith</div>;
-    }
-}
+const ApplicationViewWithAttributes = (viewModel: {}): HtmlDefinition =>
+    <div id="appRoot" class="app-container">John Smith</div>;
 
-class ApplicationViewWithNestedMarkup implements View<{}>{
-    template(viewModel: {}): HtmlDefinition {
-        return <div><h1><b>John Smith</b></h1></div>;
-    }
-}
+const ApplicationViewWithNestedMarkup = (viewModel: {}): HtmlDefinition =>
+    <div>
+        <h1><b>John Smith</b></h1>
+    </div>;
 
-class ApplicationViewWithNoValueAttribute implements View<{}>{
-    template(viewModel: {}): HtmlDefinition {
-        return <input type="checkbox" checked/>;
-    }
-}
+const ApplicationViewWithNoValueAttribute = (viewModel: {}): HtmlDefinition =>
+    <input type="checkbox" checked/>;
 
 const ApplicationViewFunction = (vm: {}) => <div>John Smith Function</div>;
 
@@ -38,6 +28,7 @@ it('should allow passing target as HTMLElement', setupAppContainer((container) =
     expect(container.innerHTML).toBe('<div>John Smith</div>');
 }));
 
+// todo remove it as we have all the views as functions in this test
 it('should allow function as a view', setupAppContainer((container) => {
     new Application().render(container, ApplicationViewFunction, {});
     expect(container.innerHTML).toBe('<div>John Smith Function</div>');

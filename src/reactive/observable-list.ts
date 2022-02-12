@@ -1,7 +1,3 @@
-/**
- * @module reactive
- */
-
 import {ObservableValue} from './observable-value';
 import {ChangeDetails, DataChangeReason} from './listenable';
 import {ArrayUtils} from '../utils/array';

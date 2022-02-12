@@ -1,7 +1,3 @@
-/**
- * @module view
- */
-
 import {Listenable} from "../reactive";
 
 import '../binding/default';
@@ -14,10 +10,21 @@ export interface HtmlDefinition {
     nested: NestedHtmlDefintion;
 }
 
-export type ViewConstructor<T> = { new(): View<T> };
-export type ViewDefinition<T> = ViewConstructor<T>|((vm:T) => HtmlDefinition);
-export type RenderingContext = { inner?: NestedHtmlDefintion };
+/**
+ * Allows declaring a View as a class:
+ *
+ * ```typescript
+ * [[include:view/view-definition-view-constructor.tsx]]
+ * ```
+ */
+export type ViewConstructor<T> = { new(viewModel:T): View };
+export type TemplateFactory<T> = (vm:T) => HtmlDefinition;
+export type ViewDefinition<T> = ViewConstructor<T>|TemplateFactory<T>;
 
-export interface View<T> {
-    template(viewModel:T, context: RenderingContext): HtmlDefinition;
+export type RenderingContext = {
+//    inner?: NestedHtmlDefintion
+};
+
+export interface View {
+    template(renderingContext:RenderingContext): HtmlDefinition;
 }

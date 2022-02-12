@@ -1,5 +1,6 @@
 import {setupAppContainerAndRender} from './_helpers';
 import {View} from '../src/view';
+import {Value} from '../src/view/components/value';
 
 class Person {
     constructor(
@@ -13,29 +14,21 @@ class ApplicationViewModel {
     }
 }
 
-class PersonView implements View<Person>{
-    template(viewModel: Person){
-        return <article>{viewModel.firstName} {viewModel.lastName}</article>;
-    }
-}
+const PersonView = (viewModel: Person) =>
+    <article>{viewModel.firstName} {viewModel.lastName}</article>;
 
-class ApplicationView implements View<ApplicationViewModel>{
-    template(viewModel: ApplicationViewModel){
-        return <div><PersonView viewModel={viewModel.person}/></div>;
-    }
-}
+const ApplicationView = (viewModel: ApplicationViewModel) =>
+    <div>
+        <Value view={PersonView} model={viewModel.person} />
+    </div>;
 
-class ApplicationViewNoNestedViewModel implements View<ApplicationViewModel>{
-    template(viewModel: ApplicationViewModel){
-        return <span><PersonView /></span>;
-    }
-}
+const ApplicationViewNoNestedViewModel = (viewModel: ApplicationViewModel) =>
+    <span>
+        <Value view={PersonView} model={null}/>
+    </span>;
 
-class ApplicationViewWithRootNested implements View<ApplicationViewModel>{
-    template(viewModel: ApplicationViewModel){
-        return <PersonView viewModel={viewModel.person}/>;
-    }
-}
+const ApplicationViewWithRootNested = (viewModel: ApplicationViewModel) =>
+    <Value view={PersonView} model={viewModel.person}/>;
 
 const JOHN_SMITH = new Person('John', 'Smith');
 

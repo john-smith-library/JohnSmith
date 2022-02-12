@@ -1,11 +1,15 @@
 import {DomElement, ViewDefinition} from "./view";
 import {DomEngine} from "./view/dom-engine";
 import {BindingRegistry, DefaultBindingRegistry} from "./binding/registry";
-import {DefaultViewRenderer, ViewRenderer} from "./view/view-renderer";
+import {ViewRenderer} from "./view/view-renderer";
 import {NativeDomEngine} from "./view/dom-engine-native";
 import {Disposable} from "./common";
 import { JxsInitializer } from './view/jsx/initializer';
+import {DefaultViewRenderer} from "./view/default-view-renderer";
 
+/**
+ * Represents main framework entry point.
+ */
 export class Application {
     private readonly _domEngine: DomEngine;
     private readonly _bindingRegistry: BindingRegistry;
@@ -23,6 +27,15 @@ export class Application {
         JxsInitializer();
     }
 
+    /**
+     * Renders the View to the provided DOM element.
+     *
+     * @param element DOM element or id to use as a View content placeholder.
+     * @param view the View Definition to render.
+     * @param viewModel the View Model to pass to the View.
+     *
+     * @return rendered View instance, can be disposed to unrender the View.
+     */
     render<TApplicationViewModel>(
         element: HTMLElement|string,
         view: ViewDefinition<TApplicationViewModel>,

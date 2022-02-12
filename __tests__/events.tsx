@@ -6,15 +6,15 @@ class ViewModel {
     }
 }
 
-class ApplicationView implements View<ViewModel>{
-    template(viewModel: ViewModel) {
-        return <a _click={viewModel.callback}>{viewModel}</a>;
-    }
-}
+const ApplicationView = (viewModel: ViewModel) =>
+    <a _click={viewModel.callback}>{viewModel}</a>;
 
-class ApplicationViewDoubleUnderscore implements View<ViewModel>{
-    template(viewModel: ViewModel) {
-        return <a __click={viewModel.callback}>{viewModel}</a>;
+class ApplicationViewDoubleUnderscore implements View {
+    constructor(private viewModel: ViewModel) {
+    }
+
+    template() {
+        return <a __click={this.viewModel.callback}>{this.viewModel}</a>;
     }
 }
 

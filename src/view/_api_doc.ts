@@ -5,7 +5,6 @@
  *
  *     import {} from 'john-smith/view';
  *
- * @module view
  * @preferred
  */
 

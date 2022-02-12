@@ -1,7 +1,3 @@
-/**
- * @module common
- */
-
 import {Disposable, IsDisposable, OptionalDisposables} from "./disposable";
 
 /**
