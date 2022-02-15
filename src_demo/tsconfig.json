@@ -4,7 +4,8 @@
     "module": "commonjs",
     "declaration": false,
     "strict": true,
-    "lib": ["es6", "dom"],
+    "lib": ["es5", "dom"],
+    "allowJs": true,
     "jsx": "react",
     "jsxFactory": "JS.d"
   }

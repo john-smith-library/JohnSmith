@@ -1,2 +1,9 @@
+coverage
+.idea
 src
+src_demo
+src_docs
+dist_doc
 tsconfig.json
+jest.config.js
+__tests__

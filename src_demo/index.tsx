@@ -1,13 +1,15 @@
-import {Application} from "../src/application";
-import {HtmlDefinition, View} from "../src/view/view-definition";
-
-import {ObservableValue} from "../src/reactive";
-import {BidirectionalValue} from '../src/reactive/bidirectional-value';
-import {DomElement, RenderingContext } from '../src/view';
-import {OnInit} from '../src/view/hooks';
-import {OptionalDisposables} from '../src/common';
-
-
+import { Application } from "john-smith";
+import { DomElement } from "john-smith/view/element";
+import { View } from "john-smith/view/view-definition";
+import { } from "john-smith/view/jsx";
+//
+import { ObservableValue, BidirectionalValue } from "john-smith/reactive";
+//import {DomElement, RenderingContext } from 'john-smith/view';
+import {OnInit} from 'john-smith/view/hooks';
+import {Value} from 'john-smith/view/components/value';
+// import {OptionalDisposables} from '../src/common';
+//
+//
 class DetailsViewModel {
     message: string;
 
@@ -15,12 +17,15 @@ class DetailsViewModel {
         this.message = message;
     }
 }
+//
+class DetailsView implements View, OnInit {
+    constructor(private vm: DetailsViewModel) {
+    }
 
-class DetailsView implements View<DetailsViewModel>, OnInit<DetailsViewModel> {
-    template = (vm: DetailsViewModel) =>
+    template = () =>
         <section>
             <header>Details View</header>
-            <section>Details content {vm.message}</section>
+            <section>Details content {this.vm.message}</section>
             <section $bind={this.bindSection}></section>
         </section>;
 
@@ -29,7 +34,7 @@ class DetailsView implements View<DetailsViewModel>, OnInit<DetailsViewModel> {
         dom.setAttribute('style', 'color: green');
     }
 
-    onInit(viewModel: DetailsViewModel, context: RenderingContext): void {
+    onInit(): void {
     }
 }
 
@@ -43,42 +48,40 @@ class ApplicationViewModel {
     }
 }
 
-class ApplicationView implements View<ApplicationViewModel> {
-    template = (vw: ApplicationViewModel) =>
+const ApplicationView = (vw: ApplicationViewModel) =>
+    <section>
+        <h1>John Smith Demo</h1>
+        <p>Lorem</p>
+        <p>{vw.firstName}</p>
+        <table>
+            <tr>
+                <th>First Name:</th>
+                <td>{vw.firstName}</td>
+            </tr>
+            <tr>
+                <th>Last Name:</th>
+                <td>{vw.lastName}</td>
+            </tr>
+        </table>
+        <div>
+            <button _click={vw.update}>Update</button>
+        </div>
+
         <section>
-            <h1>John Smith Demo</h1>
-            <p>Lorem</p>
-            <p>{vw.firstName}</p>
-            <table>
-                <tr>
-                    <th>First Name:</th>
-                    <td>{vw.firstName}</td>
-                </tr>
-                <tr>
-                    <th>Last Name:</th>
-                    <td>{vw.lastName}</td>
-                </tr>
-            </table>
-            <div>
-                <button _click={vw.update}>Update</button>
-            </div>
-
-            <section>
-                <DetailsView viewModel={new DetailsViewModel('Hello, John Smith!')}/>
-            </section>
-
-            <section>
-                <input $value={[vw.firstName, 'keyup']}/>
-            </section>
-
-            <section>Checked: {vw.rememberMe}</section>
-
-            <section>
-                <input type="checkbox" $checked={vw.rememberMe} />
-            </section>
+            <Value view={DetailsView} model={new DetailsViewModel('Hello, John Smith!')}/>
         </section>
-}
 
+        <section>
+            <input $value={[vw.firstName, 'keyup']}/>
+        </section>
+
+        <section>Checked: {vw.rememberMe}</section>
+
+        <section>
+            <input type="checkbox" $checked={vw.rememberMe} />
+        </section>
+    </section>;
+//
 let $app = document.getElementById('app');
 if ($app) {
     const

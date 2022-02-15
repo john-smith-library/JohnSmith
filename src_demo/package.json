@@ -1,0 +1,21 @@
+{
+  "name": "john-smith-demo",
+  "version": "1.0.0",
+  "description": "JohnSmith API checking demo (for development purposes)",
+  "main": "index.tsx",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "john-smith": "^4.0.0-alpha.2"
+  },
+  "devDependencies": {
+    "ts-loader": "^9.2.6",
+    "typescript": "^4.5.5",
+    "webpack": "^5.68.0",
+    "webpack-cli": "^4.9.2"
+  }
+}

@@ -1,16 +1,18 @@
 {
   "name": "john-smith",
-  "version": "1.0.1",
+  "version": "4.0.0-alpha.2",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "clean": "rimraf dist",
     "test": "jest",
     "test:coverage": "jest --coverage",
-    "build": "tsc --noEmitHelpers",
+    "build": "tsc",
     "build_demo": "cd src_demo && webpack",
     "build_docs": "typedoc --exclude \"**/*+(spec|index).ts\" --includes src_docs --out dist_doc --entryPointStrategy expand --categorizeByGroup true src",
-    "pack": "npm run clean && npm run build && cpx package.json dist/"
+    "pack": "npm run clean && npm run build && cpx package.json dist/",
+    "publish": "cd dist && npm publish"
   },
   "repository": {
     "type": "git",
