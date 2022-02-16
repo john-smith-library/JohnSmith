@@ -43,7 +43,7 @@ export class Application {
 
         const actualElement: DomElement|null = this._domEngine.resolveElement(element);
         if (actualElement !== null) {
-            return this._viewRenderer.render(actualElement, view, viewModel, {});
+            return this._viewRenderer.render(actualElement, view, viewModel);
         }
 
         // todo: error

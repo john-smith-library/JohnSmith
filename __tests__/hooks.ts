@@ -1,27 +1,76 @@
-import {HtmlDefinition, RenderingContext, View} from '../src/view';
-import {OnBeforeInit, StandardHook} from '../src/view/hooks';
+import {DomElement, HtmlDefinition, View} from '../src/view';
+import {OnBeforeInit} from '../src/view/hooks';
 import {setupAppContainerAndRender} from "./_helpers";
+import {DomEngine} from "../src/view/dom-engine";
 
 describe('onBeforeInit', () => {
-    class ViewModel {}
+    class ViewModel {
+        constructor(
+            public onBeforeInit: any) {
+        }
+    }
 
     class ApplicationView implements View, OnBeforeInit {
-        constructor(viewModel: ViewModel) {
+        constructor(private viewModel: ViewModel) {
         }
 
         template(): HtmlDefinition {
             return JS.d('div');
         }
 
-        onBeforeInit = jest.fn();
+        onBeforeInit(host: DomElement, root: DomElement|null, domEngine: DomEngine) {
+            this.viewModel.onBeforeInit(host, domEngine);
+        }
     }
 
-    it('should be called', () => {
-        setupAppContainerAndRender(ApplicationView, new ViewModel(),(container, viewModel, view) => {
-            const viewInstance: ApplicationView = <any>view;
+    class ApplicationViewChangingHostDom implements View, OnBeforeInit {
+        constructor() {
+        }
 
-            expect(viewInstance.onBeforeInit).toBeCalled();
-        })
-    });
+        template(): HtmlDefinition {
+            return JS.d('div');
+        }
+
+        onBeforeInit(host: DomElement, root: DomElement|null, domEngine: DomEngine) {
+            host.appendText(domEngine.createTextNode("manual text"));
+        }
+    }
+
+    class ApplicationViewChangingRootDom implements View, OnBeforeInit {
+        constructor() {
+        }
+
+        template(): HtmlDefinition {
+            return JS.d('div');
+        }
+
+        onBeforeInit(host: DomElement, root: DomElement|null, domEngine: DomEngine) {
+            if (root)
+            {
+                root.createClassNames().add('enter');
+            }
+        }
+    }
+
+    it('should be called',
+        setupAppContainerAndRender(ApplicationView, new ViewModel(jest.fn()),(container, viewModel, view) => {
+            expect(viewModel.onBeforeInit).toBeCalled();
+        }));
+
+    it('can modify host DOM',
+        setupAppContainerAndRender(
+            ApplicationViewChangingHostDom,
+            {},
+            (container, viewModel, view) => {
+                expect(container.innerHTML).toBe('<div></div>manual text')
+            }));
+
+    it('can modify root DOM',
+        setupAppContainerAndRender(
+            ApplicationViewChangingRootDom,
+            {},
+            (container, viewModel, view) => {
+                expect(container.innerHTML).toBe('<div class="enter"></div>')
+            }));
 
 });

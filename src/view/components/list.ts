@@ -1,4 +1,4 @@
-import {RenderingContext, ViewDefinition} from "../view-definition";
+import {ViewDefinition} from "../view-definition";
 import {Listenable} from "../../reactive";
 import {ViewComponent} from "../view-component";
 import {DomElement} from "../element";
@@ -18,7 +18,7 @@ export class List<T> implements ViewComponent<ListData<T>> {
         this.data = data;
     }
 
-    $$createBinding(parent: DomElement, renderer: ViewRenderer, renderingContext: RenderingContext): Disposable {
-        return new ObservableListViewConnector(this.data.model, parent, this.data.view, renderer, renderingContext);
+    $$createBinding(parent: DomElement, renderer: ViewRenderer): Disposable {
+        return new ObservableListViewConnector(this.data.model, parent, this.data.view, renderer);
     }
 }

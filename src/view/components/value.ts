@@ -1,7 +1,6 @@
 import {ViewDefinition} from "../view-definition";
 import {Listenable} from "../../reactive";
 import {ViewComponent} from "../view-component";
-import {RenderingContext} from "../view-definition";
 import {Disposable} from "../../common";
 import {ObservableValueViewConnector} from "../connectors";
 import {DomElement} from "../element";
@@ -19,7 +18,7 @@ export class Value<T> implements ViewComponent<ValueData<T>> {
         this.data = data;
     }
 
-    $$createBinding(parent: DomElement, renderer: ViewRenderer, renderingContext: RenderingContext): Disposable {
-        return new ObservableValueViewConnector(this.data.model, parent, this.data.view, renderer, renderingContext);
+    $$createBinding(parent: DomElement, renderer: ViewRenderer): Disposable {
+        return new ObservableValueViewConnector(this.data.model, parent, this.data.view, renderer);
     }
 }

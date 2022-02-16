@@ -1,10 +1,10 @@
 import { DomElement } from './element';
 import {Disposable, NoopDisposable, Owner, ToDisposable} from '../common';
-import {HtmlDefinition, ViewDefinition, RenderingContext } from './view-definition';
+import {HtmlDefinition, ViewDefinition } from './view-definition';
 import {DomEngine} from "./dom-engine";
 import {BindingRegistry} from "../binding/registry";
 import {Listenable} from '../reactive';
-import {ObservableListViewConnector, ObservableValueViewConnector, ListenableAttributeConnector, ListenableTextConnector} from './connectors';
+import {ListenableAttributeConnector, ListenableTextConnector} from './connectors';
 
 import '../binding/default';
 import {OnBeforeInit, OnInit, OnUnrender} from './hooks';
@@ -27,16 +27,14 @@ export class DefaultViewRenderer implements ViewRenderer {
      * @param element @inheritDoc
      * @param view @inheritDoc
      * @param viewModel @inheritDoc
-     * @param renderingContext @inheritDoc
      */
     render<ViewModel>(
         element: DomElement,
         view: ViewDefinition<ViewModel>,
-        viewModel: ViewModel,
-        renderingContext: RenderingContext): Disposable {
+        viewModel: ViewModel): Disposable {
 
         const
-            viewRuntime = DefaultViewRenderer.createViewRuntime(view, viewModel, renderingContext),
+            viewRuntime = DefaultViewRenderer.createViewRuntime(view, viewModel),
             template = viewRuntime.template;
 
         const
@@ -65,7 +63,8 @@ export class DefaultViewRenderer implements ViewRenderer {
          */
         const onBeforeInitViewInstance = (<OnBeforeInit>context.viewInstance);
         if (onBeforeInitViewInstance && onBeforeInitViewInstance.onBeforeInit) {
-            result.ownIfNotNull(ToDisposable(onBeforeInitViewInstance.onBeforeInit(renderingContext)));
+            result.ownIfNotNull(ToDisposable(onBeforeInitViewInstance.onBeforeInit(
+                element, transformedTemplate, this.domEngine)));
         }
 
         for (let i = initializers.length - 1; i >= 0 ; i--) {
@@ -77,7 +76,7 @@ export class DefaultViewRenderer implements ViewRenderer {
          */
         const onInitViewInstance = (<OnInit>context.viewInstance);
         if (onInitViewInstance && onInitViewInstance.onInit) {
-            result.ownIfNotNull(ToDisposable(onInitViewInstance.onInit(renderingContext)));
+            result.ownIfNotNull(ToDisposable(onInitViewInstance.onInit(element, transformedTemplate, this.domEngine)));
         }
 
         /**
@@ -87,7 +86,7 @@ export class DefaultViewRenderer implements ViewRenderer {
         if (onUnrenderViewInstance && onUnrenderViewInstance.onUnrender){
             return {
                 dispose: () => {
-                    onUnrenderViewInstance.onUnrender(renderingContext, () => { result.dispose(); })
+                    onUnrenderViewInstance.onUnrender(() => { result.dispose(); }, element, transformedTemplate, this.domEngine)
                 }
             }
         }
@@ -97,8 +96,7 @@ export class DefaultViewRenderer implements ViewRenderer {
 
     private static createViewRuntime<ViewModel>(
         viewDefinition: ViewDefinition<ViewModel>,
-        viewModel: ViewModel,
-        renderingContext: RenderingContext) : ViewRuntimeData {
+        viewModel: ViewModel) : ViewRuntimeData {
 
         const
             viewDefinitionUntyped = <any>viewDefinition,
@@ -106,7 +104,7 @@ export class DefaultViewRenderer implements ViewRenderer {
 
         if (instance.template) {
             return {
-                template: instance.template(renderingContext),
+                template: instance.template(),
                 viewInstance: instance
             };
         }
@@ -164,34 +162,11 @@ export class DefaultViewRenderer implements ViewRenderer {
     private processView(source: HtmlDefinition, bindings: (() => Disposable)[], parent: DomElement) {
         const component: ViewComponent<any> = new source.element(source.attributes);
 
-            //<ViewComponent<any>>source.element;
         if (!component.$$createBinding) {
             return;
         }
 
-        // if (!source.attributes) {
-        //     return;
-        // }
-
-        const
-            nestedRenderingContext: RenderingContext = {
-                inner: source.nested
-            };
-
-        // const
-        //     viewModel: any|null = component.data.model; // source.attributes.viewModel;
-
-        bindings.push(() => component.$$createBinding(parent, this, nestedRenderingContext));
-
-        /*
-        if (viewModel) {
-            bindings.push(() => new ObservableValueViewConnector(viewModel, parent, viewDefinition, this, nestedRenderingContext));
-        } else {
-            const listViewModel: any|null = source.attributes.listViewModel;
-            if (listViewModel) {
-                bindings.push(() => new ObservableListViewConnector(listViewModel, parent, viewDefinition, this, nestedRenderingContext));
-            }
-        }*/
+        bindings.push(() => component.$$createBinding(parent, this));
     }
 
     private processElementNested(
@@ -246,13 +221,6 @@ export class DefaultViewRenderer implements ViewRenderer {
 
                         if (bindResult) {
                             return bindResult;
-                            // if (bindResult.dispose) {
-                            //     return bindResult;
-                            // }
-                            //
-                            // if (bindResult.length) {
-                            //     return new Owner(bindResult);
-                            // }
                         }
 
                         return NoopDisposable;

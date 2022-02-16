@@ -1,5 +1,5 @@
 import {DomElement} from "./element";
-import {RenderingContext, ViewDefinition} from "./view-definition";
+import {ViewDefinition} from "./view-definition";
 import {Disposable} from "../common";
 
 export interface ViewRenderer {
@@ -9,11 +9,9 @@ export interface ViewRenderer {
      * @param element - the DOM element to render to
      * @param view - the view definition to render
      * @param viewModel - the view model instance
-     * @param context - rendering context
      */
     render<ViewModel>(
         element: DomElement,
         view: ViewDefinition<ViewModel>,
-        viewModel: ViewModel,
-        context: RenderingContext): Disposable;
+        viewModel: ViewModel): Disposable;
 }

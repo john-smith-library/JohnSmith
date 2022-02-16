@@ -19,3 +19,21 @@ test('disposes properties', () => {
 
     expect(property.disposed).toBe(true);
 });
+
+describe('ownIfNotNull', () => {
+   it("adds disposable if not null", () => {
+       const owner = new Owner();
+       const property = new DisposableMock();
+
+       owner.ownIfNotNull(property);
+       owner.dispose();
+
+       expect(property.disposed).toBe(true);
+   });
+
+    it('does nothing if null', () => {
+        const owner = new Owner();
+        owner.ownIfNotNull(null);
+        owner.dispose();
+    });
+});

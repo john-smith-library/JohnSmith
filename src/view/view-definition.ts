@@ -21,10 +21,6 @@ export type ViewConstructor<T> = { new(viewModel:T): View };
 export type TemplateFactory<T> = (vm:T) => HtmlDefinition;
 export type ViewDefinition<T> = ViewConstructor<T>|TemplateFactory<T>;
 
-export type RenderingContext = {
-//    inner?: NestedHtmlDefintion
-};
-
 export interface View {
-    template(renderingContext:RenderingContext): HtmlDefinition;
+    template(): HtmlDefinition;
 }
