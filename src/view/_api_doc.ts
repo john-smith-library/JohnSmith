@@ -5,7 +5,8 @@
  *
  *     import {} from 'john-smith/view';
  *
- * @preferred
+ * @mergeTarget
+ * @module view
  */
 
 /**

@@ -110,6 +110,10 @@ class DomNativeText implements DomText {
 }
 
 export class NativeDomEngine implements DomEngine {
+    getRoot(): DomElement | null {
+        return new NativeElement(document.body);
+    }
+
     createElement(tag: string): DomElement {
         return new NativeElement(document.createElement(tag));
     }

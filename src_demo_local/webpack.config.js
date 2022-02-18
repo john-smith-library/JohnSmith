@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-    entry: ['john-smith/debugging/includes', './index.tsx'],
+    entry: ['../src/debugging/includes', './index.tsx'],
     mode: 'development',
     module: {
         rules: [

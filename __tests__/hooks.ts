@@ -3,6 +3,8 @@ import {OnBeforeInit} from '../src/view/hooks';
 import {setupAppContainerAndRender} from "./_helpers";
 import {DomEngine} from "../src/view/dom-engine";
 
+import '../src/debugging/includes';
+
 describe('onBeforeInit', () => {
     class ViewModel {
         constructor(

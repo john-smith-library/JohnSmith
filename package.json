@@ -1,6 +1,6 @@
 {
   "name": "john-smith",
-  "version": "4.0.0-alpha.2",
+  "version": "4.0.0-alpha.10",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -10,9 +10,8 @@
     "test:coverage": "jest --coverage",
     "build": "tsc",
     "build_demo": "cd src_demo && webpack",
-    "build_docs": "typedoc --theme default --exclude \"**/*+(spec|index).ts\" --includes src_docs --out dist_doc --entryPointStrategy expand --categorizeByGroup true src",
-    "pack": "npm run clean && npm run build && cpx package.json dist/",
-    "publish": "cd dist && npm publish"
+    "build_docs": "typedoc --theme default --exclude \"**/*+(spec|index).ts\" --includes src_docs --out dist_doc --entryPointStrategy expand --mergeModulesMergeMode module --categorizeByGroup true src",
+    "pack": "npm run clean && npm run build && cpx package.json dist/"
   },
   "repository": {
     "type": "git",
@@ -32,6 +31,7 @@
     "ts-jest": "^27.1.3",
     "ts-loader": "^9.2.6",
     "typedoc": "^0.22.11",
+    "typedoc-plugin-merge-modules": "^3.1.0",
     "typedoc-plugin-mermaid": "^1.3.0",
     "typescript": "^4.5.5",
     "webpack": "^5.68.0",

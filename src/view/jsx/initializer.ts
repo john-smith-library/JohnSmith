@@ -1,3 +1,4 @@
+/*
 import {HtmlDefinition} from '../view-definition';
 
 export const JxsInitializer = () => {
@@ -21,3 +22,4 @@ export const JxsInitializer = () => {
         d: domConstruct
     };
 };
+*/

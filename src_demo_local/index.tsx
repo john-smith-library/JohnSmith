@@ -1,12 +1,12 @@
-import { Application } from "john-smith";
-import { DomElement } from "john-smith/view/element";
-import { View } from "john-smith/view/view-definition";
-import { } from "john-smith/view/jsx";
+import { Application } from "../src";
+import { DomElement } from "../src/view/element";
+import { View } from "../src/view/view-definition";
+import { } from "../src/view/jsx";
 //
-import { ObservableValue, BidirectionalValue } from "john-smith/reactive";
+import { ObservableValue, BidirectionalValue } from '../src/reactive';
 //import {DomElement, RenderingContext } from 'john-smith/view';
-import {OnInit} from 'john-smith/view/hooks';
-import {Value} from 'john-smith/view/components/value';
+import {OnInit} from '../src/view/hooks';
+import {Value} from '../src/view/components/value';
 // import {OptionalDisposables} from '../src/common';
 //
 //
@@ -17,6 +17,7 @@ class DetailsViewModel {
         this.message = message;
     }
 }
+
 //
 class DetailsView implements View, OnInit {
     constructor(private vm: DetailsViewModel) {
@@ -24,9 +25,9 @@ class DetailsView implements View, OnInit {
 
     template = () =>
         <section>
-            <header $className2={this.vm.message}>Details View</header>
+            <header>Details View2</header>
             <section>Details content {this.vm.message}</section>
-            <section $bind={this.bindSection} $unknown={'1'}></section>
+            <section $bind={this.bindSection} $unknown={'1'} class="active"></section>
         </section>;
 
     bindSection(dom: DomElement, viewModel: DetailsViewModel) {

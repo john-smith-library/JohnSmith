@@ -10,16 +10,21 @@ import '../binding/default';
 import {OnBeforeInit, OnInit, OnUnrender} from './hooks';
 import {ViewComponent} from "./view-component";
 import {ViewRenderer} from "./view-renderer";
+import {Troubleshooter} from "../troubleshooting/troubleshooter";
 
 
 type ViewRuntimeData = { template: HtmlDefinition, viewInstance?: any /* todo: typings */ };
 type Initializers = (() => Disposable)[];
 type TraversingContext = { viewInstance: any, viewModel: any };
 
+/**
+ * @internal
+ */
 export class DefaultViewRenderer implements ViewRenderer {
     constructor(
         private domEngine: DomEngine,
-        private bindingRegistry: BindingRegistry){
+        private bindingRegistry: BindingRegistry,
+        private troubleshooter: Troubleshooter){
     }
 
     /**
@@ -248,9 +253,14 @@ export class DefaultViewRenderer implements ViewRenderer {
         }
     }
 
-    private configureBinding(element: DomElement, bindingCode: string, bindingArgs: any) {
-        // todo handle unknown binding issues
-        return this.bindingRegistry[bindingCode](element, bindingArgs);
+    private configureBinding(element: DomElement, bindingCode: string, bindingArgs: any): Disposable {
+        const binding = this.bindingRegistry[bindingCode];
+
+        if (!binding) {
+            return this.troubleshooter.bindingNotFound(bindingCode, element);
+        }
+
+        return binding(element, bindingArgs);
     }
 
     private createEventInitializer(result: DomElement, attributeName: string, attributeValue: any, context: TraversingContext): () => Disposable {

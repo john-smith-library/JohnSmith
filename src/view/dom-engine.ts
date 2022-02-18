@@ -6,4 +6,6 @@ export interface DomEngine {
     createTextNode(text: string): DomText;
 
     resolveElement(element: any): DomElement|null;
+
+    getRoot(): DomElement|null;
 }

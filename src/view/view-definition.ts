@@ -1,13 +1,17 @@
+/**
+ * @module view
+ */
+ 
 import {Listenable} from "../reactive";
 
 import '../binding/default';
 
-export type NestedHtmlDefintion = (HtmlDefinition|string|Listenable<any>|any)[];
+export type NestedHtmlDefinition = (HtmlDefinition|string|Listenable<any>|any)[];
 
 export interface HtmlDefinition {
     element: any;
     attributes: { [key: string]: any };
-    nested: NestedHtmlDefintion;
+    nested: NestedHtmlDefinition;
 }
 
 /**
