@@ -8,10 +8,11 @@
     "clean": "rimraf dist",
     "test": "jest",
     "test:coverage": "jest --coverage",
+    "prebuild": "node -p \"'export const JS_VERSION = ' + JSON.stringify(require('./package.json').version) + ';'\" > src/version.ts",
     "build": "tsc",
     "build_demo": "cd src_demo && webpack",
     "build_docs": "typedoc --theme default --exclude \"**/*+(spec|index).ts\" --includes src_docs --out dist_doc --entryPointStrategy expand --mergeModulesMergeMode module --categorizeByGroup true src",
-    "pack": "npm run clean && npm run build && cpx package.json dist/"
+    "pack": "npm run prebuild && npm run clean && npm run build && cpx package.json dist/"
   },
   "repository": {
     "type": "git",
