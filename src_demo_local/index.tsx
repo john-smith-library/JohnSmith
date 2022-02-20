@@ -1,15 +1,11 @@
 import { Application } from "../src";
-import { DomElement } from "../src/view/element";
-import { View } from "../src/view/view-definition";
-import { } from "../src/view/jsx";
-//
+import { DomElement } from "../src/view";
+import { View } from "../src/view";
+import "../src/view/jsx";
 import { ObservableValue, BidirectionalValue } from '../src/reactive';
-//import {DomElement, RenderingContext } from 'john-smith/view';
 import {OnInit} from '../src/view/hooks';
 import {Value} from '../src/view/components/value';
-// import {OptionalDisposables} from '../src/common';
-//
-//
+
 class DetailsViewModel {
     message: string;
 

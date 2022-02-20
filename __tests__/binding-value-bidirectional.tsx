@@ -1,7 +1,8 @@
 import {HtmlDefinition, View} from '../src/view';
 import {ObservableValue} from '../src/reactive';
 import {dispatchChange, findInput, setupAppContainerAndRender} from './_helpers';
-import {BidirectionalValue, ChangeHandler} from '../src/reactive/bidirectional-value';
+import {BidirectionalValue, ChangeHandler} from '../src/reactive';
+import '../src/view/jsx';
 
 class ViewModel {
     firstName: ObservableValue<string>;

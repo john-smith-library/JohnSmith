@@ -1,6 +1,7 @@
 import {setupAppContainerAndRender} from './_helpers';
 import { List } from '../src/view/components/list';
 import {ObservableList} from '../src/reactive';
+import '../src/view/jsx';
 
 class ViewModel {
     items:ObservableList<string>;

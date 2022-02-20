@@ -1,6 +1,7 @@
 import {HtmlDefinition, View} from '../src/view';
 import {ObservableValue} from '../src/reactive';
 import {findInput, setupAppContainerAndRender} from './_helpers';
+import '../src/view/jsx';
 
 class ViewModel {
     firstName: ObservableValue<string>;

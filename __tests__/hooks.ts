@@ -4,6 +4,7 @@ import {setupAppContainerAndRender} from "./_helpers";
 import {DomEngine} from "../src/view/dom-engine";
 
 import '../src/debugging/includes';
+import '../src/view/jsx';
 
 describe('onBeforeInit', () => {
     class ViewModel {

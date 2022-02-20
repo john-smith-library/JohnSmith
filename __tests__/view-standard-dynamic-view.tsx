@@ -1,6 +1,7 @@
 import {setupAppContainerAndRender} from './_helpers';
 import { HtmlDefinition, View } from '../src/view';
 import { Value } from '../src/view/components/value';
+import '../src/view/jsx';
 
 class Shape {}
 class Rectangle extends Shape {}

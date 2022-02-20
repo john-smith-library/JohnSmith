@@ -1,6 +1,7 @@
 import {DefaultIntrinsicElements} from "./default-intrinsic-element";
 import {HtmlDefinition} from '../view-definition';
 import {ViewComponent} from "../view-component";
+import '../../global';
 
 declare global {
     namespace JSX {
@@ -32,3 +33,25 @@ declare global {
 
     //const JS: { d: (...args:any[]) => HtmlDefinition };
 }
+
+declare module '../../global' {
+    interface JsGlobal {
+        d: (...arguments: any[]) => HtmlDefinition
+    }
+}
+
+JS.d = function(): HtmlDefinition {
+    const
+        argsCount = arguments.length,
+        nested = [];
+
+    for (let i = 2; i < argsCount; i++) {
+        nested.push(arguments[i]);
+    }
+
+    return {
+        element: arguments[0],
+        attributes: argsCount > 1 ? arguments[1] : null,
+        nested: nested
+    };
+};

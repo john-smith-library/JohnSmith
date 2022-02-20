@@ -1,6 +1,7 @@
 import {Application} from "../src/application";
 import {HtmlDefinition, View} from "../src/view";
 import {setupAppContainer} from './_helpers';
+import '../src/view/jsx';
 
 const ApplicationView = (viewModel: {}): HtmlDefinition =>
     <div>John Smith</div>;

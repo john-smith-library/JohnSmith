@@ -1,6 +1,7 @@
 import {ObservableValue} from '../src/reactive';
 import {setupAppContainerAndRender} from './_helpers';
 import {Value} from '../src/view/components/value';
+import '../src/view/jsx';
 
 class PersonViewModel {
     constructor(

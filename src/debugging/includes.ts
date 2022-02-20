@@ -6,21 +6,27 @@ import {NoopTroubleshooter} from "../troubleshooting/noop-troubleshooter";
 import {ErrorsView} from "./errors-view";
 import {ErrorsViewModel} from "./errors-view-model";
 
+import '../troubleshooting/global';
+
 const LOG = console ? console.log : () => undefined;
 
 const debuggerViewModel = new ErrorsViewModel();
 
-(<any>(globalThis.JS || (globalThis.JS = <any>{}))).Troubleshooter = new DebugTroubleshooter(
-    debuggerViewModel,
-    () => {
-        const domEngine = new NativeDomEngine();
+globalThis.JS.TroubleShooterFactory = () => {
+    INITIALIZER();
 
-        new DefaultViewRenderer(
-            domEngine,
-            new DefaultBindingRegistry(),
-            new NoopTroubleshooter()
-        ).render(domEngine.getRoot()!, ErrorsView, debuggerViewModel);
-    });
+    return new DebugTroubleshooter(
+        debuggerViewModel,
+        () => {
+            const domEngine = new NativeDomEngine();
+
+            new DefaultViewRenderer(
+                domEngine,
+                new DefaultBindingRegistry(),
+                new NoopTroubleshooter()
+            ).render(domEngine.getRoot()!, ErrorsView, debuggerViewModel);
+        });
+};
 
 const INITIALIZER = () => {
     LOG("");
@@ -57,5 +63,3 @@ const INITIALIZER = () => {
     `;
     document.getElementsByTagName('head')[0].appendChild(style);
 };
-
-INITIALIZER();

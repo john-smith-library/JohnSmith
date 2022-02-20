@@ -1,4 +1,5 @@
 import {setupAppContainerAndRender} from "./_helpers";
+import '../src/view/jsx';
 
 it('should render static string from vm', setupAppContainerAndRender(
     vm => <div>{vm.message}</div>,

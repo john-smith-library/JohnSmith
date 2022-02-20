@@ -1,5 +1,6 @@
 import {setupAppContainerAndRender} from './_helpers';
 import {View} from '../src/view';
+import '../src/view/jsx';
 
 class ViewModel {
     constructor(public callback: () => void) {

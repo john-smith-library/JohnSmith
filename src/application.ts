@@ -9,7 +9,7 @@ import {DefaultViewRenderer} from "./view/default-view-renderer";
 import {Troubleshooter} from "./troubleshooting/troubleshooter";
 import {NoopTroubleshooter} from "./troubleshooting/noop-troubleshooter";
 
-import './view/globals';
+import './troubleshooting/global';
 
 /**
  * Represents main framework entry point.
@@ -28,7 +28,8 @@ export class Application {
 
         this._domEngine = domEngine || new NativeDomEngine();
         this._bindingRegistry = bindingRegistry || new DefaultBindingRegistry();
-        this._troubleshooter = troubleshooter || ((<any>JS).Troubleshooter) || new NoopTroubleshooter();
+        this._troubleshooter = troubleshooter ||
+            (JS.TroubleShooterFactory ? JS.TroubleShooterFactory() : new NoopTroubleshooter());
         this._viewRenderer = viewRenderer || new DefaultViewRenderer(
             this._domEngine,
             this._bindingRegistry,

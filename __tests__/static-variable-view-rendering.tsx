@@ -1,6 +1,6 @@
 import {setupAppContainerAndRender} from './_helpers';
-import {View} from '../src/view';
 import {Value} from '../src/view/components/value';
+import '../src/view/jsx';
 
 class Person {
     constructor(
