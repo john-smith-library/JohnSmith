@@ -3,7 +3,7 @@ import {DomEngine} from "./view/dom-engine";
 import {BindingRegistry, DefaultBindingRegistry} from "./binding/registry";
 import type { ViewRenderer } from "./view/view-renderer";
 import {NativeDomEngine} from "./view/dom-engine-native";
-import {Disposable} from "./common";
+import {Disposable, NoopDisposable} from "./common";
 //import { JxsInitializer } from './view/jsx/initializer';
 import {DefaultViewRenderer} from "./view/default-view-renderer";
 import {Troubleshooter} from "./troubleshooting/troubleshooter";
@@ -57,6 +57,6 @@ export class Application {
 
         // todo: error
 
-        return { dispose: () => {} }; // todo
+        return NoopDisposable; // todo
     }
 }

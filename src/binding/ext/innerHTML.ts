@@ -1,5 +1,4 @@
 import {DefaultBindingRegistry} from "../registry";
-import {DefaultIntrinsicElements} from "../../view/jsx/default-intrinsic-element";
 import {Listenable} from "../../reactive";
 import {DomElement} from "../../view";
 import {AbstractListenableConnector} from '../../view/connectors/abstract';

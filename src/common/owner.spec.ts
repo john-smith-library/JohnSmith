@@ -2,7 +2,7 @@ import {Disposable} from "./disposable";
 import {Owner} from "./owner";
 
 class DisposableMock implements Disposable{
-    disposed: boolean = false;
+    disposed = false;
 
     dispose() {
         this.disposed = true;

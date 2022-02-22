@@ -51,7 +51,7 @@ export class ObservableListViewConnector<T> implements Disposable {
 
     private findRenderedValue(value: any) : Disposable|null {
         for (let i = 0; i < this._renderedValues.length; i++){
-            let renderedItem = this._renderedValues[i];
+            const renderedItem = this._renderedValues[i];
             if (renderedItem.value === value){
                 return renderedItem.renderedValue;
             }

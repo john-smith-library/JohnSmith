@@ -118,6 +118,11 @@ export class NativeDomEngine implements DomEngine {
         return new NativeElement(document.createElement(tag));
     }
 
+    createNamespaceElement(namespace: string, tag: string): DomElement {
+        console.log(namespace, tag);
+        return new NativeElement(<HTMLElement>document.createElementNS(namespace, tag)); // todo
+    }
+
     resolveElement(element: any): DomElement|null {
         if (typeof element === 'string') {
             const elementById = document.getElementById(element);

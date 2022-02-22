@@ -3,7 +3,7 @@ import {DomElement} from '../../view';
 import {Listenable} from '../../reactive';
 import {AbstractListenableConnector} from '../../view/connectors/abstract';
 
-DefaultBindingRegistry.prototype['$className'] = (element: DomElement, bindingArgs: any) => {
+DefaultBindingRegistry.prototype['$className'] = (element: DomElement, bindingArgs: unknown) => {
     const classNames = element.createClassNames();
 
     return new AbstractListenableConnector<any>(

@@ -9,7 +9,7 @@ export const setupAppContainer = (callback: ContainerCallback, containerId = 'ap
     return () => {
         document.body.innerHTML = '<div id="' + containerId + '"></div>';
 
-        let container = document.getElementById(containerId);
+        const container = document.getElementById(containerId);
         if (container === null) {
             throw new Error('Can not initialize dom for testing');
         }
@@ -27,7 +27,7 @@ export function setupAppContainerAndRender<ViewModel>(
     return setupAppContainer(container => {
         const view = new Application().render(container, viewDefinition, viewModel);
         callback(container, viewModel, view);
-    });
+    }, containerId);
 }
 
 export function findInput(id: string): HTMLInputElement {
@@ -46,7 +46,7 @@ export function dispatchChange(element: HTMLElement) {
 }
 
 export class DisposableStub implements Disposable {
-    disposed: boolean = false;
+    disposed = false;
 
     dispose(): void {
         this.disposed = true;

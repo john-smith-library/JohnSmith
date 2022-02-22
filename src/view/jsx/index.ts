@@ -40,18 +40,22 @@ declare module '../../global' {
     }
 }
 
-JS.d = function(): HtmlDefinition {
+JS.d = function(...args: any[]): HtmlDefinition {
     const
         argsCount = arguments.length,
         nested = [];
 
     for (let i = 2; i < argsCount; i++) {
-        nested.push(arguments[i]);
+        nested.push(args[i]);
     }
 
+    const attributes = argsCount > 1 ? args[1] : null;
+    const namespace: string|undefined = attributes ? attributes['xmlns'] : undefined;
+
     return {
-        element: arguments[0],
-        attributes: argsCount > 1 ? arguments[1] : null,
-        nested: nested
+        element: args[0],
+        attributes: attributes,
+        nested: nested,
+        namespace: namespace
     };
 };

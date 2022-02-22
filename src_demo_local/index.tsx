@@ -23,11 +23,12 @@ class DetailsView implements View, OnInit {
         <section>
             <header>Details View2</header>
             <section>Details content {this.vm.message}</section>
-            <section $bind={this.bindSection} $unknown={'1'} class="active"></section>
+            <section $bind={this.bindSection} $unknown={'1'}  $unknown2={'1'}   $unknown3={'1'} class="active"></section>
         </section>;
 
     bindSection(dom: DomElement, viewModel: DetailsViewModel) {
-        dom.setInnerText('Custom dom manipulation');
+        dom.setInnerText('Custom dom manipulation  ');
+
         dom.setAttribute('style', 'color: green');
     }
 
@@ -40,8 +41,11 @@ class ApplicationViewModel {
     lastName = new ObservableValue();
     rememberMe = new BidirectionalValue<boolean>(() => {});
 
+    details = new ObservableValue<DetailsViewModel>();
+
     update() {
         this.firstName.setValue(this.firstName.getValue() + '1');
+        this.details.setValue(new DetailsViewModel('Updated message from ' + this.firstName.getValue()));
     }
 }
 
@@ -65,7 +69,7 @@ const ApplicationView = (vw: ApplicationViewModel) =>
         </div>
 
         <section>
-            <Value view={DetailsView} model={new DetailsViewModel('Hello, John Smith!')}/>
+            <Value view={DetailsView} model={vw.details}/>
         </section>
 
         <section>
@@ -79,13 +83,11 @@ const ApplicationView = (vw: ApplicationViewModel) =>
         </section>
     </section>;
 //
-let $app = document.getElementById('app');
+const $app = document.getElementById('app');
 if ($app) {
     const
         application = new Application(),
         applicationViewModel = new ApplicationViewModel();
-
-    console.log(application);
 
     application.render(
         $app,

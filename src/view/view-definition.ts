@@ -5,13 +5,16 @@
 import {Listenable} from "../reactive";
 
 import '../binding/default';
+import {ViewComponentConstructor} from "./view-component";
 
-export type NestedHtmlDefinition = (HtmlDefinition|string|Listenable<any>|any)[];
+export type HtmlDefinitionElement = string|ViewComponentConstructor<unknown>;
+export type NestedHtmlDefinition = (HtmlDefinition|string|Listenable<unknown>|any);
 
 export interface HtmlDefinition {
-    element: any;
+    element: HtmlDefinitionElement;
     attributes: { [key: string]: any };
-    nested: NestedHtmlDefinition;
+    nested: NestedHtmlDefinition[];
+    namespace?: string
 }
 
 /**

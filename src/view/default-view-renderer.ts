@@ -1,6 +1,6 @@
 import { DomElement } from './element';
 import {Disposable, NoopDisposable, Owner, ToDisposable} from '../common';
-import {HtmlDefinition, ViewDefinition } from './view-definition';
+import {HtmlDefinition, NestedHtmlDefinition, ViewDefinition} from "./view-definition";
 import {DomEngine} from "./dom-engine";
 import {BindingRegistry} from "../binding/registry";
 import {Listenable} from '../reactive';
@@ -8,7 +8,7 @@ import {ListenableAttributeConnector, ListenableTextConnector} from './connector
 
 import '../binding/default';
 import {OnBeforeInit, OnInit, OnUnrender} from './hooks';
-import {ViewComponent} from "./view-component";
+import {ViewComponent, ViewComponentConstructor} from "./view-component";
 import {ViewRenderer} from "./view-renderer";
 import {Troubleshooter} from "../troubleshooting/troubleshooter";
 
@@ -48,7 +48,7 @@ export class DefaultViewRenderer implements ViewRenderer {
                 viewInstance: viewRuntime.viewInstance,
                 viewModel: viewModel
             },
-            transformedTemplate = this.transformElementsRecursively(element, template, initializers, context);
+            transformedTemplate = this.transformElementsRecursively(element, template, initializers, context, undefined);
 
         const result = new Owner();
 
@@ -124,7 +124,8 @@ export class DefaultViewRenderer implements ViewRenderer {
         parent: DomElement,
         source: HtmlDefinition,
         bindings: (() => Disposable)[],
-        context: TraversingContext): DomElement | null {
+        context: TraversingContext,
+        parentNamespace: string|undefined): DomElement | null {
 
         if (typeof source.element === 'string') {
             /**
@@ -134,10 +135,14 @@ export class DefaultViewRenderer implements ViewRenderer {
              * create and initialize it.
              */
 
-            let result = this.domEngine.createElement(source.element);
+            const actualNamespace = source.namespace || parentNamespace;
+
+            const result = actualNamespace
+                ? this.domEngine.createNamespaceElement(actualNamespace, source.element)
+                : this.domEngine.createElement(source.element);
 
             if (source.nested) {
-                this.processElementNested(source, result, bindings, context);
+                this.processElementNested(source, result, bindings, context, actualNamespace);
             }
 
             this.processElementAttributes(source, bindings, result, context);
@@ -151,7 +156,7 @@ export class DefaultViewRenderer implements ViewRenderer {
              * HtmlDefenition represents a nested
              * view to be rendered.
              */
-            this.processView(source, bindings, parent);
+            this.processViewComponent(source.element, source.attributes, bindings, parent);
 
             /**
              * Return null here as view definition
@@ -164,8 +169,11 @@ export class DefaultViewRenderer implements ViewRenderer {
         return null; // todo: unknown HtmlDefinition
     }
 
-    private processView(source: HtmlDefinition, bindings: (() => Disposable)[], parent: DomElement) {
-        const component: ViewComponent<any> = new source.element(source.attributes);
+    private processViewComponent(
+        constructor: ViewComponentConstructor<unknown>,
+        constructorArgument: unknown,
+        bindings: (() => Disposable)[], parent: DomElement) {
+        const component: ViewComponent<unknown> = new constructor(constructorArgument);
 
         if (!component.$$createBinding) {
             return;
@@ -178,13 +186,14 @@ export class DefaultViewRenderer implements ViewRenderer {
         source: HtmlDefinition,
         result: DomElement,
         bindings: (() => Disposable)[],
-        context: TraversingContext) {
+        context: TraversingContext,
+        namespace: string|undefined) {
 
         for (let i = 0; i < source.nested.length; i++) {
-            const nested = source.nested[i];
+            const nested: NestedHtmlDefinition = source.nested[i];
 
             if (nested.element) {
-                let newChild = this.transformElementsRecursively(result, nested, bindings, context);
+                const newChild = this.transformElementsRecursively(result, nested, bindings, context, namespace);
                 if (newChild !== null) {
                     result.appendChild(newChild);
                 }
@@ -235,7 +244,6 @@ export class DefaultViewRenderer implements ViewRenderer {
                 bindings.push(() => this.configureBinding(result, attributeName, attributeValue));
             } else if (attrPrefix === '_') {
                 bindings.push(this.createEventInitializer(result, attributeName, attributeValue, context))
-
             } else {
                 if (typeof attributeValue === 'string') {
                     /**
@@ -253,7 +261,7 @@ export class DefaultViewRenderer implements ViewRenderer {
         }
     }
 
-    private configureBinding(element: DomElement, bindingCode: string, bindingArgs: any): Disposable {
+    private configureBinding(element: DomElement, bindingCode: string, bindingArgs: unknown): Disposable {
         const binding = this.bindingRegistry[bindingCode];
 
         if (!binding) {
@@ -263,16 +271,20 @@ export class DefaultViewRenderer implements ViewRenderer {
         return binding(element, bindingArgs);
     }
 
-    private createEventInitializer(result: DomElement, attributeName: string, attributeValue: any, context: TraversingContext): () => Disposable {
+    private createEventInitializer(
+        result: DomElement,
+        attributeName: string,
+        attributeValue: (...args: unknown[]) => unknown, context: TraversingContext): () => Disposable {
+
         const { eventKey, eventThis } =
             attributeName.length > 1 && attributeName[1] === '_' ?
                 { eventKey: attributeName.substr(2), eventThis: context.viewInstance } :
                 { eventKey: attributeName.substr(1), eventThis: context.viewModel };
 
         return () => {
-            const rawCallback = <Function>attributeValue,
-                eventCallback = function() {
-                    rawCallback.apply(eventThis, arguments);
+            const
+                eventCallback = function(...args: unknown[]) {
+                    attributeValue.apply(eventThis, args);
                 },
                 handle = result.attachEventHandler(eventKey, eventCallback);
 

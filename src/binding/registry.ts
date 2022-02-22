@@ -3,7 +3,7 @@ import {DomElement} from "../view";
 
 export interface Binding
 {
-    (element: DomElement, args: any): Disposable;
+    (element: DomElement, args: unknown): Disposable;
 }
 
 export interface BindingRegistry {
