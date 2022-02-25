@@ -69,6 +69,24 @@ export class ObservableList<T> extends ObservableValue<T[]> {
         return this._count;
     }
 
+    public currentCount() {
+        const value = this.getValue();
+        if (!value) {
+            return 0;
+        }
+
+        return value.length;
+    }
+
+    public getRequiredLast() {
+        const value = this.getRequiredValue();
+        if (value.length === 0) {
+            throw new Error('Expected non empty list');
+        }
+
+        return value[value.length - 1];
+    }
+
     public forEach(callback: ((item: T) => void), thisArg?: any){
         const array:T[] = this.getValue() || [];
         array.forEach(callback, thisArg);
@@ -81,7 +99,7 @@ export class ObservableList<T> extends ObservableValue<T[]> {
 
     private notifyCountListeners():void {
         if (this._count){
-            let value = this.getValue();
+            const value = this.getValue();
             if (value !== null) {
                 this._count.setValue(value.length);
             } else {

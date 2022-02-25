@@ -13,6 +13,7 @@
     "build": "tsc",
     "build_demo": "cd src_demo && webpack",
     "build_demo_local": "cd src_demo_local && webpack",
+    "run_demo_local": "cd src_demo_local && webpack --watch",
     "build_docs": "typedoc --theme default --exclude \"**/*+(spec|index).ts\" --includes src_docs --out dist_doc --entryPointStrategy expand --mergeModulesMergeMode module --categorizeByGroup true src",
     "pack": "npm run prebuild && npm run clean && npm run build && cpx package.json dist/"
   },

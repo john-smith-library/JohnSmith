@@ -9,7 +9,7 @@ export class AbstractListenableConnector<T> implements Disposable {
 
     constructor(
         source: Listenable<T>|T,
-        private renderer: (value: any) => Disposable|null) {
+        private renderer: (value: T|null) => Disposable|null) {
 
         if (source != null) {
             if (isListenable(source)) {
@@ -27,7 +27,7 @@ export class AbstractListenableConnector<T> implements Disposable {
         }
     }
 
-    private doRender(value: any):void {
+    private doRender(value: T|null):void {
         this.disposeRenderedValue();
         this._renderedValue = this.renderer(value);
     }

@@ -5,11 +5,15 @@ import {DomEngine} from "../src/view/dom-engine";
 
 import '../src/debugging/includes';
 import '../src/view/jsx';
+import {OptionalDisposables} from "../src/common";
 
 describe('onBeforeInit', () => {
     class ViewModel {
         constructor(
-            public onBeforeInit: any) {
+            public onBeforeInit: ((
+                host: DomElement,
+                root: DomElement|null,
+                domEngine: DomEngine) => OptionalDisposables)) {
         }
     }
 
@@ -22,14 +26,11 @@ describe('onBeforeInit', () => {
         }
 
         onBeforeInit(host: DomElement, root: DomElement|null, domEngine: DomEngine) {
-            this.viewModel.onBeforeInit(host, domEngine);
+            this.viewModel.onBeforeInit(host, root, domEngine);
         }
     }
 
     class ApplicationViewChangingHostDom implements View, OnBeforeInit {
-        constructor() {
-        }
-
         template(): HtmlDefinition {
             return JS.d('div');
         }
@@ -40,14 +41,11 @@ describe('onBeforeInit', () => {
     }
 
     class ApplicationViewChangingRootDom implements View, OnBeforeInit {
-        constructor() {
-        }
-
         template(): HtmlDefinition {
             return JS.d('div');
         }
 
-        onBeforeInit(host: DomElement, root: DomElement|null, domEngine: DomEngine) {
+        onBeforeInit(host: DomElement, root: DomElement|null) {
             if (root)
             {
                 root.createClassNames().add('enter');
@@ -56,7 +54,7 @@ describe('onBeforeInit', () => {
     }
 
     it('should be called',
-        setupAppContainerAndRender(ApplicationView, new ViewModel(jest.fn()),(container, viewModel, view) => {
+        setupAppContainerAndRender(ApplicationView, new ViewModel(jest.fn()),(container, viewModel) => {
             expect(viewModel.onBeforeInit).toBeCalled();
         }));
 
@@ -64,7 +62,7 @@ describe('onBeforeInit', () => {
         setupAppContainerAndRender(
             ApplicationViewChangingHostDom,
             {},
-            (container, viewModel, view) => {
+            (container) => {
                 expect(container.innerHTML).toBe('<div></div>manual text')
             }));
 
@@ -72,7 +70,7 @@ describe('onBeforeInit', () => {
         setupAppContainerAndRender(
             ApplicationViewChangingRootDom,
             {},
-            (container, viewModel, view) => {
+            (container) => {
                 expect(container.innerHTML).toBe('<div class="enter"></div>')
             }));
 

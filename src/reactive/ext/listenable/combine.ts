@@ -36,7 +36,7 @@ declare module '../../listenable' {
 }
 
 class DependantListenableValue<TLeft, TRight, TResult> extends Listenable<TResult> {
-    private _listenersCount: number = 0;
+    private _listenersCount = 0;
 
     constructor(
         private left: Listenable<TLeft>,
@@ -60,7 +60,7 @@ class DependantListenableValue<TLeft, TRight, TResult> extends Listenable<TResul
                 leftOld = newValue;
 
                 if (rightOld !== undefined) {
-                    let transformedNew = this.transformer(newValue, rightOld);
+                    const transformedNew = this.transformer(newValue, rightOld);
 
                     if (details.reason !== DataChangeReason.initial || actualRaiseInitial) {
                         listener(
@@ -77,7 +77,7 @@ class DependantListenableValue<TLeft, TRight, TResult> extends Listenable<TResul
                 rightOld = newValue;
 
                 if (leftOld !== undefined) {
-                    let transformedNew = this.transformer(leftOld, newValue);
+                    const transformedNew = this.transformer(leftOld, newValue);
 
                     if (details.reason !== DataChangeReason.initial || actualRaiseInitial) {
                         listener(
