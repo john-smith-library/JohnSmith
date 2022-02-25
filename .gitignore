@@ -180,6 +180,7 @@ coverage
 #############
 
 dist_doc
+dist_tutorial
 out
 tools
 node_modules

@@ -8,6 +8,8 @@ head
     //if lt IE 9
         script(type="text/javascript", src="http://html5shiv.googlecode.com/svn/trunk/html5.js")
 
+    link(rel="stylesheet", href=pathToRoot + "/assets/styles/prism.css")
+
     link(rel="stylesheet", href=pathToRoot + "/assets/styles/googlecode.css")
     link(rel="stylesheet", href=pathToRoot + "/assets/styles/samples_hub.css")
     link(rel="stylesheet", href=pathToRoot + "/assets/styles/tooltipster.css")
@@ -17,6 +19,7 @@ head
         style(type='text/css')
             #{currentTopic.styles}
 
+    script(src=pathToRoot + '/assets/scripts/prism.js')
     script(src='http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js')
     script(src='john-smith-latest.js')
     script(src='assets/scripts/highlight.pack.js')
@@ -36,15 +39,12 @@ html
                 each topic in currentTopics
                     - var itemClass = topic.id === currentTopic.id ? "selected" : ""
                     li
-                        if topic.code && topic.markup
-                            a.topicLink(href='#{topic.id}.html', class=itemClass, id=topic.id + "Link") #{topic.title}
-                                if topic.isNew
-                                    span new
-                        else
-                            span #{topic.title}
+                        if topic.type === 'leaf'
+                            a.topicLink(href=pathToRoot + '/' + topic.path, class=itemClass, id=topic.id + "Link") #{topic.title}
 
-                        //if topic.children.length > 0
-                            //+navigationList(topic.children, level + 1)
+                        if topic.type === 'node' && topic.items.length > 0
+                            span #{topic.title}
+                            +navigationList(topic.items, level + 1)
 
         header#mainHeader
             div.appContent
@@ -57,6 +57,11 @@ html
                     div#logo
                         span JohnSmith
                         | &nbsp;Samples Hub
+
+
+        section#tableOfContents(style='height: 100%')
+            div.content
+                +navigationList(tableOfContents, 0)
 
         section#page.appContent
             div.container(itemscope,itemtype="http://schema.org/Article")
@@ -85,23 +90,17 @@ html
 
                 section#source.fullHeight
                     section#javaScript
-                        header JavaScript
+                        header TypeScript
                         section.sourceContent
-                            pre
-                                code.javascript !{currentTopic.formattedCode}
+                            pre.source-code-container
+                                code.language-tsx !{currentTopic.formattedCode}
                     section#html
                         header HTML
                         section.sourceContent
-                            pre
-                                code.html #{currentTopic.markup}
+                            pre.source-code-container
+                                code.language-html #{currentTopic.markup}
 
                 section#result.fullHeight
-                    section#tableOfContents(style='height: 0')
-                        div.content
-                            +navigationList(topics, 0)
-
-                    section#tableOfContentsOverlay
-
                     div.scroller
                         div#description !{currentTopic.description}
 

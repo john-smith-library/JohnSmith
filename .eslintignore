@@ -1,4 +1,5 @@
 coverage
 dist
 dist_doc
+dist_tutorial
 node_modules

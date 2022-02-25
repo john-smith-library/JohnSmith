@@ -271,17 +271,6 @@ a
 
 #tableOfContents
 {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    overflow: hidden;
-    z-index: 100;
-
-    transition: height 1s ease;
-    -webkit-transition: height 1s ease;
-
-
     background: #FFFFFF;
 }
 
@@ -610,4 +599,10 @@ a
 #mainFooter #footerLinks
 {
     text-align: center;
+}
+
+/* prism overrides */
+.source-code-container {
+    margin: 0 !important;
+    background: #ffffff !important;
 }

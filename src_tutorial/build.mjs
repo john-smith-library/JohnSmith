@@ -4,15 +4,6 @@ import path from "path";
 import glob from "glob";
 import yaml from "js-yaml";
 
-class TutorialItem {
-    constructor(
-        idParts,
-        relativePath
-    ) {
-        this.idParts = idParts;
-    }
-}
-
 console.log('Building tutorial...');
 
 const topicTemplate = pug.compile(fs.readFileSync('_templates/topic.pug'));
@@ -25,6 +16,9 @@ if (!fs.existsSync(outputPath)) {
     fs.mkdirSync(outputPath);
 }
 
+const johnSmithPackageJson = fs.readJsonSync('node_modules/john-smith/package.json');
+const version = johnSmithPackageJson.version;
+
 const tutorialItems = glob.sync(path.join(inputPath, '/**/index.tsx')).map((indexPath) => {
     const tutorialDirectoryPath = indexPath.replace('/index.tsx', '');
     const tutorialDirectoryPathCode = indexPath
@@ -32,21 +26,19 @@ const tutorialItems = glob.sync(path.join(inputPath, '/**/index.tsx')).map((inde
         .substring(inputPath.length - 1);
     const idParts = tutorialDirectoryPathCode.split('/');
 
-    const configFile = path.join(tutorialDirectoryPath, "config.yaml");
     const contentFile = path.join(tutorialDirectoryPath, "content.html");
     const codeFile = indexPath;
     const compiledCodePath = path.join(outputPath, tutorialDirectoryPath, 'index.js');
     const markupFile = path.join(tutorialDirectoryPath, "markup.html");
     const stylesFile = path.join(tutorialDirectoryPath, "styles.css");
 
-    if (!fs.existsSync(configFile)) {
+    const configData = readConfig(tutorialDirectoryPath);
+    if (!configData) {
         throw new Error('Config file not found in ' + tutorialDirectoryPath);
     }
 
-    const configData = yaml.load(fs.readFileSync(configFile).toString());
     const visible = configData.visible !== false;
     const title = configData.title;
-    const cleanTopicId = tutorialDirectoryPathCode.replace(/^\d\d_/, "");
     const isNew = configData.isNew || false;
     const markup = readIfExists(markupFile);
     const compiledCode = readIfExists(compiledCodePath);
@@ -68,7 +60,68 @@ const tutorialItems = glob.sync(path.join(inputPath, '/**/index.tsx')).map((inde
         description,
         styles
     }
-});
+}).filter(x => x.visible);
+
+const hierarchicalTutorialItems = tutorialItems.reduce((acc, item) => {
+    let currentAcc = acc;
+
+    for (let i = 0; i < item.idParts.length; i++){
+        const part = item.idParts[i];
+
+        const isLastLevel = i === item.idParts.length - 1;
+
+        if (!currentAcc[part]) {
+            if (isLastLevel) {
+                currentAcc[part] = {
+                    id: item.id,
+                    title: item.title,
+                    type: 'leaf'
+                };
+            } else {
+                const categoryItem = {
+                    type: 'node',
+                    items: {}
+                };
+
+                currentAcc[part] = categoryItem;
+                currentAcc = categoryItem.items
+            }
+        }
+    }
+
+    return acc;
+}, {});
+
+const composeTableOfContents = (currentLevel, baseIds) => {
+    return Object.keys(currentLevel)
+        .sort()
+        .map(key => {
+            const item = currentLevel[key];
+
+            const fullIds = baseIds.concat([key]);
+
+            if (item.type === 'leaf') {
+                return {
+                    id: item.id,
+                    type: item.type,
+                    title: item.title,
+                    path: fullIds.join('/') + '/index.html'
+                };
+            }
+
+            const config = readConfig(path.join(inputPath, fullIds.join('/')));
+
+            return {
+                type: 'node',
+                title:  config ? config.title : key,
+                items: composeTableOfContents(item.items, fullIds)
+            }
+        });
+}
+
+const tableOfContents = composeTableOfContents(hierarchicalTutorialItems, []);
+
+console.log(tableOfContents);
 
 tutorialItems.forEach((item, index) => {
     const currentTopicGlobalIndex = index;
@@ -81,22 +134,17 @@ tutorialItems.forEach((item, index) => {
         ? null
         : tutorialItems[currentTopicGlobalIndex - 1];
 
-    if (item.visible) {
-        const outFile = path.join(outputPath, item.relativePath, "index.html");
+    const outFile = path.join(outputPath, item.relativePath, "index.html");
 
-        // var outJsonFile = path.join(path.join("out", "ajax"), topic.id + ".json");
-
-        fs.writeFileSync(outFile, topicTemplate({
-            topics: tutorialItems,
-            currentTopic: item,
-            nextTopic: nextTopic,
-            prevTopic: prevTopic,
-            pathToRoot: item.idParts.map(_ => '..').join('/'),
-            version: 'todo'
-        }));
-
-        // fs.writeFileSync(outJsonFile, JSON.stringify(topic));
-    }
+    fs.writeFileSync(outFile, topicTemplate({
+        tableOfContents: tableOfContents,
+        topics: tutorialItems,
+        currentTopic: item,
+        nextTopic: nextTopic,
+        prevTopic: prevTopic,
+        pathToRoot: item.idParts.map(_ => '..').join('/'),
+        version: version
+    }));
 });
 
 var assetsSourcePath = path.join(inputPath, "assets");
@@ -118,7 +166,15 @@ fs.copy(assetsSourcePath, assetsDestPath, function(err){
     }
 });
 
-console.log(tutorialItems, path.separator);
+function readConfig(directory) {
+    const configFile = path.join(directory, "config.yaml");
+
+    if (!fs.existsSync(configFile)) {
+        return undefined;
+    }
+
+    return yaml.load(fs.readFileSync(configFile).toString());
+}
 
 function readIfExists(filePath) {
     return fs.existsSync(filePath)
