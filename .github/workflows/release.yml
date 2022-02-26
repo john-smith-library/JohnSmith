@@ -19,17 +19,19 @@ jobs:
         run: npm ci
         working-directory: ./src_tutorial
 
+      - name: Tutorial🠖Build Code
+        run: npm run build_samples_code
+        working-directory: ./src_tutorial
+
+      - name: Tutorial🠖Build Pages
+        run: npm run build_site
+        working-directory: ./src_tutorial
+
       - name: Tutorial🠖Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist_tutorial
-
-      - run: npm run build_samples_code
-        working-directory: ./src_tutorial
-
-      - run: npm run build_site
-        working-directory: ./src_tutorial
 
       - run: npm run pack
       - run: npm publish ./dist
