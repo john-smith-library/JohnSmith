@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?><testsuite name="Safari_53434_Linux.unit.binding.DefaultBindingManager" errors="0" failures="0" tests="4" time="0.001">
-<testcase classname="Safari_53434_Linux.unit.binding.DefaultBindingManager" name="test_staticObject_shouldTransformTiBindable" time="0.001"/>
-<testcase classname="Safari_53434_Linux.unit.binding.DefaultBindingManager" name="test_bindableObject_shouldWireProvidedBindable" time="0.0"/>
-<testcase classname="Safari_53434_Linux.unit.binding.DefaultBindingManager" name="testShouldCreateWireIfFactoriesProvided" time="0.0"/>
-<testcase classname="Safari_53434_Linux.unit.binding.DefaultBindingManager" name="testNoHandlerFactoryShouldThrowError" time="0.0"/>
-</testsuite>

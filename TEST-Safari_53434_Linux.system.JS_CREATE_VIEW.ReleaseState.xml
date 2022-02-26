@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?><testsuite name="Safari_53434_Linux.system.JS_CREATE_VIEW.ReleaseState" errors="0" failures="0" tests="2" time="0.002">
-<testcase classname="Safari_53434_Linux.system.JS_CREATE_VIEW.ReleaseState" name="test_disposeView_shouldCallReleaseState" time="0.001"/>
-<testcase classname="Safari_53434_Linux.system.JS_CREATE_VIEW.ReleaseState" name="test_unrenderView_shouldCallReleaseState" time="0.001"/>
-</testsuite>

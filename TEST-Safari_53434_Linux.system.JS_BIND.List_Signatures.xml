@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?><testsuite name="Safari_53434_Linux.system.JS_BIND.List_Signatures" errors="0" failures="0" tests="7" time="0.010000001">
-<testcase classname="Safari_53434_Linux.system.JS_BIND.List_Signatures" name="testSelectorAndViewClass" time="0.002"/>
-<testcase classname="Safari_53434_Linux.system.JS_BIND.List_Signatures" name="testConfigObjectWithSelectorAndViewClass" time="0.001"/>
-<testcase classname="Safari_53434_Linux.system.JS_BIND.List_Signatures" name="testConfigObjectWithSelectorAndFormatter" time="0.001"/>
-<testcase classname="Safari_53434_Linux.system.JS_BIND.List_Signatures" name="testStaticArrayConfigObjectWithSelectorAndFormatter" time="0.002"/>
-<testcase classname="Safari_53434_Linux.system.JS_BIND.List_Signatures" name="testConfigObjectFull" time="0.001"/>
-<testcase classname="Safari_53434_Linux.system.JS_BIND.List_Signatures" name="testSelectorAndConfigObject" time="0.001"/>
-<testcase classname="Safari_53434_Linux.system.JS_BIND.List_Signatures" name="testSelectorViewAndConfigObject" time="0.002"/>
-</testsuite>

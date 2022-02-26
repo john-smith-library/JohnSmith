@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?><testsuite name="Safari_53434_Linux.system.JS_BIND.List_Interaction" errors="0" failures="0" tests="4" time="0.0050000004">
-<testcase classname="Safari_53434_Linux.system.JS_BIND.List_Interaction" name="testAdd_ShouldAppendItems" time="0.001"/>
-<testcase classname="Safari_53434_Linux.system.JS_BIND.List_Interaction" name="testRemove_ShouldRemoveItems" time="0.002"/>
-<testcase classname="Safari_53434_Linux.system.JS_BIND.List_Interaction" name="testRemove_ShouldDisposeView" time="0.001"/>
-<testcase classname="Safari_53434_Linux.system.JS_BIND.List_Interaction" name="testRemoveAndAddTheSameObject_ShouldWorkCorrectly" time="0.001"/>
-</testsuite>
