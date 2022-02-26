@@ -17,13 +17,14 @@ describe('forEach', function(){
 
     it('respects the context', function(){
         const observable = new ObservableList(['foo']);
-        const context: any = {};
+        const context: unknown = {};
 
-        let actualContext: any = null;
+        let actualContext: unknown = null;
 
-        observable.forEach(function(){
-            // @ts-ignore
-            actualContext = this }, context);
+        observable.forEach(
+            function(this: unknown){
+                actualContext = this
+            }, context);
 
         expect(actualContext).toBe(context);
     });
