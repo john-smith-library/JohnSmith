@@ -1,7 +1,7 @@
 import { Application } from 'john-smith';
 import 'john-smith/view/jsx';
 
-class ApplicationViewModel {
+class /*(*/ApplicationViewModel/*)*/ {
     message = 'Hello, World!';
 }
 
