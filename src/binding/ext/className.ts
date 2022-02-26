@@ -6,9 +6,9 @@ import {AbstractListenableConnector} from '../../view/connectors/abstract';
 DefaultBindingRegistry.prototype['$className'] = (element: DomElement, bindingArgs: unknown) => {
     const classNames = element.createClassNames();
 
-    return new AbstractListenableConnector<any>(
-        bindingArgs,
-        (value: any) => {
+    return new AbstractListenableConnector<string>(
+        <Listenable<string|null>>bindingArgs,
+        (value: string|null) => {
             if (value === null) {
                 return null;
             }

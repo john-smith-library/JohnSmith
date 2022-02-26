@@ -25,9 +25,8 @@ export class Event<T> extends Listenable<T> {
      * the initial callback.
      *
      * @param listener the listener callback
-     * @param raiseInitial ignored by Event
      */
-    listen(listener: ListenerCallback<T>, raiseInitial?: boolean): Disposable {
+    listen(listener: ListenerCallback<T>): Disposable {
         return this._listeners.add(listener, undefined);
     }
 

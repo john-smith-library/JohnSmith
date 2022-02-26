@@ -20,10 +20,10 @@ describe('getListenersCount', () => {
 
         expect(event.getListenersCount()).toBe(0);
 
-        event.listen(function(){});
+        event.listen(jest.fn());
         expect(event.getListenersCount()).toBe(1);
 
-        event.listen(function(){});
+        event.listen(jest.fn());
         expect(event.getListenersCount()).toBe(2);
     });
 
@@ -32,8 +32,7 @@ describe('getListenersCount', () => {
 
         expect(event.getListenersCount()).toBe(0);
 
-        const link = event.listen(function () {
-        });
+        const link = event.listen(jest.fn());
         expect(event.getListenersCount()).toBe(1);
 
         link.dispose();

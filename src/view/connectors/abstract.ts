@@ -8,10 +8,12 @@ export class AbstractListenableConnector<T> implements Disposable {
     private readonly _link:Disposable|null = null;
 
     constructor(
-        source: Listenable<T>|T,
+        source: Listenable<T|null>|T|null|undefined,
         private renderer: (value: T|null) => Disposable|null) {
 
-        if (source != null) {
+        if (source === null) {
+            this.doRender(source);
+        } else if (source !== undefined) {
             if (isListenable(source)) {
                 this._link = source.listen(value => this.doRender(value));
             } else {

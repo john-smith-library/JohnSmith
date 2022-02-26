@@ -6,12 +6,23 @@ import {BidirectionalListenable} from '../../reactive';
 
 export type BidirectionalConfig = [BidirectionalListenable<string>, string];
 
-DefaultBindingRegistry.prototype['$value'] = (element: DomElement, bindingArgs: any) => {
-    const { event, source } = bindingArgs && (<BidirectionalConfig>bindingArgs).length === 2 ?
-        { event: (<BidirectionalConfig>bindingArgs)[1], source: (<BidirectionalConfig>bindingArgs)[0] } :
-        { event: 'change', source: bindingArgs };
+export type ValueType = (BidirectionalListenable<string>)|(Listenable<string|null>)|string|([BidirectionalListenable<string|null>, string]);
 
-    return new AbstractBidirectionalConnector(
+type ConnectorValueType = BidirectionalListenable<string>|Listenable<string>|string;
+
+DefaultBindingRegistry.prototype['$value'] = (element: DomElement, bindingArgs: unknown) => {
+    const typedBindingArgs = bindingArgs as ValueType;
+
+    const { event, source }: { event: string, source: ConnectorValueType } = typedBindingArgs && (<BidirectionalConfig>typedBindingArgs).length === 2 ?
+        {
+            event: (<BidirectionalConfig>typedBindingArgs)[1],
+            source: (<BidirectionalConfig>typedBindingArgs)[0] } :
+        {
+            event: 'change',
+            source: <ConnectorValueType>typedBindingArgs
+        };
+
+    return new AbstractBidirectionalConnector<string>(
         source,
         element,
         (elem: DomElement) => elem.getValue(),
@@ -22,6 +33,6 @@ DefaultBindingRegistry.prototype['$value'] = (element: DomElement, bindingArgs: 
 
 declare module '../../view/jsx/default-intrinsic-element' {
     interface DefaultIntrinsicElements {
-        $value?: (BidirectionalListenable<string>)|(Listenable<string|null>)|string|([BidirectionalListenable<string|null>, string])
+        $value?: ValueType
     }
 }

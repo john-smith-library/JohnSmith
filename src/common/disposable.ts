@@ -20,6 +20,7 @@ export const NoopDisposable: Disposable = {
     /**
      * This method does nothing.
      */
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     dispose: () => {}
 };
 

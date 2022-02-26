@@ -3,7 +3,7 @@ import {Disposable, Owner} from "../../../common";
 
 Listenable.prototype.combine = function<TRight, TResult>(
     right: Listenable<TRight>,
-    transform: (left: any, right: TRight) => TResult) : Listenable<TResult> {
+    transform: (left: unknown, right: TRight) => TResult) : Listenable<TResult> {
 
     return new DependantListenableValue(this, right, transform);
 };

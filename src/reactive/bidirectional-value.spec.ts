@@ -13,7 +13,7 @@ describe('requestChange', () => {
     });
 
     it ('should accept change on void changeHandler', () => {
-        const value = new BidirectionalValue<string>(() => {});
+        const value = new BidirectionalValue<string>(jest.fn());
 
         value.requestUpdate('1');
         expect(value.getValue()).toBe('1');

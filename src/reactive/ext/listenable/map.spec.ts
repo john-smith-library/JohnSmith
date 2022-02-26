@@ -38,7 +38,7 @@ describe('listen', () => {
         const data = createMap();
 
         data.source.setValue('john');
-        const link = data.mapped.listen(() => {});
+        const link = data.mapped.listen(jest.fn());
 
         expect(data.source.getListenersCount()).toBe(1);
 
@@ -54,7 +54,7 @@ describe('getListenersCount', () => {
 
         expect(data.mapped.getListenersCount()).toBe(0);
 
-        data.mapped.listen(() => {});
+        data.mapped.listen(jest.fn());
 
         expect(data.mapped.getListenersCount()).toBe(1);
     });

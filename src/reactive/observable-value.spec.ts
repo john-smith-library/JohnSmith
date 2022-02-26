@@ -3,14 +3,14 @@ import { DataChangeReason } from "./listenable";
 
 it('can attach listeners', () => {
     const observable = new ObservableValue();
-    observable.listen(() => {});
+    observable.listen(jest.fn());
 
     expect(observable.getListenersCount()).toBe(1);
 });
 
 it('can dispose listeners', () => {
     const observable = new ObservableValue();
-    const link = observable.listen(() => {});
+    const link = observable.listen(jest.fn());
     link.dispose();
     expect(observable.getListenersCount()).toBe(0);
 });

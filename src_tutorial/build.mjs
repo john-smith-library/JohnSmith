@@ -151,8 +151,6 @@ var assetsSourcePath = path.join(inputPath, "assets");
 var assetsDestPath = path.join(outputPath, "assets");
 var rootAssets = path.join(assetsDestPath, "root");
 
-fs.mkdirsSync(path.join("out", "ajax"));
-
 fs.copy(assetsSourcePath, assetsDestPath, function(err){
     if (!err) {
         if (fs.existsSync(rootAssets)) {

@@ -3,16 +3,20 @@ import {Listenable} from "../../reactive";
 import {DomElement} from "../../view";
 import {AbstractListenableConnector} from '../../view/connectors/abstract';
 
-DefaultBindingRegistry.prototype['$innerHTML'] = (element: DomElement, bindingArgs: any) => {
-    return new AbstractListenableConnector(bindingArgs, (value: any) => {
-        element.setInnerHtml(value === null ? '' : value);
+type InnerHtmlValue = Listenable<string|null>|string|null|undefined;
 
-        return null;
-    });
+DefaultBindingRegistry.prototype['$innerHTML'] = (element: DomElement, bindingArgs: unknown) => {
+    return new AbstractListenableConnector<string>(
+        <InnerHtmlValue>bindingArgs,
+        (value: string|null) => {
+            element.setInnerHtml(value === null ? '' : value);
+
+            return null;
+        });
 };
 
 declare module '../../view/jsx/default-intrinsic-element' {
     interface DefaultIntrinsicElements {
-        $innerHTML?: Listenable<string|null>|string
+        $innerHTML?: InnerHtmlValue
     }
 }

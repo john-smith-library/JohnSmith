@@ -9,23 +9,37 @@ import {ErrorsViewModel} from "./errors-view-model";
 import '../troubleshooting/global';
 
 const LOG = console ? console.log : () => undefined;
+const ERROR = console ? console.error : () => undefined;
 
 const debuggerViewModel = new ErrorsViewModel();
 
 globalThis.JS.TroubleShooterFactory = () => {
-    INITIALIZER();
+    try {
+        INITIALIZER();
 
-    return new DebugTroubleshooter(
-        debuggerViewModel,
-        () => {
-            const domEngine = new NativeDomEngine();
+        return new DebugTroubleshooter(
+            debuggerViewModel,
+            () => {
+                const domEngine = new NativeDomEngine();
 
-            new DefaultViewRenderer(
-                domEngine,
-                new DefaultBindingRegistry(),
-                new NoopTroubleshooter()
-            ).render(domEngine.getRoot()!, ErrorsView, debuggerViewModel);
-        });
+                const root = domEngine.getRoot();
+
+                if (!root) {
+                    throw new Error('Cannot find page root element to attach JohnSmith debug tools.')
+                }
+
+                new DefaultViewRenderer(
+                    domEngine,
+                    new DefaultBindingRegistry(),
+                    new NoopTroubleshooter()
+                ).render(root, ErrorsView, debuggerViewModel);
+            });
+    } catch (e) {
+        ERROR(e);
+        ERROR('Noop debugger will be used.');
+
+        return new NoopTroubleshooter();
+    }
 };
 
 const INITIALIZER = () => {

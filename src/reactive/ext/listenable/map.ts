@@ -1,7 +1,7 @@
 import {Listenable, ListenerCallback} from '../../listenable';
 import {Disposable} from '../../../common';
 
-Listenable.prototype.map = function<TResult>(mapper: (value: any) => TResult) {
+Listenable.prototype.map = function<TResult>(mapper: (value: unknown) => TResult) {
     return new MappedListenable(this, mapper);
 };
 
