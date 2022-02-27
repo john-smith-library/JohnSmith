@@ -16,7 +16,7 @@ jobs:
       - run: npm run test
 
       - name: Tutorial🠖Init
-        run: npm ci
+        run: npm install
         working-directory: ./src_tutorial
 
       - name: Tutorial🠖Build Code

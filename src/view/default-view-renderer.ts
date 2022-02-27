@@ -230,7 +230,7 @@ export class DefaultViewRenderer implements ViewRenderer {
                 if (attributeValue) {
                     bindings.push(() => {
                         const
-                            bindCallback = <Function>attributeValue,
+                            bindCallback = <(root: DomElement, viewModel: unknown) => Disposable|undefined>attributeValue,
                             bindResult = ToDisposable(bindCallback.call(context.viewInstance, result, context.viewModel));
 
                         if (bindResult) {

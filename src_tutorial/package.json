@@ -1,17 +1,16 @@
 {
   "name": "john-smith-tutorial",
   "version": "1.0.0",
-  "description": "JohnSmith API checking demo (for development purposes)",
+  "description": "JohnSmith guide sources",
   "main": "index.tsx",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "build_site": "node build.mjs",
     "build_samples_code": "webpack"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "john-smith": "^4.0.0-alpha.10"
+    "john-smith": "latest"
   },
   "devDependencies": {
     "ts-loader": "^9.2.6",
