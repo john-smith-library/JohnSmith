@@ -1,0 +1,45 @@
+name: release
+on:
+  push:
+    branches:
+      - release
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16.x'
+          registry-url: 'https://registry.npmjs.org'
+      - run: npm ci
+      - run: npm run test
+
+      - run: npm version prerelease -preid=alpha
+      - run: npm run pack
+      - run: npm publish ./dist
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Backsync with master
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          branch: master
+
+      - name: Tutorial🠖Init
+        run: npm install
+        working-directory: ./src_tutorial
+
+      - name: Tutorial🠖Build Code
+        run: npm run build_samples_code
+        working-directory: ./src_tutorial
+
+      - name: Tutorial🠖Build Pages
+        run: npm run build_site
+        working-directory: ./src_tutorial
+
+      - name: Tutorial🠖Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist_tutorial

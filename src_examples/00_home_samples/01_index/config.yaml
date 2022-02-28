@@ -1,7 +1,0 @@
-title: User Greeter
-annotations:
-    - <p>Creates an observable object. That object notifies it's listeners about any change.</p> <p class='last'>Normally <b>ViewModel</b> initiates the change and <b>View</b> listens for it.</p>
-    - <p>Creates a calculated observable object. This object will trigger change event on every dependency change.</p><p class='last'>Note that we manually set a dependincy, no magic autodetection.</p>
-    - |
-      <p>Template is a plain html. As an option, You can move the actual markup to script element and reference it by jQuery selector:</p>
-      <p class='last'><code>this.template = '#myViewTemplate'</code></p>

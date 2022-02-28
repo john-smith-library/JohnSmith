@@ -1,0 +1,608 @@
+/* mini resets */
+h1, h2, h3, h4, h5, pre, code, div, header, section, body, p, a, ul, li, img
+{
+    margin: 0;
+    padding: 0;
+    font-weight: normal;
+    border: none;
+}
+
+table
+{
+    border-collapse: collapse;
+}
+
+/* common */
+
+body
+{
+    background: #efefef;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.appContent
+{
+    margin: 0 auto;
+}
+
+.container
+{
+    padding: 0 20px;
+}
+
+a
+{
+    color: #009fe3;
+}
+
+/* ----------------------------------------------
+   Main Header
+   ---------------------------------------------- */
+
+#mainHeader
+{
+    height: 65px;
+    line-height: 65px;
+    background: #FFFFFF;
+    border-bottom: 5px solid #009fe3;
+}
+
+#mainHeader .appContent
+{
+    width: 1200px; /* default width */
+}
+
+#mainHeader #johnSmith
+{
+    float: left;
+    margin-right: 5px;
+}
+
+#logo span
+{
+    color: #009fe3;
+    font-weight: 400;
+}
+
+#logo
+{
+    font-size: 24px;
+    color: #666666;
+    font-weight: 300;
+}
+
+#mainHeader #links
+{
+    float: right;
+}
+
+#mainHeader #links img
+{
+    vertical-align: middle;
+}
+
+/* ----------------------------------------------
+   Page
+   ---------------------------------------------- */
+
+#page
+{
+    position: absolute;
+    top: 70px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+
+    width: 1200px; /* default width */
+    margin: 0 auto;
+}
+
+#page .sourceContent
+{
+    overflow: auto;
+}
+
+#contentHeader
+{
+    height: 80px;
+}
+
+#contentHeader h1
+{
+    padding-top: 30px;
+    font-weight: 300;
+    font-size: 26px;
+}
+
+/* ----------------------------------------------
+   Page >> Result
+   ---------------------------------------------- */
+
+#page #result .scroller
+{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    overflow: auto;
+    z-index: 20;
+    padding: 40px 0 20px 0;
+}
+
+#page #result #destination
+{
+    padding: 20px;
+    font-size: 16px;
+}
+
+
+#page #result
+{
+    float: left;
+    width: 590px;
+    height: 780px;
+
+    background: #FFFFFF;
+    border: 1px solid #cfcfcf;
+
+    border-radius: 3px;
+
+    position: relative;
+    overflow: hidden;
+
+    width: 570px; /* default width */
+}
+
+#result #description
+{
+    padding: 0px 20px 20px 20px;
+    font-size: 16px;
+    font-weight: 300;
+}
+
+#result #description p,
+#result #description pre,
+#result #description ul
+{
+    margin-bottom: 1em;
+}
+
+#result #description p,
+#result #description pre,
+#result #description ul,
+#result #description ul li,
+#result #description a
+{
+    font-weight: 300;
+}
+
+#result #description ul
+{
+    padding-left: 20px;
+}
+
+#result h3
+{
+    font-weight: 300;
+    font-size: 20px;
+    padding-left: 20px;
+}
+
+#result #destination
+{
+    border: 1px solid #b2e7fe;
+    margin: 20px;
+    border-radius: 2px;
+    background: #ecf9fe;
+}
+
+#result #destination p,
+#result #destination h2,
+#result #destination table,
+#result #destination ul
+{
+    margin-bottom: 1em;
+}
+
+#result #destination table,
+#result #destination table td,
+#result #destination table th
+{
+    border: 1px solid #b2e7fe;
+}
+
+#result #destination table td,
+#result #destination table th
+{
+    padding: 5px 10px;
+}
+
+#result #destination ul,
+#result #destination ul li
+{
+    list-style-type: none;
+    list-style-image: none;
+}
+
+#result #destination input[type=text],
+#result #destination textarea
+{
+    padding: 3px 5px;
+    width: 50%;
+    resize: none;
+}
+
+#sendToJsFiddle
+{
+    padding: 0 20px;
+}
+
+#sendToJsFiddle #sendButton
+{
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 11px;
+    text-transform: uppercase;
+    color: #999999;
+    text-shadow: 1px 1px #FFFFFF;
+
+    background: #EFEFEF;
+    background: -webkit-linear-gradient(#FFFFFF, #EFEFEF, #EEEEEE);
+    background: -moz-linear-gradient(top, #FFFFFF, #EFEFEF, #EEEEEE);
+    background: -ms-linear-gradient(top, #FFFFFF, #EFEFEF, #EEEEEE);
+    background: -o-linear-gradient(top, #FFFFFF, #EFEFEF, #EEEEEE);
+
+    padding: 5px 10px;
+    border: 1px solid #cfcfcf;
+    cursor: pointer;
+    color: #666666;
+}
+
+#sendToJsFiddle #sendButton:hover {
+
+}
+
+/* ----------------------------------------------
+   Result >> Table of Contents
+   ---------------------------------------------- */
+
+#tableOfContents
+{
+    background: #FFFFFF;
+}
+
+#tableOfContents .content
+{
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0px;
+    padding: 30px 0 15px 0;
+
+    border-bottom: 1px solid #cfcfcf;
+}
+
+#tableOfContents.shown .content
+{
+    overflow: auto;
+}
+
+#tableOfContents ul
+{
+    font-size: 13px;
+    line-height: 1.7em;
+    list-style-type: none;
+    list-style-image: none;
+    padding-left: 30px;
+}
+
+#tableOfContents ul a
+{
+    color: #009fe3;
+    text-decoration: none;
+}
+
+#tableOfContents ul a.selected
+{
+    font-weight: 700;
+}
+
+#tableOfContents ul a:hover
+{
+    text-decoration: underline;
+}
+
+#tableOfContentsOverlay
+{
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    overflow: hidden;
+    z-index: 95;
+
+    background: #efefef;
+    opacity: 0.5;
+    display: none;
+
+    transition: all 1s ease;
+    -webkit-transition: all 1s ease;
+
+    cursor: pointer;
+}
+
+#tableOfContentsOverlay.visible
+{
+    display: block;
+    opacity: 0.5;
+}
+
+/* ----------------------------------------------
+   Page >> Source
+   ---------------------------------------------- */
+
+#source
+{
+    float: left;
+    width: 590px;
+    height: 780px;
+    background: #FFFFFF;
+    border: 1px solid #cfcfcf;
+
+    border-radius: 3px;
+
+    width: 570px; /* default width */
+
+    margin-right: 10px;
+}
+
+#source header
+{
+    background: #EEEEEE;
+    border-bottom: 1px solid #cfcfcf;
+    font-size: 12px;
+    padding: 5px 10px;
+    font-weight: 700;
+}
+
+#source #javaScript,
+#source #html
+{
+    position: relative;
+}
+
+#source #javaScript header
+{
+    border-radius: 2px 2px 0 0;
+}
+
+#source #html header
+{
+    border-top: 1px solid #cfcfcf;
+}
+
+#source #javaScript
+{
+}
+
+#source .sourceContent pre
+{
+    padding: 10px;
+}
+
+#source .sourceContent pre code
+{
+    font-size: 12px;
+}
+
+#source .codeAnnotation
+{
+    background: #ffdbb2;
+    padding-left: 3px;
+    padding-right: 3px;
+
+    border-radius: 2px;
+}
+
+#navigation
+{
+    position: absolute;
+    top: -20px;
+    left: 20px;
+}
+
+#navigation #prev
+{
+
+}
+
+#mainNavigation
+{
+    position: absolute;
+    top: 60px;
+    z-index: 1000;
+    width: 188px;
+    height: 40px;
+    left: 378px;
+}
+
+#mainNavigation .bg
+{
+    position: absolute;
+    height: 20px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    z-index: 90;
+}
+
+#mainNavigation .bg .left
+{
+    float: left;
+    width: 20px;
+    height: 20px;
+    background: url(../images/circle.png) 0 -20px;
+}
+
+#mainNavigation .bg .center
+{
+    display: block;
+    padding: 0 20px;
+    height: 19px;
+}
+
+#mainNavigation .bg .center span
+{
+    display: block;
+    height: 20px;
+    background: url(../images/rect.png);
+}
+
+#mainNavigation .bg .right
+{
+    float: right;
+    width: 20px;
+    height: 20px;
+    background: url(../images/circle.png) 20px -20px;
+}
+
+#mainNavigation a
+{
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 11px;
+    text-transform: uppercase;
+    color: #999999;
+    text-shadow: 1px 1px #FFFFFF;
+}
+
+#mainNavigation .content
+{
+    position: absolute;
+    left: 4px;
+    bottom: 4px;
+
+    z-index: 100;
+}
+
+#mainNavigation #prevLink,
+#mainNavigation #nextLink,
+#mainNavigation #browseAll span
+{
+    background: #EFEFEF;
+    background: -webkit-linear-gradient(#FFFFFF, #EFEFEF, #EEEEEE);
+    background: -moz-linear-gradient(top, #FFFFFF, #EFEFEF, #EEEEEE);
+    background: -ms-linear-gradient(top, #FFFFFF, #EFEFEF, #EEEEEE);
+    background: -o-linear-gradient(top, #FFFFFF, #EFEFEF, #EEEEEE);
+}
+
+#mainNavigation #prevLink.disabled,
+#mainNavigation #nextLink.disabled,
+#mainNavigation #browseAll.disabled span
+{
+    background: #e9e9e9;
+}
+
+#mainNavigation #prevLink:hover,
+#mainNavigation #nextLink:hover,
+#mainNavigation #browseAll:hover span
+{
+    color: #666666;
+}
+
+#mainNavigation #prevLink:active,
+#mainNavigation #nextLink:active,
+#mainNavigation #browseAll:active span
+{
+    background: -webkit-linear-gradient(#EFEFEF, #FFFFFF, #EEEEEE)
+}
+
+#mainNavigation #prevLink
+{
+    float: left;
+    border: 1px solid #cfcfcf;
+    height: 34px;
+    width: 34px;
+    border-radius: 50% 0 0 50%;
+    text-align: center;
+    line-height: 34px;
+}
+
+#mainNavigation #nextLink
+{
+    float: right;
+    border: 1px solid #cfcfcf;
+    height: 34px;
+    width: 34px;
+    border-radius: 0 50% 50% 0;
+    text-align: center;
+    line-height: 34px;
+}
+
+#mainNavigation #browseAll
+{
+    height: 34px;
+    line-height: 34px;
+    display: block;
+    padding: 0 40px;
+    width: 100px;
+    text-align: center;
+}
+
+#mainNavigation #browseAll span
+{
+    display: block;
+    border: 1px solid #cfcfcf;
+}
+
+/* ----------------------------------------------
+   Main Footer
+   ---------------------------------------------- */
+
+#mainFooter
+{
+    height: 40px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    font-size: 12px;
+}
+
+#mainFooter .container
+{
+    padding-bottom: 20px;
+}
+#mainFooter a
+{
+    font-size: 12px;
+    color: #009fe3;
+}
+
+#mainFooter #ci
+{
+    float: right;
+}
+
+#mainFooter .info
+{
+    float: left;
+}
+
+#mainFooter #footerLinks
+{
+    text-align: center;
+}
+
+/* prism overrides */
+.source-code-container {
+    margin: 0 !important;
+    background: #ffffff !important;
+}

@@ -169,11 +169,18 @@ pip-log.txt
 .idea/workspace.xml
 .idea/tasks.xml
 
+#############
+## Testing Artifacts
+#############
+
+coverage
 
 #############
 ## JohnSmith autogenerate
 #############
 
+dist_doc
+dist_tutorial
 out
 tools
 node_modules

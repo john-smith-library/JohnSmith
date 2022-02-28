@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "declaration": false,
+    "strict": true,
+    "lib": ["es5", "dom"],
+    "allowJs": true,
+    "jsx": "react",
+    "jsxFactory": "JS.d"
+  }
+}
