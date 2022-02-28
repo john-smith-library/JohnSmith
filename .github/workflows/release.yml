@@ -15,7 +15,11 @@ jobs:
       - run: npm ci
       - run: npm run test
 
-      - run: npm version prerelease -preid=alpha
+      - run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "<>"
+
+      - run: npm --no-git-tag-version version prerelease -preid=alpha
       - run: npm run pack
       - run: npm publish ./dist
         env:
