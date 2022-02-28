@@ -15,6 +15,17 @@ jobs:
       - run: npm ci
       - run: npm run test
 
+      - run: npm version prerelease -preid=alpha
+      - run: npm run pack
+      - run: npm publish ./dist
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Backsync with master
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          branch: master
+
       - name: Tutorial🠖Init
         run: npm install
         working-directory: ./src_tutorial
@@ -32,8 +43,3 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist_tutorial
-
-      - run: npm run pack
-      - run: npm publish ./dist
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
