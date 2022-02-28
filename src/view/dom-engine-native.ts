@@ -119,7 +119,6 @@ export class NativeDomEngine implements DomEngine {
     }
 
     createNamespaceElement(namespace: string, tag: string): DomElement {
-        console.log(namespace, tag);
         return new NativeElement(<HTMLElement>document.createElementNS(namespace, tag)); // todo
     }
 
