@@ -4,6 +4,7 @@ import {ViewComponent} from "../view-component";
 import '../../global';
 
 declare global {
+    // eslint-disable-next-line @typescript-eslint/no-namespace
     namespace JSX {
         interface IElement extends DefaultIntrinsicElements{
             [elemName: string]: any;
@@ -14,10 +15,11 @@ declare global {
         }
 
         interface ElementAttributesProperty {
-            data: {}; // specify the property name to use
+            data: unknown; // specify the property name to use
         }
 
-        interface ElementClass extends ViewComponent<any> {
+        // eslint-disable-next-line @typescript-eslint/no-empty-interface
+        interface ElementClass extends ViewComponent<unknown> {
         }
 
         // interface IntrinsicClassAttributes<T>  {

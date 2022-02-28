@@ -9,22 +9,15 @@ head
         script(type="text/javascript", src="http://html5shiv.googlecode.com/svn/trunk/html5.js")
 
     link(rel="stylesheet", href=pathToRoot + "/assets/styles/prism.css")
-
     link(rel="stylesheet", href=pathToRoot + "/assets/styles/googlecode.css")
     link(rel="stylesheet", href=pathToRoot + "/assets/styles/samples_hub.css")
-    link(rel="stylesheet", href=pathToRoot + "/assets/styles/tooltipster.css")
-    link(rel="stylesheet", href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,700", type='text/css')
+    link(rel="stylesheet", href="//fonts.googleapis.com/css?family=Open+Sans:400,300,700", type='text/css')
 
     if currentTopic.styles
         style(type='text/css')
             #{currentTopic.styles}
 
     script(src=pathToRoot + '/assets/scripts/prism.js')
-    script(src='http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js')
-    script(src='john-smith-latest.js')
-    script(src='assets/scripts/highlight.pack.js')
-    script(src='assets/scripts/jquery.tooltipster.min.js')
-    script(src='assets/scripts/samples_hub.js')
     script.
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -49,22 +42,20 @@ html
         header#mainHeader
             div.appContent
                 div.container
-                    img#johnSmith(src='assets/images/john_head_small.png')
                     div#links
-                        a(href='https://github.com/guryanovev/JohnSmith')
-                            img(src='assets/images/github.png')
+                        a(href='https://github.com/john-smith-library/JohnSmith')
+                            img(src=pathToRoot + '/assets/images/github.png')
 
                     div#logo
                         span JohnSmith
                         | &nbsp;Samples Hub
-
 
         section#tableOfContents(style='height: 100%')
             div.content
                 +navigationList(tableOfContents, 0)
 
         section#page.appContent
-            div.container(itemscope,itemtype="http://schema.org/Article")
+            div.container(itemscope,itemtype="//schema.org/Article")
                 header#contentHeader
                     h1(itemprop="name") #{currentTopic.title}
 
@@ -109,18 +100,11 @@ html
                         div#destination !{currentTopic.markup}
                             script (function(){!{currentTopic.code}}());
 
-                        form#sendToJsFiddle(action='http://jsfiddle.net/api/post/jquery/2.0/', method='POST', target='_blank')
-                            input#formJs(type='hidden', value='#{currentTopic.code}', name='js')
-                            input#formHtml(type='hidden', value='#{currentTopic.markup}', name='html')
-                            input(type='hidden', value='d', name='wrap')
-                            input(type='hidden', value='http://john-smith-js.com/john-smith.debug.js', name='resources')
-                            input#sendButton(type='submit', value='Open in jsFiddle')
-
         footer#mainFooter.appContent
             div.container
                 section#ci
-                    a(href='https://travis-ci.org/guryanovev/JohnSmith', title='Travis CI Build Status')
-                        img(src='https://travis-ci.org/guryanovev/JohnSmith.png', alt='Build Status')
+
+                img(src='https://github.com/john-smith-library/JohnSmith/actions/workflows/ci.yml/badge.svg', alt='Build Status')
 
                 section.info v#{version}
 
@@ -131,17 +115,4 @@ html
                     span &nbsp;|&nbsp;
                     a(href='http://www.nuget.org/packages/JohnSmith/') NuGet package
 
-
-        script.
-            $(function(){
-                runApplication();
-                //hljs.initHighlightingOnLoad();
-                $('pre code').each(function(i, e) {hljs.highlightBlock(e)});
-                //setTimeout(function(){
-                    $('.codeAnnotation').tooltipster({
-                        maxWidth: 300,
-                        position: 'right'
-                    });
-                //}, 3000);
-            });
         script(src="index.js")
