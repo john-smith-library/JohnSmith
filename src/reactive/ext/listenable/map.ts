@@ -30,30 +30,11 @@ class MappedListenable<TSource, TTarget> extends Listenable<TTarget> {
         super();
     }
 
-    getListenersCount(): number {
-        return this.source.getListenersCount();
-    }
-
     listen(listener: ListenerCallback<TTarget>, raiseInitial?: boolean): Disposable {
-        let cachedOldValue: TTarget|undefined = undefined;
-
         return this.source.listen(
-            (value, oldValue, details) => {
-
-                const
-                    mappedNewValue: TTarget = this.mapper(value),
-                    mappedOldValue = oldValue === undefined ? undefined : (cachedOldValue === undefined ? this.mapper(oldValue) : cachedOldValue),
-                    mappedDetails = {
-                        reason: details.reason,
-                        portion: details.portion === value ? mappedNewValue : this.mapper(details.portion)
-                };
-
-                listener(
-                    mappedNewValue,
-                    mappedOldValue,
-                    mappedDetails);
-
-                cachedOldValue = mappedNewValue;
+            (value) => {
+                const mappedNewValue: TTarget = this.mapper(value);
+                listener(mappedNewValue);
             }, raiseInitial);
     }
 }

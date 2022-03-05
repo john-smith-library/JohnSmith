@@ -3,10 +3,10 @@ import {setupAppContainerAndRender} from './_helpers';
 import '../src/view/jsx';
 
 class ViewModel {
-    content: ObservableValue<string>;
+    content: ObservableValue<string|null>;
 
     constructor(content: string|null) {
-        this.content = new ObservableValue<string>(content);
+        this.content = new ObservableValue<string|null>(content);
     }
 }
 

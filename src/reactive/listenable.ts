@@ -40,17 +40,34 @@ export interface ChangeDetails<T> {
 /**
  * Listenable callback signature.
  */
-export interface ListenerCallback<T> {
-    (value: T, oldValue: T|undefined, details: ChangeDetails<T>): void;
-}
+// export interface ListenerCallback<T> {
+//     (value: T, oldValue: T|undefined, details: ChangeDetails<T>): void;
+// }
 
 class ListenerLink<T> implements Disposable {
-    constructor(private allListeners:  ListenerCallback<T>[], private currentListener: ListenerCallback<T>){
+    constructor(private allListeners:  T[], private currentListener: T){
     }
 
     dispose(){
         ArrayUtils.removeItem(this.allListeners, this.currentListener);
     }
+}
+
+/**
+ * Listenable callback signature.
+ */
+export interface ListenerCallback<TItem> {
+    (value: TItem): void;
+}
+
+/**
+ * Partial listenable callback signature.
+ *
+ * @param portion the changed part of data
+ * @param reason data change reason
+ */
+export interface PartialListenerCallback<TItem> {
+    (portion: TItem, reason: DataChangeReason): void;
 }
 
 /**
@@ -66,11 +83,18 @@ export abstract class Listenable<T> {
      * right away with the actual value. Default is `true`.
      */
     abstract listen(listener:  ListenerCallback<T>, raiseInitial?: boolean): Disposable;
+}
 
+export interface PartialListenable<T> {
     /**
-     * Returns the number of listeners attached to the listenable.
+     * Attaches a listener to this listenable object. The listener
+     * will be called for every change related to the listenable.
+     *
+     * @param listener the listener callback
+     * @param raiseInitial a flag indicating whether the callback should be called
+     * right away with the actual value. Default is `true`.
      */
-    abstract getListenersCount(): number;
+    listenPartial(listener: PartialListenerCallback<T>, raiseInitial?: boolean): Disposable;
 }
 
 /**
@@ -84,15 +108,43 @@ export class Listeners<T> {
     add(listener:  ListenerCallback<T>, initial:T|undefined) : Disposable {
         this._items.push(listener);
         if (initial !== undefined) {
-            listener(initial, undefined, { reason: DataChangeReason.initial, portion: initial })
+            listener(initial);
         }
 
         return new ListenerLink(this._items, listener);
     }
 
-    notify(newValue:T, oldValue:T|undefined, details: ChangeDetails<T>): void {
+    notify(newValue:T): void {
         for (let i = 0; i < this._items.length; i++) {
-            this._items[i](newValue, oldValue, details);
+            this._items[i](newValue);
+        }
+    }
+
+    size() {
+        return this._items.length;
+    }
+}
+
+/**
+ * A helper class to encapsulate the logic of listener
+ * callbacks management via composition. This class is for
+ * internal framework usages.
+ */
+export class PartialListeners<TItem> {
+    private _items: PartialListenerCallback<TItem>[] = [];
+
+    add(listener: PartialListenerCallback<TItem>, initial?: TItem) : Disposable {
+        this._items.push(listener);
+        if (initial !== undefined) {
+            listener(initial, DataChangeReason.initial);
+        }
+
+        return new ListenerLink(this._items, listener);
+    }
+
+    notify(newValue:TItem, reason: DataChangeReason): void {
+        for (let i = 0; i < this._items.length; i++) {
+            this._items[i](newValue, reason);
         }
     }
 
@@ -102,7 +154,7 @@ export class Listeners<T> {
 }
 
 export interface BidirectionalListenable<T> extends Listenable<T> {
-    requestUpdate(newValue: T|null): void;
+    requestUpdate(newValue: T): void;
 }
 
 export abstract class ReadonlyObservable<T> extends Listenable<T> {
@@ -113,4 +165,10 @@ export const isListenable = <T>(
     source: (Listenable<T>)|T): source is Listenable<T> => {
 
     return !!(<Listenable<T>>source).listen;
+};
+
+export const isPartialListenable = <T>(
+    source: PartialListenable<T>|Listenable<T>|T): source is PartialListenable<T> => {
+
+    return !!(<PartialListenable<T>>source).listenPartial;
 };

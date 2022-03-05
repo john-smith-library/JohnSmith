@@ -1,12 +1,11 @@
-import {Disposable} from '../../common';
-import {DataChangeReason, Listenable} from '../../reactive';
-import {DomElement} from '../element';
-import {ViewDefinition} from '../view-definition';
-import {ViewRenderer} from '../view-renderer';
-import {isListenable} from '../../reactive';
+import {Disposable} from "../../common";
+import {DataChangeReason, isListenable, isPartialListenable, Listenable} from "../../reactive";
+import {DomElement} from "../element";
+import {ViewDefinition} from "../view-definition";
+import {ViewRenderer} from "../view-renderer";
 
-interface IRenderedValueData {
-    value: any;
+interface IRenderedValueData<T> {
+    value: T;
     renderedValue: Disposable;
 }
 
@@ -17,7 +16,7 @@ interface IRenderedValueData {
 export class ObservableListViewConnector<T> implements Disposable {
     private readonly _link: Disposable|null = null;
 
-    private _renderedValues: IRenderedValueData[];
+    private _renderedValues: IRenderedValueData<T>[];
 
     constructor(
         private _observable: Listenable<T[]|null>|T[]|null,
@@ -28,10 +27,15 @@ export class ObservableListViewConnector<T> implements Disposable {
         this._renderedValues = [];
 
         if (_observable != null) {
-            if (isListenable(_observable)) {
+            if (isPartialListenable(_observable)) {
+                this._link = _observable.listenPartial(
+                    (portion, reason) => {
+                        this.doRender(portion || [], reason);
+                    });
+            } else if (isListenable(_observable)) {
                 this._link = _observable.listen(
-                    (value, oldValue, details) => {
-                        this.doRender(details.portion || [], details.reason);
+                    (value) => {
+                        this.doRender(value || [], DataChangeReason.replace);
                     });
             } else {
                 this.doRender(_observable, DataChangeReason.replace);
@@ -49,7 +53,7 @@ export class ObservableListViewConnector<T> implements Disposable {
         }
     }
 
-    private findRenderedValue(value: any) : Disposable|null {
+    private findRenderedValue(value: T) : Disposable|null {
         for (let i = 0; i < this._renderedValues.length; i++){
             const renderedItem = this._renderedValues[i];
             if (renderedItem.value === value){
@@ -99,7 +103,7 @@ export class ObservableListViewConnector<T> implements Disposable {
         }
     }
 
-    private appendItems(items:any[]):void {
+    private appendItems(items:T[]):void {
         if (!items) {
             return;
         }

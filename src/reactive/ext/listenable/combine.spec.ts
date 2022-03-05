@@ -3,8 +3,8 @@ import './combine';
 
 function createCombined() {
     const
-        firstName = new ObservableValue<string>(),
-        lastName = new ObservableValue<string>(),
+        firstName = new ObservableValue<string>(''),
+        lastName = new ObservableValue<string>(''),
         fullName = firstName.combine(lastName, (first, last) => first + ' ' + last);
 
     return {
@@ -26,8 +26,8 @@ describe('combine observable', function () {
         data.lastName.setValue('Smith');
 
         expect(results).toEqual([
-            'null null',
-            'John null',
+            ' ',
+            'John ',
             'John Smith'
         ]);
     });
@@ -42,7 +42,7 @@ describe('combine observable', function () {
         data.firstName.setValue('John');
         data.lastName.setValue('Smith');
 
-        expect(results).toEqual(['John null', 'John Smith']);
+        expect(results).toEqual(['John ', 'John Smith']);
     });
 
     it('should release links after disposing', function () {

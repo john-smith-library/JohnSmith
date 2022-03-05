@@ -46,9 +46,9 @@ export class AbstractBidirectionalConnector<T> extends AbstractListenableConnect
     private readonly eventHandler: any;
 
     constructor(
-        source: BidirectionalListenable<T> | Listenable<T> | T,
+        source: BidirectionalListenable<T> | Listenable<T> |  BidirectionalListenable<T|null> | Listenable<T|null> | T,
         private target: DomElement,
-        valueFromDom: (target: DomElement) => T|null,
+        valueFromDom: (target: DomElement) => T,
         valueToDom: (target: DomElement, value:T|null) => void,
         private event: string) {
 

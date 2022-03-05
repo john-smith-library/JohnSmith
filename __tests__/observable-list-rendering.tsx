@@ -49,7 +49,7 @@ it('should clean on clear',
 
 it('should clean listeners on dispose',
     setupAppContainerAndRender(ListView, new ViewModel(['1', '2', '3']),(container, viewModel, view) => {
-        expect(viewModel.items.getListenersCount()).toBeGreaterThan(0);
+        expect(viewModel.items.getPartialListenersCount()).toBeGreaterThan(0);
         view.dispose();
-        expect(viewModel.items.getListenersCount()).toBe(0);
+        expect(viewModel.items.getPartialListenersCount()).toBe(0);
     }));

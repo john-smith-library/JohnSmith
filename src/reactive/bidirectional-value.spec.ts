@@ -4,7 +4,7 @@ describe('requestChange', () => {
     it ('should call changeHandler', () => {
         const
             changeHandlerSpy = jest.fn(),
-            value = new BidirectionalValue<string>(changeHandlerSpy);
+            value = new BidirectionalValue<string>(changeHandlerSpy, '');
 
         value.requestUpdate('1');
 
@@ -13,21 +13,21 @@ describe('requestChange', () => {
     });
 
     it ('should accept change on void changeHandler', () => {
-        const value = new BidirectionalValue<string>(jest.fn());
+        const value = new BidirectionalValue<string>(jest.fn(), '');
 
         value.requestUpdate('1');
         expect(value.getValue()).toBe('1');
     });
 
     it ('should accept change on null changeHandler result', () => {
-        const value = new BidirectionalValue<string>(() => null);
+        const value = new BidirectionalValue<string>(() => null, '');
 
         value.requestUpdate('1');
         expect(value.getValue()).toBe('1');
     });
 
     it ('should accept change on true changeHandler result', () => {
-        const value = new BidirectionalValue<string>(() => true);
+        const value = new BidirectionalValue<string>(() => true, '');
 
         value.requestUpdate('1');
         expect(value.getValue()).toBe('1');

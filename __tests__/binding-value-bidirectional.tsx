@@ -5,10 +5,10 @@ import {BidirectionalValue, ChangeHandler} from '../src/reactive';
 import '../src/view/jsx';
 
 class ViewModel {
-    firstName: ObservableValue<string>;
+    firstName: ObservableValue<string|null>;
 
-    constructor(public callback: ChangeHandler<string>, firstName: string|null = null) {
-        this.firstName = new BidirectionalValue<string>(callback, firstName);
+    constructor(public callback: ChangeHandler<string|null>, firstName: string|null = null) {
+        this.firstName = new BidirectionalValue<string|null>(callback, firstName);
     }
 }
 

@@ -45,11 +45,12 @@ describe('count', function(){
         expect(observable.count().getValue()).toBe(0);
     });
 
+    /*
     it('Should be 0 if value is null', function(){
         const observable = new ObservableList();
         observable.setValue(null);
         expect(observable.count().getValue()).toBe(0);
-    });
+    });*/
 
     it('Should be equal to items count', function(){
         const observable = new ObservableList<number>();
@@ -66,11 +67,12 @@ it('has value by default', function(){
 });
 
 describe('add', () => {
+    /*
     it('can add even if initial is null', function(){
         const observable = new ObservableList<string>(null);
         observable.add('foo', 'bar');
         expect(observable.getRequiredValue().length).toBe(2);
-    });
+    });*/
 
     it('can add multiple items', function(){
         const observable = new ObservableList<string>();
@@ -78,11 +80,12 @@ describe('add', () => {
         expect(observable.getRequiredValue().length).toBe(2);
     });
 
+    /*
     it('replaces value if it is null', function(){
         const observable = new ObservableList<string>(null);
         observable.add('foo', 'bar');
         expect(observable.getRequiredValue().length).toBe(2);
-    });
+    });*/
 
     it('notifies listeners', function(){
         const observable = new ObservableList<string>();
@@ -94,7 +97,20 @@ describe('add', () => {
         observable.add('foo', 'bar');
 
         expect(listener).toHaveBeenCalled();
-        expect(listener).toHaveBeenCalledWith(['baz', 'foo', 'bar'], ['baz'], { reason: DataChangeReason.add, portion: ['foo', 'bar']});
+        expect(listener).toHaveBeenCalledWith(['baz', 'foo', 'bar']);
+    });
+
+    it('notifies partial listeners', function(){
+        const observable = new ObservableList<string>();
+
+        const listener = jest.fn();
+
+        observable.add('baz');
+        observable.listenPartial(listener);
+        observable.add('foo', 'bar');
+
+        expect(listener).toHaveBeenCalled();
+        expect(listener).toHaveBeenCalledWith(['foo', 'bar'], DataChangeReason.add);
     });
 });
 
@@ -123,11 +139,12 @@ describe('remove', () => {
         expect(value.length).toBe(3);
     });
 
+    /*
     it('does nothing if value is null', () => {
         const observable = new ObservableList<number>(null);
         observable.remove(1, 2, 3);
         expect(observable.getValue()).toBeNull();
-    });
+    });*/
 
     it('notifies listeners', function(){
         const observable = new ObservableList<number>();
@@ -139,7 +156,20 @@ describe('remove', () => {
         observable.remove(1, 3, 5, 7, 9);
 
         expect(listener).toHaveBeenCalled();
-        expect(listener).toHaveBeenCalledWith([2, 4, 6, 8, 10], [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], { reason: DataChangeReason.remove, portion: [1, 3, 5, 7, 9] });
+        expect(listener).toHaveBeenCalledWith([2, 4, 6, 8, 10]);
+    });
+
+    it('notifies partial listeners', function(){
+        const observable = new ObservableList<number>();
+
+        const listener = jest.fn();
+
+        observable.setValue([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+        observable.listenPartial(listener);
+        observable.remove(1, 3, 5, 7, 9);
+
+        expect(listener).toHaveBeenCalled();
+        expect(listener).toHaveBeenCalledWith([1, 3, 5, 7, 9], DataChangeReason.remove);
     });
 });
 
@@ -154,7 +184,20 @@ describe('clear', () => {
         observable.clear();
 
         expect(listener).toHaveBeenCalled();
-        expect(listener).toHaveBeenCalledWith([], [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], { reason: DataChangeReason.remove, portion: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]});
+        expect(listener).toHaveBeenCalledWith([]);
+    });
+
+    it('notifies partial listeners', function(){
+        const observable = new ObservableList<number>();
+
+        const listener = jest.fn();
+
+        observable.setValue([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+        observable.listenPartial(listener);
+        observable.clear();
+
+        expect(listener).toHaveBeenCalled();
+        expect(listener).toHaveBeenCalledWith([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], DataChangeReason.remove);
     });
 
     it('deletes all items', function(){

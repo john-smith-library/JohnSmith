@@ -11,10 +11,10 @@ class PersonViewModel {
 }
 
 class ApplicationViewModel {
-    person: ObservableValue<PersonViewModel>;
+    person: ObservableValue<PersonViewModel|null>;
 
     constructor(person: PersonViewModel|null) {
-        this.person = new ObservableValue<PersonViewModel>(person);
+        this.person = new ObservableValue<PersonViewModel|null>(person);
     }
 }
 

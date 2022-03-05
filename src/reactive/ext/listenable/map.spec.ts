@@ -2,7 +2,7 @@ import {ObservableValue} from '../../observable-value';
 import './map';
 
 function createMap() {
-    const source = new ObservableValue<string>();
+    const source = new ObservableValue<string>('');
 
     return {
         source: source,
@@ -52,10 +52,10 @@ describe('getListenersCount', () => {
     it('should increment on listen', () => {
         const data = createMap();
 
-        expect(data.mapped.getListenersCount()).toBe(0);
+        expect(data.source.getListenersCount()).toBe(0);
 
         data.mapped.listen(jest.fn());
 
-        expect(data.mapped.getListenersCount()).toBe(1);
+        expect(data.source.getListenersCount()).toBe(1);
     });
 });
