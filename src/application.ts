@@ -4,7 +4,6 @@ import {BindingRegistry, DefaultBindingRegistry} from "./binding/registry";
 import type { ViewRenderer } from "./view/view-renderer";
 import {NativeDomEngine} from "./view/dom-engine-native";
 import {Disposable, NoopDisposable} from "./common";
-//import { JxsInitializer } from './view/jsx/initializer';
 import {DefaultViewRenderer} from "./view/default-view-renderer";
 import {Troubleshooter} from "./troubleshooting/troubleshooter";
 import {NoopTroubleshooter} from "./troubleshooting/noop-troubleshooter";
@@ -55,8 +54,6 @@ export class Application {
             return this._viewRenderer.render(actualElement, view, viewModel);
         }
 
-        // todo: error
-
-        return NoopDisposable; // todo
+        return this._troubleshooter.elementNotFound(element, this._domEngine.getRoot())
     }
 }

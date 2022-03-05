@@ -5,4 +5,12 @@ export class NoopTroubleshooter implements Troubleshooter {
     bindingNotFound(): Disposable {
         return NoopDisposable;
     }
+
+    elementNotFound(): Disposable {
+        return NoopDisposable;
+    }
+
+    unknownHtmlDefinition(): Disposable {
+        return NoopDisposable;
+    }
 }

@@ -1,5 +1,5 @@
 import {Troubleshooter} from "../troubleshooting/troubleshooter";
-import {DomElement, DomElementClasses} from "../view";
+import {DomElement, DomElementClasses, HtmlDefinition} from "../view";
 import {Disposable} from "../common";
 import {ErrorsViewModel} from "./errors-view-model";
 
@@ -28,6 +28,7 @@ export class DebugTroubleshooter implements Troubleshooter {
     private _errorIndex = 1;
 
     constructor(
+        private rootContext: DomElement,
         private debuggerViewModel: ErrorsViewModel,
         private onFirstErrorCallback: () => void) {
     }
@@ -35,6 +36,20 @@ export class DebugTroubleshooter implements Troubleshooter {
     bindingNotFound(code: string, context: DomElement): Disposable {
         return this.pushErrorMessage(
             'Binding with code [' + code + '] is not registered, please make sure the code is correct and the binding definition has been imported',
+            context
+        );
+    }
+
+    elementNotFound(element: HTMLElement | string, context: DomElement | null): Disposable {
+        return this.pushErrorMessage(
+            'Required DOM element [' + element + '] was not found',
+            context || this.rootContext
+        );
+    }
+
+    unknownHtmlDefinition(source: HtmlDefinition, context: DomElement): Disposable {
+        return this.pushErrorMessage(
+            'Unsupported HTML Definition detected: [' + source.element + ']',
             context
         );
     }

@@ -1,5 +1,5 @@
 import { DomElement } from './element';
-import {Disposable, NoopDisposable, Owner, ToDisposable} from '../common';
+import {Disposable, Owner, ToDisposable} from '../common';
 import {HtmlDefinition, NestedHtmlDefinition, ViewDefinition} from "./view-definition";
 import {DomEngine} from "./dom-engine";
 import {BindingRegistry} from "../binding/registry";
@@ -12,10 +12,9 @@ import {ViewComponent, ViewComponentConstructor} from "./view-component";
 import {ViewRenderer} from "./view-renderer";
 import {Troubleshooter} from "../troubleshooting/troubleshooter";
 
-
-type ViewRuntimeData = { template: HtmlDefinition, viewInstance?: any /* todo: typings */ };
+type ViewRuntimeData = { template: HtmlDefinition, viewInstance?: unknown };
 type Initializers = (() => Disposable)[];
-type TraversingContext = { viewInstance: any, viewModel: any };
+type TraversingContext = { viewInstance: unknown, viewModel: unknown };
 
 /**
  * @internal
@@ -166,7 +165,13 @@ export class DefaultViewRenderer implements ViewRenderer {
             return null;
         }
 
-        return null; // todo: unknown HtmlDefinition
+        bindings.push(
+            () => this.troubleshooter.unknownHtmlDefinition(
+                source,
+                parent)
+        );
+
+        return null;
     }
 
     private processViewComponent(
@@ -226,7 +231,7 @@ export class DefaultViewRenderer implements ViewRenderer {
             const attrPrefix = attributeName && attributeName.length > 0 ? attributeName[0] : null;
             const attributeValue = source.attributes[attributeName];
 
-            if (attributeName === '$bind') {
+            /*if (attributeName === '$bind') {
                 if (attributeValue) {
                     bindings.push(() => {
                         const
@@ -240,7 +245,7 @@ export class DefaultViewRenderer implements ViewRenderer {
                         return NoopDisposable;
                     });
                 }
-            } else if (attrPrefix === '$') {
+            } else*/ if (attrPrefix === '$') {
                 bindings.push(() => this.configureBinding(result, attributeName, attributeValue));
             } else if (attrPrefix === '_') {
                 bindings.push(this.createEventInitializer(result, attributeName, attributeValue, context))
