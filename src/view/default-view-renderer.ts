@@ -231,21 +231,7 @@ export class DefaultViewRenderer implements ViewRenderer {
             const attrPrefix = attributeName && attributeName.length > 0 ? attributeName[0] : null;
             const attributeValue = source.attributes[attributeName];
 
-            /*if (attributeName === '$bind') {
-                if (attributeValue) {
-                    bindings.push(() => {
-                        const
-                            bindCallback = <(root: DomElement, viewModel: unknown) => Disposable|undefined>attributeValue,
-                            bindResult = ToDisposable(bindCallback.call(context.viewInstance, result, context.viewModel));
-
-                        if (bindResult) {
-                            return bindResult;
-                        }
-
-                        return NoopDisposable;
-                    });
-                }
-            } else*/ if (attrPrefix === '$') {
+            if (attrPrefix === '$') {
                 bindings.push(() => this.configureBinding(result, attributeName, attributeValue));
             } else if (attrPrefix === '_') {
                 bindings.push(this.createEventInitializer(result, attributeName, attributeValue, context))

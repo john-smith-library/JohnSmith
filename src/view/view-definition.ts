@@ -1,7 +1,7 @@
 /**
  * @module view
  */
- 
+
 import {Listenable} from "../reactive";
 
 import '../binding/default';
@@ -9,10 +9,11 @@ import {ViewComponentConstructor} from "./view-component";
 
 export type HtmlDefinitionElement = string|ViewComponentConstructor<unknown>;
 export type NestedHtmlDefinition = (HtmlDefinition|string|Listenable<unknown>|any);
+export type HtmlDefinitionAttributes = { [key: string]: any };
 
 export interface HtmlDefinition {
     element: HtmlDefinitionElement;
-    attributes: { [key: string]: any };
+    attributes: HtmlDefinitionAttributes|null;
     nested: NestedHtmlDefinition[];
     namespace?: string
 }

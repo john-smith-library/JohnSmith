@@ -1,5 +1,4 @@
 import { ObservableValue } from "./observable-value";
-import { DataChangeReason } from "./listenable";
 
 it('can attach listeners', () => {
     const observable = new ObservableValue('');
@@ -84,13 +83,13 @@ it('passes changes details to listener', () => {
 
 describe('hasValue', () => {
     it('returns false if value is null', () => {
-        const observable = new ObservableValue<any>('');
+        const observable = new ObservableValue<string|null>('');
         observable.setValue(null);
         expect(observable.hasValue()).toBe(false);
     });
 
     it('returns false if value is undefined', () => {
-        const observable = new ObservableValue<any|undefined>('');
+        const observable = new ObservableValue<string|undefined>('');
         observable.setValue(undefined);
         expect(observable.hasValue()).toBe(false);
     });
@@ -104,13 +103,13 @@ describe('hasValue', () => {
 
 describe('getRequiredValue', () => {
     it('returns value if it is set', () => {
-        const observable = new ObservableValue<any>(null);
+        const observable = new ObservableValue<number|null>(null);
         observable.setValue(0);
         expect(observable.getRequiredValue()).toBe(0);
     });
 
     it('throws error if not set', () => {
-        const observable = new ObservableValue<any>(null);
+        const observable = new ObservableValue<string|null>(null);
         expect(() => {
             observable.getRequiredValue();
         }).toThrow()

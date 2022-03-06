@@ -31,7 +31,9 @@ jobs:
           branch: master
 
       - name: Tutorial🠖Init
-        run: npm install
+        run: |
+          npm install
+          npm install john-smith@latest
         working-directory: ./src_tutorial
 
       - name: Tutorial🠖Build Code
