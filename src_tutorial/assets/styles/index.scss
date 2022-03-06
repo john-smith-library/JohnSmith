@@ -2,6 +2,7 @@
 h1, h2, h3, h4, h5, pre, code, div, header, section, body, p, a, ul, li, img
 {
     margin: 0;
+
     padding: 0;
     font-weight: normal;
     border: none;
@@ -32,7 +33,15 @@ a
     color: #009fe3;
 }
 
-
+.scrollable {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    overflow: auto;
+    z-index: 1;
+}
 /* ----------------------------------------------
    Layout
    ---------------------------------------------- */
@@ -41,9 +50,9 @@ html, body {
     height: 100%;
 }
 
+$asideWidth: 400px;
+
 .application {
-    /*display: flex;*/
-    /*flex-direction: row;*/
 }
 
 .application__aside {
@@ -51,12 +60,12 @@ html, body {
     left: 0;
     top: 0;
     bottom: 0;
-    width: 400px;
+    width: $asideWidth;
     padding-top: 85px;
 }
 
 .application__main {
-    padding-left: 400px;
+    padding-left: $asideWidth;
 }
 
 .main {
@@ -81,7 +90,7 @@ html, body {
 }
 
 .main__page__description {
-
+    flex: 1;
 }
 
 .main__page__code {
@@ -89,19 +98,28 @@ html, body {
 }
 
 .article-code {
-    position: fixed;
-    top: 100px;
-    bottom: 100px;
-    right: 50px;
-    width: 400px;
+    flex: 1;
+
+    padding-top: 30px;
+    padding-bottom: 30px;
 
     display: flex;
     flex-direction: column;
+
+    .panel {
+        &:first-child {
+            margin-bottom: 15px;
+        }
+
+        flex: 1;
+    }
 }
 
 .main__footer {
     flex: 0 0 40px;
 }
+
+
 
 /* ----------------------------------------------
    Panel
@@ -111,6 +129,8 @@ html, body {
     background: #FFFFFF;
     border: 1px solid #cfcfcf;
     border-radius: 3px;
+    display: flex;
+    flex-direction: column;
 }
 
 .panel__header {
@@ -122,13 +142,19 @@ html, body {
 }
 
 .panel__content {
-    font-size: 12px;
+    flex: 1;
+    position: relative;
+
+    .scrollable {
+        padding: 15px;
+    }
 }
 
 /* prism overrides */
 .panel__content pre {
     margin: 0 !important;
     background: #ffffff !important;
+    font-size: 12px;
 }
 
 /* ----------------------------------------------
@@ -163,6 +189,34 @@ html, body {
     vertical-align: middle;
 }
 
+.article-text-panel {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 30px;
+    margin-right: 30px;
+
+    .scrollable {
+        padding: 30px;
+    }
+
+    header {
+        flex: 0 0 80px;
+
+        h1 {
+            padding-top: 30px;
+            font-weight: 300;
+            font-size: 26px;
+        }
+    }
+
+    .article-content {
+        flex: 1;
+        background: #FFFFFF;
+        position: relative;
+        border: 1px solid #cfcfcf;
+        border-radius: 3px;
+    }
+}
 /* ----------------------------------------------
    Page
    ---------------------------------------------- */
@@ -349,60 +403,51 @@ html, body {
 .table-of-contents
 {
     background: #009fe3;
-    height: 100%;
-    width: 400px;
     color: #FFFFFF;
-}
 
-.table-of-contents ul
-{
-    font-size: 13px;
-    line-height: 1.7em;
-    list-style-type: none;
-    list-style-image: none;
-    padding-left: 30px;
-}
+    display: flex;
+    flex-direction: column;
 
-.table-of-contents ul a
-{
-    color: #FFFFFF;
-    text-decoration: none;
-}
+    a
+    {
+        color: #FFFFFF;
+        text-decoration: none;
+    }
 
-.table-of-contents ul a.selected
-{
-    font-weight: 700;
-}
+    a:hover
+    {
+        text-decoration: underline;
+    }
 
-.table-of-contents ul a:hover
-{
-    text-decoration: underline;
-}
+    ul, footer {
+        padding-left: 30px;
+        padding-right: 30px;
+    }
 
-#tableOfContentsOverlay
-{
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    overflow: hidden;
-    z-index: 95;
+    ul
+    {
+        font-size: 13px;
+        line-height: 1.7em;
+        list-style-type: none;
+        list-style-image: none;
 
-    background: #efefef;
-    opacity: 0.5;
-    display: none;
+        flex: 1;
 
-    transition: all 1s ease;
-    -webkit-transition: all 1s ease;
+        a.selected
+        {
+            font-weight: 700;
+        }
+    }
 
-    cursor: pointer;
-}
+    footer {
+        flex: 0 0 45px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
 
-#tableOfContentsOverlay.visible
-{
-    display: block;
-    opacity: 0.5;
+        font-size: 12px;
+        color: #FFFFFF;
+    }
 }
 
 /* ----------------------------------------------
