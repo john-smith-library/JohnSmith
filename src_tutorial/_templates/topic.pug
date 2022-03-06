@@ -9,8 +9,7 @@ head
         script(type="text/javascript", src="http://html5shiv.googlecode.com/svn/trunk/html5.js")
 
     link(rel="stylesheet", href=pathToRoot + "/assets/styles/prism.css")
-    link(rel="stylesheet", href=pathToRoot + "/assets/styles/googlecode.css")
-    link(rel="stylesheet", href=pathToRoot + "/assets/styles/samples_hub.css")
+    link(rel="stylesheet", href=pathToRoot + "/assets/styles/index.css")
     link(rel="stylesheet", href="//fonts.googleapis.com/css?family=Open+Sans:400,300,700", type='text/css')
 
     if currentTopic.styles
@@ -26,7 +25,7 @@ head
         ga('create', 'UA-41108809-1', 'john-smith-js.com');
         ga('send', 'pageview');
 html
-    body#application
+    body.application
         mixin navigationList(currentTopics, level)
             ul(class="navLevel#{level}")
                 each topic in currentTopics
@@ -39,80 +38,50 @@ html
                             span #{topic.title}
                             +navigationList(topic.items, level + 1)
 
-        header#mainHeader
-            div.appContent
-                div.container
-                    div#links
-                        a(href='https://github.com/john-smith-library/JohnSmith')
-                            img(src=pathToRoot + '/assets/images/github.png')
+        aside.application__aside.table-of-contents
+            +navigationList(tableOfContents, 0)
 
-                    div#logo
-                        span JohnSmith
-                        | &nbsp;Samples Hub
+            footer.main__foter
+                section.main__footer_ci
+                    img(src='//github.com/john-smith-library/JohnSmith/actions/workflows/ci.yml/badge.svg', alt='Build Status')
 
-        section#tableOfContents(style='height: 100%')
-            div.content
-                +navigationList(tableOfContents, 0)
+                section.main_footer_links
+                    a(href='//github.com/john-smith-library/JohnSmith') GitHub
+                    span &nbsp;|&nbsp;
+                    a(href='//www.npmjs.com/package/john-smith') Npm
 
-        section#page.appContent
-            div.container(itemscope,itemtype="//schema.org/Article")
-                header#contentHeader
-                    h1(itemprop="name") #{currentTopic.title}
+                section.main__footer_version v#{version}
 
-                nav#mainNavigation
-                    div.content
-                        if prevTopic
-                            a#prevLink(href='#{prevTopic.id}.html', title='Previous sample: #{prevTopic.title}') &lt;
-                        else
-                            a#prevLink.disabled(href='#') &lt;
+        main.application__main.main
+            header.main__header
+                div.main__header__logo
+                    span JohnSmith
+                    | &nbsp;Tutorial
 
-                        if nextTopic
-                            a#nextLink(href='#{nextTopic.id}.html', title='Next sample: #{nextTopic.title}') &gt;
-                        else
-                            a#nextLink.disabled(href='#') &gt;
+                div.main__header__links
+                    a(href='https://github.com/john-smith-library/JohnSmith')
+                        img(src=pathToRoot + '/assets/images/github.png')
 
-                        a#browseAll(href='#')
-                            span Browse all
-                    div.bg
-                        span.left
-                        span.right
-                        span.center
-                            span
-
-                section#source.fullHeight
-                    section#javaScript
-                        header TypeScript
-                        section.sourceContent
-                            pre.source-code-container
+            section.main__page(itemscope,itemtype="//schema.org/Article")
+                section.main__page__description.article-text-panel
+                    header#contentHeader
+                        h1(itemprop="name") #{currentTopic.title}
+                    section.article-content
+                        div.scrollable
+                            div#description !{currentTopic.description}
+                section.article-code
+                    section.panel
+                        header.panel__header TypeScript
+                        section.panel__content
+                            pre.scrollable
                                 code.language-tsx !{currentTopic.formattedCode}
-                    section#html
-                        header HTML
-                        section.sourceContent
-                            pre.source-code-container
-                                code.language-html #{currentTopic.markup}
 
-                section#result.fullHeight
-                    div.scroller
-                        div#description !{currentTopic.description}
+                    section.panel
+                        header.panel__header Result
+                        section.panel__content
+                            div#destination.scrollable !{currentTopic.markup}
+                                script (function () {!{currentTopic.code}}());
 
-                        h3 Result:
 
-                        div#destination !{currentTopic.markup}
-                            script (function(){!{currentTopic.code}}());
-
-        footer#mainFooter.appContent
-            div.container
-                section#ci
-
-                img(src='https://github.com/john-smith-library/JohnSmith/actions/workflows/ci.yml/badge.svg', alt='Build Status')
-
-                section.info v#{version}
-
-                section#footerLinks Get JohnSmith:&nbsp;
-                    a(href='john-smith-#{version}.min.js') Download Minified
-                    span &nbsp;|&nbsp;
-                    a(href='john-smith-#{version}.debug.js') Download Debug
-                    span &nbsp;|&nbsp;
-                    a(href='http://www.nuget.org/packages/JohnSmith/') NuGet package
 
         script(src="index.js")
