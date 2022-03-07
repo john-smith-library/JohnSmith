@@ -37,7 +37,9 @@ jobs:
         working-directory: ./src_tutorial
 
       - name: Tutorial🠖Build Code
-        run: npm run build_samples_code
+        run: |
+          npm run build_samples_code
+          npm run build_styles
         working-directory: ./src_tutorial
 
       - name: Tutorial🠖Build Pages

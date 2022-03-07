@@ -6,6 +6,7 @@
   "scripts": {
     "build_site": "node build.mjs",
     "build_samples_code": "webpack",
+    "build_styles": "node-sass assets/styles -o ../dist_tutorial/assets/styles",
     "watch_styles": "node-sass --watch assets/styles -o ../dist_tutorial/assets/styles"
   },
   "author": "",
