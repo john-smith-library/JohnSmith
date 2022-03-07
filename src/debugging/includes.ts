@@ -17,17 +17,18 @@ globalThis.JS.TroubleShooterFactory = () => {
     try {
         INITIALIZER();
 
+        const domEngine = new NativeDomEngine();
+
+        const root = domEngine.getRoot();
+
+        if (!root) {
+            throw new Error('Cannot find page root element to attach JohnSmith debug tools.')
+        }
+
         return new DebugTroubleshooter(
+            root,
             debuggerViewModel,
             () => {
-                const domEngine = new NativeDomEngine();
-
-                const root = domEngine.getRoot();
-
-                if (!root) {
-                    throw new Error('Cannot find page root element to attach JohnSmith debug tools.')
-                }
-
                 new DefaultViewRenderer(
                     domEngine,
                     new DefaultBindingRegistry(),

@@ -37,11 +37,11 @@ class DetailsView implements View, OnInit {
 }
 
 class ApplicationViewModel {
-    firstName = new BidirectionalValue<string>(() => {});
-    lastName = new ObservableValue();
-    rememberMe = new BidirectionalValue<boolean>(() => {});
+    firstName = new BidirectionalValue<string>(() => {}, '');
+    lastName = new ObservableValue<any>(null);
+    rememberMe = new BidirectionalValue<boolean>(() => {}, true);
 
-    details = new ObservableValue<DetailsViewModel>();
+    details = new ObservableValue<DetailsViewModel|null>(null);
 
     update() {
         this.firstName.setValue(this.firstName.getValue() + '1');
@@ -83,14 +83,14 @@ const ApplicationView = (vw: ApplicationViewModel) =>
         </section>
     </section>;
 //
-const $app = document.getElementById('app');
-if ($app) {
+//const $app = document.getElementById('app1');
+//if ($app) {
     const
         application = new Application(),
         applicationViewModel = new ApplicationViewModel();
 
     application.render(
-        $app,
+        'app',
         ApplicationView,
         applicationViewModel);
 
@@ -99,6 +99,7 @@ if ($app) {
 
     setTimeout(() => {
         applicationViewModel.firstName.setValue('Eugene');
+
         applicationViewModel.lastName.setValue('Guryanov');
     }, 3000);
-}
+//}

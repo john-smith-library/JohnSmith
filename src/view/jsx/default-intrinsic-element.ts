@@ -1,6 +1,3 @@
-import {DomElement} from '../element';
-import {Disposable} from '../../common';
-
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface DefaultIntrinsicElements {
-    $bind?: (domElement: DomElement, viewModel: any) => void|Disposable|(Disposable[]);
 }

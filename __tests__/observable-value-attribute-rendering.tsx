@@ -3,10 +3,10 @@ import {setupAppContainerAndRender} from './_helpers';
 import '../src/view/jsx';
 
 class ViewModel {
-    status: ObservableValue<string>;
+    status: ObservableValue<string|null>;
 
     constructor(status: string|null) {
-        this.status = new ObservableValue<string>(status);
+        this.status = new ObservableValue<string|null>(status);
     }
 }
 
@@ -23,10 +23,10 @@ it('should update class attribute',
         expect(container.innerHTML).toBe('<div class="updated"></div>');
     }));
 
-it('should remove attribute on null',
+it('should set attribute to empty on null',
     setupAppContainerAndRender(ApplicationView, new ViewModel('active'),(container, viewModel) => {
         viewModel.status.setValue(null);
-        expect(container.innerHTML).toBe('<div></div>');
+        expect(container.innerHTML).toBe('<div class=""></div>');
     }));
 
 it('should clean listeners on dispose',

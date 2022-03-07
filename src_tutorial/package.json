@@ -5,7 +5,8 @@
   "main": "index.tsx",
   "scripts": {
     "build_site": "node build.mjs",
-    "build_samples_code": "webpack"
+    "build_samples_code": "webpack",
+    "watch_styles": "node-sass --watch assets/styles -o ../dist_tutorial/assets/styles"
   },
   "author": "",
   "license": "ISC",
@@ -19,6 +20,7 @@
     "webpack-cli": "^4.9.2",
     "pug": "^3.0.2",
     "fs-extra": "^10.0.1",
-    "js-yaml": "^4.1.0"
+    "js-yaml": "^4.1.0",
+    "node-sass": "^7.0.1"
   }
 }

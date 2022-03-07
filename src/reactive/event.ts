@@ -1,5 +1,5 @@
-import {DataChangeReason, Listenable, ListenerCallback, Listeners} from './listenable';
-import {Disposable} from '../common';
+import { Listenable, ListenerCallback, Listeners } from './listenable';
+import { Disposable } from '../common';
 
 /**
  * Events are stateless listenables that only notify on incoming data change.
@@ -35,6 +35,6 @@ export class Event<T> extends Listenable<T> {
      * @param data data object to pass to the listeners
      */
     trigger(data: T) {
-        this._listeners.notify(data, undefined, { reason: DataChangeReason.replace, portion: data });
+        this._listeners.notify(data);
     }
 }

@@ -1,15 +1,37 @@
-import {ObservableValue} from './observable-value';
-import {ChangeDetails, DataChangeReason} from './listenable';
-import {ArrayUtils} from '../utils/array';
+import {ObservableValue} from "./observable-value";
+import {
+    DataChangeReason,
+    PartialListenable,
+    PartialListenerCallback,
+    PartialListeners
+} from "./listenable";
+import {ArrayUtils} from "../utils/array";
+import {Disposable} from "../common";
 
-export class ObservableList<T> extends ObservableValue<T[]> {
+/**
+ * Defines a stateful listenable class for lists. Supports both regular and partial
+ * notifications on list mutation.
+ */
+export class ObservableList<T> extends ObservableValue<T[]> implements PartialListenable<T[]>{
     private _count: ObservableValue<number>|null = null;
+    private _partialListeners: PartialListeners<T[]> = new PartialListeners<T[]>();
 
-    constructor(value?: T[]|null){
+    constructor(value?: T[]){
         super(value === undefined ? [] : value);
     }
 
-    public setValue(value: T[]|null) {
+    public listenPartial(listener: PartialListenerCallback<T[]>, raiseInitial?: boolean): Disposable {
+        return this._partialListeners.add(listener, raiseInitial === undefined || raiseInitial ? this.getValue() : undefined);
+    }
+
+    /**
+     * Gets the number of listeners attached to the observable value.
+     */
+    getPartialListenersCount(): number {
+        return this._partialListeners.size();
+    }
+
+    public setValue(value: T[]) {
         if (value){
             if (!(value instanceof Array)){
                 throw new Error("Observable list supports only array values");
@@ -17,6 +39,7 @@ export class ObservableList<T> extends ObservableValue<T[]> {
         }
 
         super.setValue(value);
+        this._partialListeners.notify(value, DataChangeReason.replace);
         this.notifyCountListeners();
     }
 
@@ -25,28 +48,24 @@ export class ObservableList<T> extends ObservableValue<T[]> {
         if (currentValue === null) {
             this.setValue(args);
         } else {
-            const oldValue = currentValue.slice(0);
-
             for (let i = 0; i < args.length; i++){
                 currentValue.push(args[i]);
             }
 
-            this.reactOnChange(currentValue, oldValue, { reason: DataChangeReason.add, portion: args } );
+            this.reactOnChange(args, DataChangeReason.add);
         }
     }
 
     public remove(...args:T[]):void {
         const currentValue = this.getValue();
         if (currentValue !== null) {
-            const
-                oldValue = currentValue.slice(0),
-                array:T[] = currentValue;
+            const array:T[] = currentValue;
 
             for (let i = 0; i < args.length; i++){
                 ArrayUtils.removeItem(array, args[i]);
             }
 
-            this.reactOnChange(array, oldValue, { reason: DataChangeReason.remove, portion: args } );
+            this.reactOnChange(args, DataChangeReason.remove);
         }
     }
 
@@ -55,14 +74,14 @@ export class ObservableList<T> extends ObservableValue<T[]> {
         const currentValue = this.getValue();
         if (currentValue !== null) {
             const removed = currentValue.splice(0, currentValue.length);
-            this.reactOnChange(currentValue, removed, { reason: DataChangeReason.remove, portion: removed } );
+            this.reactOnChange(removed, DataChangeReason.remove);
         }
     }
 
     /** Returns a bindable value that stores size of the list */
     public count(): ObservableValue<number> {
         if (this._count === null) {
-            this._count = new ObservableValue<number>();
+            this._count = new ObservableValue<number>(0);
             this.notifyCountListeners();
         }
 
@@ -92,8 +111,10 @@ export class ObservableList<T> extends ObservableValue<T[]> {
         array.forEach(callback, thisArg);
     }
 
-    private reactOnChange(newItems: T[], oldItems: T[], details: ChangeDetails<T[]>):void{
-        this._listeners.notify(newItems, oldItems, details);
+    private reactOnChange(portion: T[], reason: DataChangeReason):void{
+        this._listeners.notify(this.getValue());
+        this._partialListeners.notify(portion, reason);
+
         this.notifyCountListeners();
     }
 

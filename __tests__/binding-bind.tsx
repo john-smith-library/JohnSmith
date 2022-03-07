@@ -1,6 +1,7 @@
 import {DomElement, HtmlDefinition, View} from '../src/view';
 import {dispatchChange, DisposableStub, findInput, setupAppContainerAndRender} from './_helpers';
 import '../src/view/jsx';
+import '../src/binding/ext/bind';
 
 class ViewModel {
     constructor(public callback: any) {

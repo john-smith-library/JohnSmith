@@ -4,10 +4,10 @@ import {findInput, setupAppContainerAndRender} from './_helpers';
 import '../src/view/jsx';
 
 class ViewModel {
-    firstName: ObservableValue<string>;
+    firstName: ObservableValue<string|null>;
 
     constructor(firstName: string) {
-        this.firstName = new ObservableValue<string>(firstName);
+        this.firstName = new ObservableValue<string|null>(firstName);
     }
 }
 

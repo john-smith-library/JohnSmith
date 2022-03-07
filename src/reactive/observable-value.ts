@@ -1,27 +1,26 @@
-import {DataChangeReason, ListenerCallback, Listeners, ReadonlyObservable} from "./listenable";
-import {Disposable} from '../common';
+import { ListenerCallback, Listeners, ReadonlyObservable } from './listenable';
+import { Disposable} from '../common';
 
 /**
- * Defines a stateless listenable class allowing `null` as a
- * target value.
+ * Defines a stateful listenable class.
  */
-export class ObservableValue<T> extends ReadonlyObservable<T|null> {
-    protected _listeners = new Listeners<T|null>();
-    private _value: T|null;
+export class ObservableValue<T> extends ReadonlyObservable<T> {
+    protected _listeners = new Listeners<T>();
+    private _value: T;
 
     /**
      * Creates new observable value instance.
      * @param value optional initial value
      */
-    constructor(value?: T | null) {
+    constructor(value: T) {
         super();
-        this._value = value || null;
+        this._value = value;
     }
 
     /**
      * Gets current value, can return `null`.
      */
-    public getValue(): T|null {
+    public getValue(): T {
         return this._value;
     }
 
@@ -42,11 +41,9 @@ export class ObservableValue<T> extends ReadonlyObservable<T|null> {
      *
      * @param value
      */
-    public setValue(value: T|null) {
-        const oldValue = this._value;
-
+    public setValue(value: T) {
         this._value = value;
-        this._listeners.notify(value, oldValue, { reason: DataChangeReason.replace, portion: value });
+        this._listeners.notify(value);
     }
 
     /**
@@ -71,8 +68,8 @@ export class ObservableValue<T> extends ReadonlyObservable<T|null> {
      * @param raiseInitial a flag indicating whether the callback should be called
      * right away with the actual value. Default is `true`.
      */
-    listen(listener: ListenerCallback<T | null>, raiseInitial?: boolean): Disposable {
-        const initial = raiseInitial === undefined || raiseInitial === true ? this.getValue() : undefined;
+    listen(listener: ListenerCallback<T>, raiseInitial?: boolean): Disposable {
+        const initial = raiseInitial === undefined || raiseInitial ? this.getValue() : undefined;
         return this._listeners.add(listener, initial);
     }
 }

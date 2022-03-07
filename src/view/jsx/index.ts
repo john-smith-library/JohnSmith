@@ -1,5 +1,10 @@
 import {DefaultIntrinsicElements} from "./default-intrinsic-element";
-import {HtmlDefinition} from '../view-definition';
+import {
+    HtmlDefinition,
+    HtmlDefinitionAttributes,
+    HtmlDefinitionElement,
+    NestedHtmlDefinition
+} from "../view-definition";
 import {ViewComponent} from "../view-component";
 import '../../global';
 
@@ -36,13 +41,18 @@ declare global {
     //const JS: { d: (...args:any[]) => HtmlDefinition };
 }
 
+export type DArguments = [
+    HtmlDefinitionElement,
+    HtmlDefinitionAttributes,
+    ...NestedHtmlDefinition] | [HtmlDefinitionElement];
+
 declare module '../../global' {
     interface JsGlobal {
-        d: (...arguments: any[]) => HtmlDefinition
+        d: (...arguments: DArguments) => HtmlDefinition
     }
 }
 
-JS.d = function(...args: any[]): HtmlDefinition {
+JS.d = function(...args: DArguments): HtmlDefinition {
     const
         argsCount = arguments.length,
         nested = [];
@@ -51,7 +61,10 @@ JS.d = function(...args: any[]): HtmlDefinition {
         nested.push(args[i]);
     }
 
-    const attributes = argsCount > 1 ? args[1] : null;
+    /* Note: ts compiler does not recognize "argsCount > 1" as a guard so we have
+    *  to do this ugly cast here */
+    const attributes = <HtmlDefinitionAttributes|null>(argsCount > 1 ? args[1] : null);
+
     const namespace: string|undefined = attributes ? attributes['xmlns'] : undefined;
 
     return {

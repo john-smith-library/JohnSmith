@@ -1,5 +1,5 @@
-import {DataChangeReason, Listenable, ListenerCallback } from '../../listenable';
-import {Disposable, Owner} from "../../../common";
+import { Listenable, ListenerCallback } from '../../listenable';
+import { Disposable, Owner } from '../../../common';
 
 Listenable.prototype.combine = function<TRight, TResult>(
     right: Listenable<TRight>,
@@ -50,43 +50,33 @@ class DependantListenableValue<TLeft, TRight, TResult> extends Listenable<TResul
         this._listenersCount++;
 
         let leftOld: TLeft|undefined,
-            rightOld: TRight|undefined,
-            transformedOld: TResult|undefined;
+            rightOld: TRight|undefined;
 
-        const actualRaiseInitial = raiseInitial === undefined || raiseInitial === true;
+        const actualRaiseInitial = raiseInitial === undefined || raiseInitial;
 
         return new Owner([
-            this.left.listen((newValue: TLeft, _, details) => {
+            this.left.listen((newValue: TLeft) => {
                 leftOld = newValue;
 
                 if (rightOld !== undefined) {
                     const transformedNew = this.transformer(newValue, rightOld);
 
-                    if (details.reason !== DataChangeReason.initial || actualRaiseInitial) {
-                        listener(
-                            transformedNew,
-                            transformedOld,
-                            {reason: DataChangeReason.replace, portion: transformedNew});
-                    }
-
-                    transformedOld = transformedNew;
+                    //if (actualRaiseInitial) {
+                        listener(transformedNew);
+                    //}
                 }
 
             }, true),
-            this.right.listen((newValue: TRight, _, details) => {
+            this.right.listen((newValue: TRight) => {
+                const isInitial = rightOld === undefined;
                 rightOld = newValue;
 
                 if (leftOld !== undefined) {
                     const transformedNew = this.transformer(leftOld, newValue);
 
-                    if (details.reason !== DataChangeReason.initial || actualRaiseInitial) {
-                        listener(
-                            transformedNew,
-                            transformedOld,
-                            {reason: DataChangeReason.replace, portion: transformedNew});
+                    if ((isInitial && actualRaiseInitial) || !isInitial) {
+                        listener(transformedNew);
                     }
-
-                    transformedOld = transformedNew;
                 }
             }, true),
             {
@@ -94,7 +84,6 @@ class DependantListenableValue<TLeft, TRight, TResult> extends Listenable<TResul
                     this._listenersCount--;
                     leftOld = undefined;
                     rightOld = undefined;
-                    transformedOld = undefined;
                 }
             }
         ]);
