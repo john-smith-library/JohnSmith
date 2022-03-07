@@ -64,7 +64,7 @@ JS.d = function(...args: DArguments): HtmlDefinition {
     /* Note: ts compiler does not recognize "argsCount > 1" as a guard so we have
     *  to do this ugly cast here */
     const attributes = <HtmlDefinitionAttributes|null>(argsCount > 1 ? args[1] : null);
-    
+
     const namespace: string|undefined = attributes ? attributes['xmlns'] : undefined;
 
     return {

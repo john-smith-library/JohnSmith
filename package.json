@@ -15,7 +15,7 @@
     "build_demo_local": "cd src_demo_local && webpack",
     "run_demo_local": "cd src_demo_local && webpack --watch",
     "build_docs": "typedoc --theme default --exclude \"**/*+(spec|index).ts\" --includes src_docs --out dist_doc --entryPointStrategy expand --mergeModulesMergeMode module --categorizeByGroup true src",
-    "pack": "npm run prebuild && npm run clean && npm run build && cpx package.json dist/"
+    "pack": "npm run prebuild && npm run clean && npm run build && cpy package.json dist/"
   },
   "repository": {
     "type": "git",
@@ -32,8 +32,9 @@
     "@types/jest": "^27.4.0",
     "@typescript-eslint/eslint-plugin": "^5.12.0",
     "@typescript-eslint/parser": "^5.12.0",
-    "cpx": "^1.5.0",
+    "cpy-cli": "^4.0.0",
     "eslint": "^8.9.0",
+    "glob": "^7.2.0",
     "jest": "^27.5.1",
     "ts-jest": "^27.1.3",
     "ts-loader": "^9.2.6",
