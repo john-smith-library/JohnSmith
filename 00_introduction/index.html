@@ -1,0 +1,29 @@
+<!DOCTYPE html><head><title>JohnSmith Library - Introduction</title><meta charset="UTF-8"><!--if lt IE 9script(type="text/javascript", src="http://html5shiv.googlecode.com/svn/trunk/html5.js")
+--><link rel="stylesheet" href="../assets/styles/prism.css"><link rel="stylesheet" href="../assets/styles/index.css"><link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:400,300,700" type="text/css"><script src="../assets/scripts/prism.js"></script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-41108809-1', 'john-smith-js.com');
+ga('send', 'pageview');</script></head><html><body class="application"><aside class="application__aside table-of-contents"><ul class="navLevel#{level}"><li><a class="topicLink selected" href="../00_introduction/index.html" id="00_introductionLink">Introduction</a></li><li><a class="topicLink" href="../01_hello-world/index.html" id="01_hello-worldLink">Hello World</a></li><li><span>Channels</span><ul class="navLevel#{level}"><li><a class="topicLink" href="../02_channels/01_static-vs-dynamic/index.html" id="02_channels/01_static-vs-dynamicLink">Static and Dynamic Channels</a></li></ul></li></ul><footer class="main__foter"><section class="main__footer_ci"><img src="//github.com/john-smith-library/JohnSmith/actions/workflows/ci.yml/badge.svg" alt="Build Status"></section><section class="main_footer_links"><a href="//github.com/john-smith-library/JohnSmith">GitHub</a><span>&nbsp;|&nbsp;</span><a href="//www.npmjs.com/package/john-smith">Npm</a></section><section class="main__footer_version">v4.0.1-alpha.16</section></footer></aside><main class="application__main main"><header class="main__header"><div class="main__header__logo"><span>JohnSmith</span>&nbsp;Tutorial</div><div class="main__header__links"><a href="https://github.com/john-smith-library/JohnSmith"><img src="../assets/images/github.png"></a></div></header><section class="main__page" itemscope itemtype="//schema.org/Article"><section class="main__page__description article-text-panel"><header id="contentHeader"><h1 itemprop="name">Introduction</h1></header><section class="article-content"><div class="scrollable"><div id="description"><p>todo</p>
+</div></div></section></section><section class="article-code"><section class="panel"><header class="panel__header">TypeScript</header><section class="panel__content"><pre class="scrollable"><code class="language-tsx">import { Application } from 'john-smith';
+import 'john-smith/view/jsx';
+
+class <span class="codeAnnotation" title="test1">ApplicationViewModel</span> {
+    message = 'Hello, World!';
+}
+
+const ApplicationView = (viewModel: ApplicationViewModel) =&gt;
+    &lt;section&gt;
+        &lt;h1&gt;{viewModel.message}&lt;/h1&gt;
+    &lt;/section&gt;;
+
+const
+    application = new Application(),
+    applicationViewModel = new ApplicationViewModel();
+
+application.render(
+    'root',
+    ApplicationView,
+    applicationViewModel);
+</code></pre></section></section><section class="panel"><header class="panel__header">Result</header><section class="panel__content"><div class="scrollable" id="destination"><div id="root"></div>
+<script>(function () {}());</script></div></section></section></section></section></main><script src="index.js"></script></body></html>
