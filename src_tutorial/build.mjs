@@ -47,6 +47,8 @@ const tutorialItems = glob.sync(path.join(inputPath, '/**/index.tsx')).map((inde
     const description = readIfExists(contentFile);
     const styles = readIfExists(stylesFile);
 
+    console.log('Detected tutorial directory ' + tutorialDirectoryPathCode + (visible ? '' : ' [hidden]'));
+
     return {
         id: tutorialDirectoryPathCode,
         relativePath: tutorialDirectoryPathCode,
@@ -120,8 +122,6 @@ const composeTableOfContents = (currentLevel, baseIds) => {
 }
 
 const tableOfContents = composeTableOfContents(hierarchicalTutorialItems, []);
-
-console.log(tableOfContents);
 
 tutorialItems.forEach((item, index) => {
     const currentTopicGlobalIndex = index;

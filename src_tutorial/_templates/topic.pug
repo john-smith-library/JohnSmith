@@ -13,8 +13,7 @@ head
     link(rel="stylesheet", href="//fonts.googleapis.com/css?family=Open+Sans:400,300,700", type='text/css')
 
     if currentTopic.styles
-        style(type='text/css')
-            #{currentTopic.styles}
+        style(type='text/css') !{currentTopic.styles}
 
     script(src=pathToRoot + '/assets/scripts/prism.js')
     script.
@@ -64,7 +63,7 @@ html
 
             section.main__page(itemscope,itemtype="//schema.org/Article")
                 section.main__page__description.article-text-panel
-                    header#contentHeader
+                    header
                         h1(itemprop="name") #{currentTopic.title}
                     section.article-content
                         div.scrollable

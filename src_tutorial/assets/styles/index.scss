@@ -23,11 +23,6 @@ body
     flex-direction: column;
 }
 
-.container
-{
-    padding: 0 20px;
-}
-
 a
 {
     color: #009fe3;
@@ -42,6 +37,7 @@ a
     overflow: auto;
     z-index: 1;
 }
+
 /* ----------------------------------------------
    Layout
    ---------------------------------------------- */
@@ -118,8 +114,6 @@ $asideWidth: 400px;
 .main__footer {
     flex: 0 0 40px;
 }
-
-
 
 /* ----------------------------------------------
    Panel
@@ -215,185 +209,48 @@ $asideWidth: 400px;
         position: relative;
         border: 1px solid #cfcfcf;
         border-radius: 3px;
+
+        /*
+         * Text content typography
+         */
+        p,
+        h3,
+        ul {
+            margin-bottom: 15px;
+            line-height: 1.5em;
+        }
+
+        h3 {
+            font-weight: 300;
+            font-size: 20px;
+            padding-left: 20px;
+        }
+
+        p, a, li {
+            font-weight: 300;
+        }
+
+        p {
+
+        }
+
+        ul {
+            list-style-position: inside;
+        }
+
+        table,
+        table td,
+        table th
+        {
+            border: 1px solid #b2e7fe;
+        }
+
+        table td,
+        table th
+        {
+            padding: 5px 10px;
+        }
     }
-}
-/* ----------------------------------------------
-   Page
-   ---------------------------------------------- */
-
-#page
-{
-    flex: 1;
-
-    display: flex;
-    flex-direction: row;
-}
-
-#page .sourceContent
-{
-    overflow: auto;
-}
-
-#contentHeader
-{
-    height: 80px;
-}
-
-#contentHeader h1
-{
-    padding-top: 30px;
-    font-weight: 300;
-    font-size: 26px;
-}
-
-/* ----------------------------------------------
-   Page >> Result
-   ---------------------------------------------- */
-
-#page #result .scroller
-{
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-
-    overflow: auto;
-    z-index: 20;
-    padding: 40px 0 20px 0;
-}
-
-#page #result #destination
-{
-    padding: 20px;
-    font-size: 16px;
-}
-
-
-#page #result
-{
-    float: left;
-    width: 590px;
-    height: 780px;
-
-    background: #FFFFFF;
-    border: 1px solid #cfcfcf;
-
-    border-radius: 3px;
-
-    position: relative;
-    overflow: hidden;
-
-    width: 570px; /* default width */
-}
-
-#result #description
-{
-    padding: 0px 20px 20px 20px;
-    font-size: 16px;
-    font-weight: 300;
-}
-
-#result #description p,
-#result #description pre,
-#result #description ul
-{
-    margin-bottom: 1em;
-}
-
-#result #description p,
-#result #description pre,
-#result #description ul,
-#result #description ul li,
-#result #description a
-{
-    font-weight: 300;
-}
-
-#result #description ul
-{
-    padding-left: 20px;
-}
-
-#result h3
-{
-    font-weight: 300;
-    font-size: 20px;
-    padding-left: 20px;
-}
-
-#result #destination
-{
-    border: 1px solid #b2e7fe;
-    margin: 20px;
-    border-radius: 2px;
-    background: #ecf9fe;
-}
-
-#result #destination p,
-#result #destination h2,
-#result #destination table,
-#result #destination ul
-{
-    margin-bottom: 1em;
-}
-
-#result #destination table,
-#result #destination table td,
-#result #destination table th
-{
-    border: 1px solid #b2e7fe;
-}
-
-#result #destination table td,
-#result #destination table th
-{
-    padding: 5px 10px;
-}
-
-#result #destination ul,
-#result #destination ul li
-{
-    list-style-type: none;
-    list-style-image: none;
-}
-
-#result #destination input[type=text],
-#result #destination textarea
-{
-    padding: 3px 5px;
-    width: 50%;
-    resize: none;
-}
-
-#sendToJsFiddle
-{
-    padding: 0 20px;
-}
-
-#sendToJsFiddle #sendButton
-{
-    text-decoration: none;
-    font-weight: 700;
-    font-size: 11px;
-    text-transform: uppercase;
-    color: #999999;
-    text-shadow: 1px 1px #FFFFFF;
-
-    background: #EFEFEF;
-    background: -webkit-linear-gradient(#FFFFFF, #EFEFEF, #EEEEEE);
-    background: -moz-linear-gradient(top, #FFFFFF, #EFEFEF, #EEEEEE);
-    background: -ms-linear-gradient(top, #FFFFFF, #EFEFEF, #EEEEEE);
-    background: -o-linear-gradient(top, #FFFFFF, #EFEFEF, #EEEEEE);
-
-    padding: 5px 10px;
-    border: 1px solid #cfcfcf;
-    cursor: pointer;
-    color: #666666;
-}
-
-#sendToJsFiddle #sendButton:hover {
-
 }
 
 /* ----------------------------------------------
@@ -450,65 +307,7 @@ $asideWidth: 400px;
     }
 }
 
-/* ----------------------------------------------
-   Page >> Source
-   ---------------------------------------------- */
-
-#source
-{
-    float: left;
-    width: 590px;
-    height: 780px;
-    background: #FFFFFF;
-    border: 1px solid #cfcfcf;
-
-    border-radius: 3px;
-
-    width: 570px; /* default width */
-
-    margin-right: 10px;
-}
-
-#source header
-{
-    background: #EEEEEE;
-    border-bottom: 1px solid #cfcfcf;
-    font-size: 12px;
-    padding: 5px 10px;
-    font-weight: 700;
-}
-
-#source #javaScript,
-#source #html
-{
-    position: relative;
-}
-
-#source #javaScript header
-{
-    border-radius: 2px 2px 0 0;
-}
-
-#source #html header
-{
-    border-top: 1px solid #cfcfcf;
-}
-
-#source #javaScript
-{
-}
-
-#source .sourceContent pre
-{
-    padding: 10px;
-}
-
-#source .sourceContent pre code
-{
-    font-size: 12px;
-}
-
-#source .codeAnnotation
+#source .codeAnnotation // todo
 {
     background: #ffdbb2;
     padding-left: 3px;
@@ -517,196 +316,11 @@ $asideWidth: 400px;
     border-radius: 2px;
 }
 
-#navigation
-{
-    position: absolute;
-    top: -20px;
-    left: 20px;
-}
-
-#navigation #prev
-{
-
-}
-
-#mainNavigation
-{
-    position: absolute;
-    top: 60px;
-    z-index: 1000;
-    width: 188px;
-    height: 40px;
-    left: 378px;
-}
-
-#mainNavigation .bg
-{
-    position: absolute;
-    height: 20px;
-    bottom: 0;
-    left: 0;
-    right: 0;
-
-    z-index: 90;
-}
-
-#mainNavigation .bg .left
-{
-    float: left;
-    width: 20px;
-    height: 20px;
-    background: url(../images/circle.png) 0 -20px;
-}
-
-#mainNavigation .bg .center
-{
-    display: block;
-    padding: 0 20px;
-    height: 19px;
-}
-
-#mainNavigation .bg .center span
-{
-    display: block;
-    height: 20px;
-    background: url(../images/rect.png);
-}
-
-#mainNavigation .bg .right
-{
-    float: right;
-    width: 20px;
-    height: 20px;
-    background: url(../images/circle.png) 20px -20px;
-}
-
-#mainNavigation a
-{
-    text-decoration: none;
-    font-weight: 700;
-    font-size: 11px;
-    text-transform: uppercase;
-    color: #999999;
-    text-shadow: 1px 1px #FFFFFF;
-}
-
-#mainNavigation .content
-{
-    position: absolute;
-    left: 4px;
-    bottom: 4px;
-
-    z-index: 100;
-}
-
-#mainNavigation #prevLink,
-#mainNavigation #nextLink,
-#mainNavigation #browseAll span
-{
-    background: #EFEFEF;
-    background: -webkit-linear-gradient(#FFFFFF, #EFEFEF, #EEEEEE);
-    background: -moz-linear-gradient(top, #FFFFFF, #EFEFEF, #EEEEEE);
-    background: -ms-linear-gradient(top, #FFFFFF, #EFEFEF, #EEEEEE);
-    background: -o-linear-gradient(top, #FFFFFF, #EFEFEF, #EEEEEE);
-}
-
-#mainNavigation #prevLink.disabled,
-#mainNavigation #nextLink.disabled,
-#mainNavigation #browseAll.disabled span
-{
-    background: #e9e9e9;
-}
-
-#mainNavigation #prevLink:hover,
-#mainNavigation #nextLink:hover,
-#mainNavigation #browseAll:hover span
-{
-    color: #666666;
-}
-
-#mainNavigation #prevLink:active,
-#mainNavigation #nextLink:active,
-#mainNavigation #browseAll:active span
-{
-    background: -webkit-linear-gradient(#EFEFEF, #FFFFFF, #EEEEEE)
-}
-
-#mainNavigation #prevLink
-{
-    float: left;
-    border: 1px solid #cfcfcf;
-    height: 34px;
-    width: 34px;
-    border-radius: 50% 0 0 50%;
-    text-align: center;
-    line-height: 34px;
-}
-
-#mainNavigation #nextLink
-{
-    float: right;
-    border: 1px solid #cfcfcf;
-    height: 34px;
-    width: 34px;
-    border-radius: 0 50% 50% 0;
-    text-align: center;
-    line-height: 34px;
-}
-
-#mainNavigation #browseAll
-{
-    height: 34px;
-    line-height: 34px;
-    display: block;
-    padding: 0 40px;
-    width: 100px;
-    text-align: center;
-}
-
-#mainNavigation #browseAll span
-{
-    display: block;
-    border: 1px solid #cfcfcf;
-}
-
 /* ----------------------------------------------
    Main Footer
    ---------------------------------------------- */
 
 .main__footer
 {
-
-
     font-size: 12px;
-}
-
-#mainFooter .container
-{
-    padding-bottom: 20px;
-}
-#mainFooter a
-{
-    font-size: 12px;
-    color: #009fe3;
-}
-
-#mainFooter #ci
-{
-    float: right;
-}
-
-#mainFooter .info
-{
-    float: left;
-}
-
-#mainFooter #footerLinks
-{
-    text-align: center;
-}
-
-/* prism overrides */
-.source-code-container {
-    margin: 0 !important;
-    background: #ffffff !important;
 }
