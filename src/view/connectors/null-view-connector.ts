@@ -15,19 +15,18 @@ import { AbstractListenableConnector } from './abstract';
  * will be cleared.
  */
 export class NullViewConnector<T> extends AbstractListenableConnector<T> {
-    constructor(
-        source: Listenable<T|null>|T|null|undefined,
-        target: DomElement,
-        view: ViewDefinition<void>,
-        _viewRenderer: ViewRenderer) {
+  constructor(
+    source: Listenable<T | null> | T | null | undefined,
+    target: DomElement,
+    view: ViewDefinition<void>,
+    _viewRenderer: ViewRenderer
+  ) {
+    super(source, (value: T | null | undefined) => {
+      if (value !== null && value !== undefined) {
+        return null;
+      }
 
-        super(source, (value: T|null|undefined) => {
-            if (value !== null && value !== undefined)
-            {
-                return null;
-            }
-
-            return _viewRenderer.render(target, view, undefined);
-        });
-    }
+      return _viewRenderer.render(target, view, undefined);
+    });
+  }
 }

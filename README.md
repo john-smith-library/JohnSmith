@@ -1,6 +1,6 @@
-**John Smith** is a lightweight no-magic typescript frontend library for building interactive UI.
+**John Smith** is a lightweight no-magic typescript frontend mini-framework for building interactive UI.
 
-John Smith utilizes Model-View-ViewModel pattern where ***ViewModel*** is a class encapsulating core business logic:
+John Smith utilizes classic Model-View-ViewModel pattern where ***ViewModel*** is a class encapsulating core business logic:
 
 ```typescript
 export class UserViewModel

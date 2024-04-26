@@ -1,7 +1,7 @@
 /**
  * Test
  * @module view
-  */
+ */
 
 export * from './element';
 export * from './view-definition';

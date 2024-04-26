@@ -136,7 +136,9 @@ tutorialItems.forEach((item, index) => {
 
     const outFile = path.join(outputPath, item.relativePath, "index.html");
 
-    fs.writeFileSync(outFile, topicTemplate({
+    console.log(outFile);
+
+    fs.outputFileSync(outFile, topicTemplate({
         tableOfContents: tableOfContents,
         topics: tutorialItems,
         currentTopic: item,

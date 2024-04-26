@@ -8,7 +8,7 @@ describe('forEach', function(){
     it('iterates over the list of items', function(){
         const observable = new ObservableList([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
 
-        const results: number[] = [];
+        const results: number[] =   [];
 
         observable.forEach(x => results.push(x));
 
@@ -23,7 +23,7 @@ describe('forEach', function(){
 
         observable.forEach(
             function(this: unknown){
-                actualContext = this
+                actualContext = this;
             }, context);
 
         expect(actualContext).toBe(context);

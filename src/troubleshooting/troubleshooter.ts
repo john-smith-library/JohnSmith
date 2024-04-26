@@ -1,10 +1,16 @@
-import {Disposable} from "../common";
-import {DomElement, HtmlDefinition} from "../view";
+import { Disposable } from '../common';
+import { DomElement, HtmlDefinition } from '../view';
 
 export interface Troubleshooter {
-    bindingNotFound(code: string, context: DomElement): Disposable;
+  bindingNotFound(code: string, context: DomElement): Disposable;
 
-    elementNotFound(element: HTMLElement|string, context: DomElement|null): Disposable;
+  elementNotFound(
+    element: HTMLElement | string,
+    context: DomElement | null
+  ): Disposable;
 
-    unknownHtmlDefinition(source: HtmlDefinition, context: DomElement): Disposable;
+  unknownHtmlDefinition(
+    source: HtmlDefinition,
+    context: DomElement
+  ): Disposable;
 }
