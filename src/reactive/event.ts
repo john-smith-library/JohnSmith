@@ -20,7 +20,7 @@ export class Event<T> extends Listenable<T> {
    * Attaches a listener to this event. The listener
    * will be called for every change related to the listenable.
    *
-   * Please not that for Events the old value is always `undefined` as there
+   * Please note that for Events the old value is always `undefined` as there
    * is no state preserved. Because of the same reason, Events never rise
    * the initial callback.
    *

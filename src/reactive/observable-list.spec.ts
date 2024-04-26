@@ -4,8 +4,8 @@
 import { ObservableList } from './observable-list';
 import { DataChangeReason } from './listenable';
 
-describe('forEach', function () {
-  it('iterates over the list of items', function () {
+describe('forEach', () => {
+  it('iterates over the list of items', () => {
     const observable = new ObservableList([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
 
     const results: number[] = [];
@@ -15,7 +15,7 @@ describe('forEach', function () {
     expect(results.length).toBe(10);
   });
 
-  it('respects the context', function () {
+  it('respects the context', () => {
     const observable = new ObservableList(['foo']);
     const context: unknown = {};
 
@@ -27,36 +27,29 @@ describe('forEach', function () {
   });
 });
 
-describe('setValue', function () {
-  it('throws error if values is not an array', function () {
-    const observable = new ObservableList();
-    expect(function () {
-      observable.setValue('foo' as any);
+describe('setValue', () => {
+  it('throws error if values is not an array', () => {
+    const observable = new ObservableList<unknown>();
+    expect(() => {
+      observable.setValue('foo' as never);
     }).toThrow();
   });
 });
 
-describe('count', function () {
-  it('Should be 0 by default', function () {
+describe('count', () => {
+  it('Should be 0 by default', () => {
     const observable = new ObservableList();
     expect(observable.count().getValue()).toBe(0);
   });
 
-  /*
-    it('Should be 0 if value is null', function(){
-        const observable = new ObservableList();
-        observable.setValue(null);
-        expect(observable.count().getValue()).toBe(0);
-    });*/
-
-  it('Should be equal to items count', function () {
+  it('Should be equal to items count', () => {
     const observable = new ObservableList<number>();
     observable.setValue([1, 2, 3]);
     expect(observable.count().getValue()).toBe(3);
   });
 });
 
-it('has value by default', function () {
+it('has value by default', () => {
   const observable = new ObservableList();
 
   expect(observable.getValue()).toBeTruthy();
@@ -64,27 +57,13 @@ it('has value by default', function () {
 });
 
 describe('add', () => {
-  /*
-    it('can add even if initial is null', function(){
-        const observable = new ObservableList<string>(null);
-        observable.add('foo', 'bar');
-        expect(observable.getRequiredValue().length).toBe(2);
-    });*/
-
-  it('can add multiple items', function () {
+  it('can add multiple items', () => {
     const observable = new ObservableList<string>();
     observable.add('foo', 'bar');
     expect(observable.getRequiredValue().length).toBe(2);
   });
 
-  /*
-    it('replaces value if it is null', function(){
-        const observable = new ObservableList<string>(null);
-        observable.add('foo', 'bar');
-        expect(observable.getRequiredValue().length).toBe(2);
-    });*/
-
-  it('notifies listeners', function () {
+  it('notifies listeners', () => {
     const observable = new ObservableList<string>();
 
     const listener = jest.fn();
@@ -97,7 +76,7 @@ describe('add', () => {
     expect(listener).toHaveBeenCalledWith(['baz', 'foo', 'bar']);
   });
 
-  it('notifies partial listeners', function () {
+  it('notifies partial listeners', () => {
     const observable = new ObservableList<string>();
 
     const listener = jest.fn();
@@ -112,7 +91,7 @@ describe('add', () => {
 });
 
 describe('remove', () => {
-  it('can delete multiple items', function () {
+  it('can delete multiple items', () => {
     const observable = new ObservableList<number>();
 
     observable.setValue([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
@@ -127,7 +106,7 @@ describe('remove', () => {
     expect(value[4]).toBe(10);
   });
 
-  it('does nothing if value not in list', function () {
+  it('does nothing if value not in list', () => {
     const observable = new ObservableList<number>([1, 2, 3]);
 
     observable.remove(5);
@@ -136,14 +115,7 @@ describe('remove', () => {
     expect(value.length).toBe(3);
   });
 
-  /*
-    it('does nothing if value is null', () => {
-        const observable = new ObservableList<number>(null);
-        observable.remove(1, 2, 3);
-        expect(observable.getValue()).toBeNull();
-    });*/
-
-  it('notifies listeners', function () {
+  it('notifies listeners', () => {
     const observable = new ObservableList<number>();
 
     const listener = jest.fn();
@@ -156,7 +128,7 @@ describe('remove', () => {
     expect(listener).toHaveBeenCalledWith([2, 4, 6, 8, 10]);
   });
 
-  it('notifies partial listeners', function () {
+  it('notifies partial listeners', () => {
     const observable = new ObservableList<number>();
 
     const listener = jest.fn();
@@ -174,7 +146,7 @@ describe('remove', () => {
 });
 
 describe('clear', () => {
-  it('notifies listeners', function () {
+  it('notifies listeners', () => {
     const observable = new ObservableList<number>();
 
     const listener = jest.fn();
@@ -187,7 +159,7 @@ describe('clear', () => {
     expect(listener).toHaveBeenCalledWith([]);
   });
 
-  it('notifies partial listeners', function () {
+  it('notifies partial listeners', () => {
     const observable = new ObservableList<number>();
 
     const listener = jest.fn();
@@ -203,7 +175,7 @@ describe('clear', () => {
     );
   });
 
-  it('deletes all items', function () {
+  it('deletes all items', () => {
     const observable = new ObservableList<number>();
     observable.setValue([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
     observable.clear();

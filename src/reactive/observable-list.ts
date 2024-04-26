@@ -56,28 +56,21 @@ export class ObservableList<T>
 
   public add(...args: T[]): void {
     const currentValue = this.getValue();
-    if (currentValue === null) {
-      this.setValue(args);
-    } else {
-      for (let i = 0; i < args.length; i++) {
-        currentValue.push(args[i]);
-      }
-
-      this.reactOnChange(args, DataChangeReason.add);
+    for (let i = 0; i < args.length; i++) {
+      currentValue.push(args[i]);
     }
+
+    this.reactOnChange(args, DataChangeReason.add);
   }
 
   public remove(...args: T[]): void {
     const currentValue = this.getValue();
-    if (currentValue !== null) {
-      const array: T[] = currentValue;
 
-      for (let i = 0; i < args.length; i++) {
-        ArrayUtils.removeItem(array, args[i]);
-      }
-
-      this.reactOnChange(args, DataChangeReason.remove);
+    for (let i = 0; i < args.length; i++) {
+      ArrayUtils.removeItem(currentValue, args[i]);
     }
+
+    this.reactOnChange(args, DataChangeReason.remove);
   }
 
   /** Removes all items from the list */
@@ -100,12 +93,7 @@ export class ObservableList<T>
   }
 
   public currentCount() {
-    const value = this.getValue();
-    if (!value) {
-      return 0;
-    }
-
-    return value.length;
+    return this.getValue().length;
   }
 
   public getRequiredLast() {
@@ -117,7 +105,7 @@ export class ObservableList<T>
     return value[value.length - 1];
   }
 
-  public forEach(callback: (item: T) => void, thisArg?: any) {
+  public forEach(callback: (item: T) => void, thisArg?: unknown) {
     const array: T[] = this.getValue() || [];
     array.forEach(callback, thisArg);
   }
@@ -130,13 +118,8 @@ export class ObservableList<T>
   }
 
   private notifyCountListeners(): void {
-    if (this._count) {
-      const value = this.getValue();
-      if (value !== null) {
-        this._count.setValue(value.length);
-      } else {
-        this._count.setValue(0);
-      }
+    if (this._count !== null) {
+      this._count.setValue(this.currentCount());
     }
   }
 }
