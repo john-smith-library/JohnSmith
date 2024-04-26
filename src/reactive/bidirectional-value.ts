@@ -17,7 +17,7 @@ export class BidirectionalValue<T>
     super(value);
   }
 
-  requestUpdate(newValue: T) {
+  public requestUpdate(newValue: T) {
     const handlerResult = this.changeHandler(newValue);
 
     if (

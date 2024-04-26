@@ -50,7 +50,7 @@ export class Application {
    *
    * @return rendered View instance, can be disposed to unrender the View.
    */
-  render<TApplicationViewModel>(
+  public render<TApplicationViewModel>(
     element: HTMLElement | string,
     view: ViewDefinition<TApplicationViewModel>,
     viewModel: TApplicationViewModel

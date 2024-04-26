@@ -17,7 +17,7 @@
       ],
       "parserOptions": {
         "project": [
-          "tsconfig.json"
+          "tsconfig.eslint.json"
         ],
         "createDefaultProgram": true
       },
@@ -30,6 +30,9 @@
         "deprecation"
       ],
       "rules": {
+        "@typescript-eslint/no-explicit-any": [
+          "warn"
+        ],
         "@typescript-eslint/naming-convention": [
           "error",
           {

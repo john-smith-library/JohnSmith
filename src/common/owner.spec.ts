@@ -1,39 +1,38 @@
-import {Disposable} from "./disposable";
-import {Owner} from "./owner";
+import { Disposable } from './disposable';
+import { Owner } from './owner';
 
-class DisposableMock implements Disposable{
-    disposed = false;
+class DisposableMock implements Disposable {
+  disposed = false;
 
-    dispose() {
-        this.disposed = true;
-    }
+  public dispose() {
+    this.disposed = true;
+  }
 }
 
 test('disposes properties', () => {
-    const
-        property = new DisposableMock(),
-        owner = new Owner();
+  const property = new DisposableMock(),
+    owner = new Owner();
 
-    owner.own(property);
-    owner.dispose();
+  owner.own(property);
+  owner.dispose();
 
-    expect(property.disposed).toBe(true);
+  expect(property.disposed).toBe(true);
 });
 
 describe('ownIfNotNull', () => {
-   it("adds disposable if not null", () => {
-       const owner = new Owner();
-       const property = new DisposableMock();
+  it('adds disposable if not null', () => {
+    const owner = new Owner();
+    const property = new DisposableMock();
 
-       owner.ownIfNotNull(property);
-       owner.dispose();
+    owner.ownIfNotNull(property);
+    owner.dispose();
 
-       expect(property.disposed).toBe(true);
-   });
+    expect(property.disposed).toBe(true);
+  });
 
-    it('does nothing if null', () => {
-        const owner = new Owner();
-        owner.ownIfNotNull(null);
-        owner.dispose();
-    });
+  it('does nothing if null', () => {
+    const owner = new Owner();
+    owner.ownIfNotNull(null);
+    owner.dispose();
+  });
 });

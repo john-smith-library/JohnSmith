@@ -56,7 +56,7 @@ export class ObservableValue<T> extends ReadonlyObservable<T> {
   /**
    * Gets the number of listeners attached to the observable value.
    */
-  getListenersCount(): number {
+  public getListenersCount(): number {
     return this._listeners.size();
   }
 
@@ -68,7 +68,10 @@ export class ObservableValue<T> extends ReadonlyObservable<T> {
    * @param raiseInitial a flag indicating whether the callback should be called
    * right away with the actual value. Default is `true`.
    */
-  listen(listener: ListenerCallback<T>, raiseInitial?: boolean): Disposable {
+  public listen(
+    listener: ListenerCallback<T>,
+    raiseInitial?: boolean
+  ): Disposable {
     const initial =
       raiseInitial === undefined || raiseInitial ? this.getValue() : undefined;
     return this._listeners.add(listener, initial);

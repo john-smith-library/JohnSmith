@@ -39,12 +39,12 @@ export class Owner implements Disposable {
    * @param property a disposable object to manage
    * @returns the original disposable object
    */
-  own<T extends Disposable>(property: T): T {
+  public own<T extends Disposable>(property: T): T {
     this._properties.push(property);
     return property;
   }
 
-  ownIfNotNull<T extends Disposable>(
+  public ownIfNotNull<T extends Disposable>(
     property: T | null | undefined
   ): T | null | undefined {
     if (property) {
@@ -57,7 +57,7 @@ export class Owner implements Disposable {
   /**
    * Disposes all the nested disposables.
    */
-  dispose() {
+  public dispose() {
     for (let i = 0; i < this._properties.length; i++) {
       this._properties[i].dispose();
     }

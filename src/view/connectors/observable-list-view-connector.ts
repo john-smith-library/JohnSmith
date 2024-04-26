@@ -46,7 +46,7 @@ export class ObservableListViewConnector<T> implements Disposable {
     }
   }
 
-  dispose(): void {
+  public dispose(): void {
     if (this._link) {
       this._link.dispose();
     }

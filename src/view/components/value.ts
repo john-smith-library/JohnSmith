@@ -18,7 +18,10 @@ export class Value<T> implements ViewComponent<ValueData<T>> {
     this.data = data;
   }
 
-  $$createBinding(parent: DomElement, renderer: ViewRenderer): Disposable {
+  public $$createBinding(
+    parent: DomElement,
+    renderer: ViewRenderer
+  ): Disposable {
     return new ObservableValueViewConnector(
       this.data.model,
       parent,

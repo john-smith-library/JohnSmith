@@ -50,7 +50,7 @@ class ListenerLink<T> implements Disposable {
     private currentListener: T
   ) {}
 
-  dispose() {
+  public dispose() {
     ArrayUtils.removeItem(this.allListeners, this.currentListener);
   }
 }
@@ -84,7 +84,7 @@ export abstract class Listenable<T> {
    * @param raiseInitial a flag indicating whether the callback should be called
    * right away with the actual value. Default is `true`.
    */
-  abstract listen(
+  public abstract listen(
     listener: ListenerCallback<T>,
     raiseInitial?: boolean
   ): Disposable;
@@ -113,7 +113,10 @@ export interface PartialListenable<T> {
 export class Listeners<T> {
   private _items: ListenerCallback<T>[] = [];
 
-  add(listener: ListenerCallback<T>, initial: T | undefined): Disposable {
+  public add(
+    listener: ListenerCallback<T>,
+    initial: T | undefined
+  ): Disposable {
     this._items.push(listener);
     if (initial !== undefined) {
       listener(initial);
@@ -122,13 +125,13 @@ export class Listeners<T> {
     return new ListenerLink(this._items, listener);
   }
 
-  notify(newValue: T): void {
+  public notify(newValue: T): void {
     for (let i = 0; i < this._items.length; i++) {
       this._items[i](newValue);
     }
   }
 
-  size() {
+  public size() {
     return this._items.length;
   }
 }
@@ -141,7 +144,10 @@ export class Listeners<T> {
 export class PartialListeners<TItem> {
   private _items: PartialListenerCallback<TItem>[] = [];
 
-  add(listener: PartialListenerCallback<TItem>, initial?: TItem): Disposable {
+  public add(
+    listener: PartialListenerCallback<TItem>,
+    initial?: TItem
+  ): Disposable {
     this._items.push(listener);
     if (initial !== undefined) {
       listener(initial, DataChangeReason.initial);
@@ -150,13 +156,13 @@ export class PartialListeners<TItem> {
     return new ListenerLink(this._items, listener);
   }
 
-  notify(newValue: TItem, reason: DataChangeReason): void {
+  public notify(newValue: TItem, reason: DataChangeReason): void {
     for (let i = 0; i < this._items.length; i++) {
       this._items[i](newValue, reason);
     }
   }
 
-  size() {
+  public size() {
     return this._items.length;
   }
 }
@@ -166,7 +172,7 @@ export interface BidirectionalListenable<T> extends Listenable<T> {
 }
 
 export abstract class ReadonlyObservable<T> extends Listenable<T> {
-  abstract getValue(): T;
+  public abstract getValue(): T;
 }
 
 export const isListenable = <T>(

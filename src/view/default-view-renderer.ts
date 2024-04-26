@@ -11,6 +11,7 @@ import { Listenable } from '../reactive';
 import {
   ListenableAttributeConnector,
   ListenableTextConnector,
+  PossiblyFormattable,
 } from './connectors';
 
 import '../binding/default';
@@ -241,7 +242,11 @@ export class DefaultViewRenderer implements ViewRenderer {
     for (let i = 0; i < source.nested.length; i++) {
       const nested: NestedHtmlDefinition = source.nested[i];
 
-      if (nested.element) {
+      if (typeof nested === 'string') {
+        result.appendText(this.domEngine.createTextNode(nested));
+      } else if (typeof nested === 'number') {
+        result.appendText(this.domEngine.createTextNode(nested.toString()));
+      } else if ('element' in nested) {
         const newChild = this.transformElementsRecursively(
           result,
           nested,
@@ -252,11 +257,9 @@ export class DefaultViewRenderer implements ViewRenderer {
         if (newChild !== null) {
           result.appendChild(newChild);
         }
-      } else if (typeof nested === 'string') {
-        result.appendText(this.domEngine.createTextNode(nested));
-      } else if (nested.listen) {
-        const connectorSource = nested as Listenable<any>,
-          connectorTarget = this.domEngine.createTextNode(nested);
+      } else if ('listen' in nested) {
+        const connectorSource = nested as Listenable<PossiblyFormattable>;
+        const connectorTarget = this.domEngine.createTextNode('');
 
         result.appendText(connectorTarget);
 
@@ -267,7 +270,11 @@ export class DefaultViewRenderer implements ViewRenderer {
         /**
          * All the unknown elements rendered as strings
          */
-        result.appendText(this.domEngine.createTextNode(nested.toString()));
+        result.appendText(
+          this.domEngine.createTextNode(
+            nested.toString ? nested.toString() ?? '' : ''
+          )
+        );
       }
     }
   }
@@ -296,26 +303,24 @@ export class DefaultViewRenderer implements ViewRenderer {
             context
           )
         );
+      } else if (typeof attributeValue === 'string') {
+        /**
+         * We could avoid this "if" condition because ListenableAttributeConnector (see next step)
+         * can handle both static and listenable, but we set string attributes here
+         * directly because of two reasons:
+         *  - performance
+         *  - to avoid confusion with class attribute vs className binding.
+         */
+        result.setAttribute(attributeName, attributeValue);
       } else {
-        if (typeof attributeValue === 'string') {
-          /**
-           * We could avoid this "if" condition because ListenableAttributeConnector
-           * can handle both static and listenable, but we set string attributes here
-           * directly because of two reasons:
-           *  - performance
-           *  - to avoid confusion with class atribute vs className binding.
-           */
-          result.setAttribute(attributeName, attributeValue);
-        } else {
-          bindings.push(
-            () =>
-              new ListenableAttributeConnector(
-                attributeValue,
-                result,
-                attributeName
-              )
-          );
-        }
+        bindings.push(
+          () =>
+            new ListenableAttributeConnector(
+              attributeValue,
+              result,
+              attributeName
+            )
+        );
       }
     }
   }
@@ -342,8 +347,8 @@ export class DefaultViewRenderer implements ViewRenderer {
   ): () => Disposable {
     const { eventKey, eventThis } =
       attributeName.length > 1 && attributeName[1] === '_'
-        ? { eventKey: attributeName.substr(2), eventThis: context.viewInstance }
-        : { eventKey: attributeName.substr(1), eventThis: context.viewModel };
+        ? { eventKey: attributeName.slice(2), eventThis: context.viewInstance }
+        : { eventKey: attributeName.slice(1), eventThis: context.viewModel };
 
     return () => {
       const eventCallback = function (...args: unknown[]) {

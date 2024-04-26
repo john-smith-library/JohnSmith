@@ -2,7 +2,7 @@ import { AbstractListenableConnector } from './abstract';
 import { Listenable } from '../../reactive';
 import { DomText } from '../element';
 
-type PossiblyFormattable = {
+export type PossiblyFormattable = {
   toString?: () => string;
 };
 

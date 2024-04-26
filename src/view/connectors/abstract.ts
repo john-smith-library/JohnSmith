@@ -22,7 +22,7 @@ export class AbstractListenableConnector<T> implements Disposable {
     }
   }
 
-  dispose(): void {
+  public dispose(): void {
     this.disposeRenderedValue();
     if (this._link) {
       this._link.dispose();
@@ -45,7 +45,7 @@ export class AbstractListenableConnector<T> implements Disposable {
 export class AbstractBidirectionalConnector<
   T,
 > extends AbstractListenableConnector<T> {
-  private readonly eventHandler: any;
+  private readonly _eventHandler: any;
 
   constructor(
     source:
@@ -72,16 +72,16 @@ export class AbstractBidirectionalConnector<
     ) {
       const bidirectionalSource = source as BidirectionalListenable<T>;
 
-      this.eventHandler = target.attachEventHandler(event, () => {
+      this._eventHandler = target.attachEventHandler(event, () => {
         bidirectionalSource.requestUpdate(valueFromDom(target));
       });
     }
   }
 
-  dispose(): void {
+  public dispose(): void {
     super.dispose();
-    if (this.eventHandler) {
-      this.target.detachEventHandler(this.event, this.eventHandler);
+    if (this._eventHandler) {
+      this.target.detachEventHandler(this.event, this._eventHandler);
     }
   }
 }

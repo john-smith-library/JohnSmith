@@ -2,15 +2,15 @@ import { Troubleshooter } from './troubleshooter';
 import { Disposable, NoopDisposable } from '../common';
 
 export class NoopTroubleshooter implements Troubleshooter {
-  bindingNotFound(): Disposable {
+  public bindingNotFound(): Disposable {
     return NoopDisposable;
   }
 
-  elementNotFound(): Disposable {
+  public elementNotFound(): Disposable {
     return NoopDisposable;
   }
 
-  unknownHtmlDefinition(): Disposable {
+  public unknownHtmlDefinition(): Disposable {
     return NoopDisposable;
   }
 }

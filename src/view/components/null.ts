@@ -18,7 +18,10 @@ export class Null<T> implements ViewComponent<NullData<T>> {
     this.data = data;
   }
 
-  $$createBinding(parent: DomElement, renderer: ViewRenderer): Disposable {
+  public $$createBinding(
+    parent: DomElement,
+    renderer: ViewRenderer
+  ): Disposable {
     return new NullViewConnector(
       this.data.model,
       parent,

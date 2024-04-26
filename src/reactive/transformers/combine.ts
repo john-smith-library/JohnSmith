@@ -1,42 +1,33 @@
-import { Listenable, ListenerCallback } from '../../listenable';
-import { Disposable, Owner } from '../../../common';
+import { Listenable, ListenerCallback } from '../listenable';
+import { Disposable, Owner } from '../../common';
 
-Listenable.prototype.combine = function <TRight, TResult>(
+/**
+ * Combines two source listenables into one transforming the source values on every change.
+ *
+ *     const firstName = new ObservableValue<string>();
+ *     const lastName = new ObservableValue<string>();
+ *
+ *     const combined = combine(
+ *           firstName
+ *          lastName,
+ *          (firstNameValue, lastNameValue) => (firstNameValue || '') + ' ' + (lastNameValue || ''));
+ *
+ *     combined.listen(v => console.log(v));
+ *
+ *     firstName.setValue('John');
+ *     secondName.setValue('Smith');
+ *
+ *     // outputs 'John Smith'
+ *
+ * @param left first listenable to combine
+ * @param right second listenable to combine
+ * @param transform the function to combine values
+ */
+export const combine = <TLeft, TRight, TResult>(
+  left: Listenable<TLeft>,
   right: Listenable<TRight>,
   transform: (left: unknown, right: TRight) => TResult
-): Listenable<TResult> {
-  return new DependantListenableValue(this, right, transform);
-};
-
-declare module '../../listenable' {
-  interface Listenable<T> {
-    /**
-     * Combines two source listenables into one transforming the source values on every change.
-     *
-     *     const
-     *         firstName = new ObservableValue<string>(),
-     *         lastName = new ObservableValue<string>();
-     *
-     *     const combined = firstName.combine(
-     *          lastName,
-     *          (firstNameValue, lastNameValue) => (firstNameValue || '') + ' ' + (lastNameValue || ''));
-     *
-     *     combined.listen(v => console.log(v));
-     *
-     *     firstName.setValue('John');
-     *     secondName.setValue('Smith');
-     *
-     *     // outputs 'John Smith'
-     *
-     * @param right second listenable to combine
-     * @param transform the function to combine values
-     */
-    combine<TRight, TResult>(
-      right: Listenable<TRight>,
-      transform: (left: T, right: TRight) => TResult
-    ): Listenable<TResult>;
-  }
-}
+): Listenable<TResult> => new DependantListenableValue(left, right, transform);
 
 class DependantListenableValue<
   TLeft,
@@ -53,7 +44,7 @@ class DependantListenableValue<
     super();
   }
 
-  listen(
+  public listen(
     listener: ListenerCallback<TResult>,
     raiseInitial?: boolean
   ): Disposable {
@@ -97,7 +88,7 @@ class DependantListenableValue<
     ]);
   }
 
-  getListenersCount(): number {
+  public getListenersCount(): number {
     return this._listenersCount;
   }
 }

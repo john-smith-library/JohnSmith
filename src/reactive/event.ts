@@ -12,7 +12,7 @@ export class Event<T> extends Listenable<T> {
   /**
    * Returns the number of listeners attached to the event.
    */
-  getListenersCount(): number {
+  public getListenersCount(): number {
     return this._listeners.size();
   }
 
@@ -26,7 +26,7 @@ export class Event<T> extends Listenable<T> {
    *
    * @param listener the listener callback
    */
-  listen(listener: ListenerCallback<T>): Disposable {
+  public listen(listener: ListenerCallback<T>): Disposable {
     return this._listeners.add(listener, undefined);
   }
 
@@ -34,7 +34,7 @@ export class Event<T> extends Listenable<T> {
    * Triggers the event and notifies all the listeners.
    * @param data data object to pass to the listeners
    */
-  trigger(data: T) {
+  public trigger(data: T) {
     this._listeners.notify(data);
   }
 }

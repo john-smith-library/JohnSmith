@@ -18,7 +18,10 @@ export class List<T> implements ViewComponent<ListData<T>> {
     this.data = data;
   }
 
-  $$createBinding(parent: DomElement, renderer: ViewRenderer): Disposable {
+  public $$createBinding(
+    parent: DomElement,
+    renderer: ViewRenderer
+  ): Disposable {
     return new ObservableListViewConnector(
       this.data.model,
       parent,

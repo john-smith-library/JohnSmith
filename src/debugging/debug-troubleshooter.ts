@@ -4,22 +4,22 @@ import { Disposable } from '../common';
 import { ErrorsViewModel } from './errors-view-model';
 
 export class ErrorInfo {
-  private classNames: DomElementClasses;
+  private _classNames: DomElementClasses;
 
   constructor(
     public readonly element: DomElement,
     public readonly message: string,
     public readonly index: number
   ) {
-    this.classNames = this.element.createClassNames();
+    this._classNames = this.element.createClassNames();
   }
 
-  highlightErrorElement() {
-    this.classNames.add('js-debugger-error');
+  public highlightErrorElement() {
+    this._classNames.add('js-debugger-error');
   }
 
-  unHighlightErrorElement() {
-    this.classNames.remove('js-debugger-error');
+  public unHighlightErrorElement() {
+    this._classNames.remove('js-debugger-error');
   }
 }
 
@@ -33,7 +33,7 @@ export class DebugTroubleshooter implements Troubleshooter {
     private onFirstErrorCallback: () => void
   ) {}
 
-  bindingNotFound(code: string, context: DomElement): Disposable {
+  public bindingNotFound(code: string, context: DomElement): Disposable {
     return this.pushErrorMessage(
       'Binding with code [' +
         code +
@@ -42,7 +42,7 @@ export class DebugTroubleshooter implements Troubleshooter {
     );
   }
 
-  elementNotFound(
+  public elementNotFound(
     element: HTMLElement | string,
     context: DomElement | null
   ): Disposable {
@@ -52,7 +52,7 @@ export class DebugTroubleshooter implements Troubleshooter {
     );
   }
 
-  unknownHtmlDefinition(
+  public unknownHtmlDefinition(
     source: HtmlDefinition,
     context: DomElement
   ): Disposable {

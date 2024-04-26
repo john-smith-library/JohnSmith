@@ -41,7 +41,7 @@ declare global {
 }
 
 export type DArguments =
-  | [HtmlDefinitionElement, HtmlDefinitionAttributes, ...NestedHtmlDefinition]
+  | [HtmlDefinitionElement, HtmlDefinitionAttributes, ...NestedHtmlDefinition[]]
   | [HtmlDefinitionElement];
 
 declare module '../../global' {
@@ -52,17 +52,17 @@ declare module '../../global' {
 
 JS.d = function (...args: DArguments): HtmlDefinition {
   const argsCount = arguments.length;
-  const nested = [];
+  const nested: NestedHtmlDefinition[] = [];
 
   for (let i = 2; i < argsCount; i++) {
-    nested.push(args[i]);
+    nested.push(args[i] as NestedHtmlDefinition);
   }
 
   const attributes: HtmlDefinitionAttributes | null =
     argsCount > 1 && args[1] !== undefined ? args[1] : null;
 
   const namespace: string | undefined = attributes
-    ? attributes['xmlns']
+    ? (attributes['xmlns'] as string)
     : undefined;
 
   return {

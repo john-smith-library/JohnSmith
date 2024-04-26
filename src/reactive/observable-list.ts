@@ -38,7 +38,7 @@ export class ObservableList<T>
   /**
    * Gets the number of listeners attached to the observable value.
    */
-  getPartialListenersCount(): number {
+  public getPartialListenersCount(): number {
     return this._partialListeners.size();
   }
 

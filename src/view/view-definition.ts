@@ -12,8 +12,13 @@ export type NestedHtmlDefinition =
   | HtmlDefinition
   | string
   | Listenable<unknown>
-  | any;
-export type HtmlDefinitionAttributes = { [key: string]: any };
+  | number
+  | {
+      toString?: () => string;
+    };
+export type HtmlDefinitionAttributes = {
+  [key: string]: any;
+};
 
 export interface HtmlDefinition {
   element: HtmlDefinitionElement;
