@@ -1,8 +1,8 @@
-import {Troubleshooter} from "./troubleshooter";
+import { Troubleshooter } from './troubleshooter';
 import '../global';
 
 declare module '../global' {
-    interface JsGlobal {
-        TroubleShooterFactory?: () => Troubleshooter
-    }
+  interface JsGlobal {
+    TroubleShooterFactory?: () => Troubleshooter;
+  }
 }

@@ -2,45 +2,45 @@
  * DomText is a wrapper around browser TextNode
  */
 export interface DomText {
-    setText(value: string): void;
+  setText(value: string): void;
 }
 
 export interface DomElementClasses {
-    add(className: string): void;
-    remove(className: string): void;
+  add(className: string): void;
+  remove(className: string): void;
 }
 
 /**
  * DomElement is a wrapper around native browser HTMLElement
  */
 export interface DomElement {
-    setInnerText(value: string): void;
+  setInnerText(value: string): void;
 
-    setInnerElement(value: DomElement): void;
+  setInnerElement(value: DomElement): void;
 
-    appendChild(value: DomElement): void;
+  appendChild(value: DomElement): void;
 
-    appendText(value: DomText): void;
+  appendText(value: DomText): void;
 
-    setAttribute(attribute: string, value: any): void;
+  setAttribute(attribute: string, value: any): void;
 
-    removeAttribute(attribute: string): void;
+  removeAttribute(attribute: string): void;
 
-    attachEventHandler(event: string, callback: () => void) : any;
+  attachEventHandler(event: string, callback: () => void): any;
 
-    detachEventHandler(event: string, handler: any): void;
+  detachEventHandler(event: string, handler: any): void;
 
-    remove(): void;
+  remove(): void;
 
-    createClassNames(): DomElementClasses;
+  createClassNames(): DomElementClasses;
 
-    setInnerHtml(value: string): void;
+  setInnerHtml(value: string): void;
 
-    getValue(): string;
+  getValue(): string;
 
-    setValue(value: string): void;
+  setValue(value: string): void;
 
-    isChecked(): boolean;
+  isChecked(): boolean;
 
-    setChecked(value: boolean): void;
+  setChecked(value: boolean): void;
 }

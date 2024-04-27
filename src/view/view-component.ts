@@ -1,11 +1,11 @@
 import { Disposable } from '../common';
-import {DomElement} from "./element";
-import {ViewRenderer} from "./view-renderer";
+import { DomElement } from './element';
+import { ViewRenderer } from './view-renderer';
 
-export type ViewComponentConstructor<T> = { new(data: T): ViewComponent<T> }
+export type ViewComponentConstructor<T> = { new (data: T): ViewComponent<T> };
 
 export interface ViewComponent<TData> {
-    data?: TData;
+  data?: TData;
 
-    $$createBinding(parent: DomElement, renderer: ViewRenderer): Disposable;
+  $$createBinding(parent: DomElement, renderer: ViewRenderer): Disposable;
 }

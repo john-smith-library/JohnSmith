@@ -1,30 +1,34 @@
-import {DefaultBindingRegistry} from '../registry';
-import {DomElement} from '../../view';
-import {Listenable} from '../../reactive';
-import {AbstractListenableConnector} from '../../view/connectors/abstract';
+import { DefaultBindingRegistry } from '../registry';
+import { DomElement } from '../../view';
+import { Listenable } from '../../reactive';
+import { AbstractListenableConnector } from '../../view/connectors/abstract';
 
-DefaultBindingRegistry.prototype['$className'] = (element: DomElement, bindingArgs: unknown) => {
-    const classNames = element.createClassNames();
+DefaultBindingRegistry.prototype['$className'] = (
+  element: DomElement,
+  bindingArgs: unknown
+) => {
+  const classNames = element.createClassNames();
 
-    return new AbstractListenableConnector<string>(
-        <Listenable<string|null>>bindingArgs,
-        (value: string|null) => {
-            if (value === null) {
-                return null;
-            }
+  return new AbstractListenableConnector<string>(
+    bindingArgs as Listenable<string | null>,
+    (value: string | null) => {
+      if (value === null) {
+        return null;
+      }
 
-            classNames.add(value);
+      classNames.add(value);
 
-            return {
-                dispose: () => {
-                    classNames.remove(value);
-                }
-            };
-        });
+      return {
+        dispose: () => {
+          classNames.remove(value);
+        },
+      };
+    }
+  );
 };
 
 declare module '../../view/jsx/default-intrinsic-element' {
-    interface DefaultIntrinsicElements {
-        $className?: Listenable<string|null>|string
-    }
+  interface DefaultIntrinsicElements {
+    $className?: Listenable<string | null> | string;
+  }
 }

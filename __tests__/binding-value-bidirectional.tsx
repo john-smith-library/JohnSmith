@@ -1,29 +1,43 @@
-import {HtmlDefinition, View} from '../src/view';
-import {ObservableValue} from '../src/reactive';
-import {dispatchChange, findInput, setupAppContainerAndRender} from './_helpers';
-import {BidirectionalValue, ChangeHandler} from '../src/reactive';
+import { HtmlDefinition } from '../src/view';
+import { ObservableValue } from '../src/reactive';
+import {
+  dispatchChange,
+  findInput,
+  setupAppContainerAndRender,
+} from './_helpers';
+import { BidirectionalValue, ChangeHandler } from '../src/reactive';
 import '../src/view/jsx';
 
 class ViewModel {
-    firstName: ObservableValue<string|null>;
+  firstName: ObservableValue<string | null>;
 
-    constructor(public callback: ChangeHandler<string|null>, firstName: string|null = null) {
-        this.firstName = new BidirectionalValue<string|null>(callback, firstName);
-    }
+  constructor(
+    public callback: ChangeHandler<string | null>,
+    firstName: string | null = null
+  ) {
+    this.firstName = new BidirectionalValue<string | null>(callback, firstName);
+  }
 }
 
-const ApplicationView = (viewModel: ViewModel): HtmlDefinition =>
-    <form>
-        <input id="textInput" $value={viewModel.firstName}/>
-    </form>;
+const ApplicationView = (viewModel: ViewModel): HtmlDefinition => (
+  <form>
+    <input id="textInput" $value={viewModel.firstName} />
+  </form>
+);
 
-it('should update source on input change',
-    setupAppContainerAndRender(ApplicationView, new ViewModel(() => {}),(container, viewModel) => {
-        const input = findInput('textInput');
+it(
+  'should update source on input change',
+  setupAppContainerAndRender(
+    ApplicationView,
+    new ViewModel(() => {}),
+    (container, viewModel) => {
+      const input = findInput('textInput');
 
-        input.value = 'John';
+      input.value = 'John';
 
-        dispatchChange(input);
+      dispatchChange(input);
 
-        expect(viewModel.firstName.getValue()).toBe('John');
-    }));
+      expect(viewModel.firstName.getValue()).toBe('John');
+    }
+  )
+);

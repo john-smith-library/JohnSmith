@@ -1,76 +1,74 @@
-import {DefaultIntrinsicElements} from "./default-intrinsic-element";
+import { DefaultIntrinsicElements } from './default-intrinsic-element';
 import {
-    HtmlDefinition,
-    HtmlDefinitionAttributes,
-    HtmlDefinitionElement,
-    NestedHtmlDefinition
-} from "../view-definition";
-import {ViewComponent} from "../view-component";
+  HtmlDefinition,
+  HtmlDefinitionAttributes,
+  HtmlDefinitionElement,
+  NestedHtmlDefinition,
+} from '../view-definition';
+import { ViewComponent } from '../view-component';
 import '../../global';
 
 declare global {
-    // eslint-disable-next-line @typescript-eslint/no-namespace
-    namespace JSX {
-        interface IElement extends DefaultIntrinsicElements{
-            [elemName: string]: any;
-        }
-
-        interface IntrinsicElements  {
-            [elemName: string]: IElement;
-        }
-
-        interface ElementAttributesProperty {
-            data: unknown; // specify the property name to use
-        }
-
-        // eslint-disable-next-line @typescript-eslint/no-empty-interface
-        interface ElementClass extends ViewComponent<unknown> {
-        }
-
-        // interface IntrinsicClassAttributes<T>  {
-        //     viewModel?: any;
-        //     listViewModel?: any;
-        // }
-        //
-        // interface IntrinsicAttributes {
-        //     viewModel?: any;
-        //     listViewModel?: any;
-        // }
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  namespace JSX {
+    interface IElement extends DefaultIntrinsicElements {
+      [elemName: string]: any;
     }
 
-    //const JS: { d: (...args:any[]) => HtmlDefinition };
+    interface IntrinsicElements {
+      [elemName: string]: IElement;
+    }
+
+    interface ElementAttributesProperty {
+      data: unknown; // specify the property name to use
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-empty-interface
+    interface ElementClass extends ViewComponent<unknown> {}
+
+    // interface IntrinsicClassAttributes<T>  {
+    //     viewModel?: any;
+    //     listViewModel?: any;
+    // }
+    //
+    // interface IntrinsicAttributes {
+    //     viewModel?: any;
+    //     listViewModel?: any;
+    // }
+  }
+
+  //const JS: { d: (...args:any[]) => HtmlDefinition };
 }
 
-export type DArguments = [
-    HtmlDefinitionElement,
-    HtmlDefinitionAttributes,
-    ...NestedHtmlDefinition] | [HtmlDefinitionElement];
+export type DArguments =
+  | [HtmlDefinitionElement, HtmlDefinitionAttributes, ...NestedHtmlDefinition[]]
+  | [HtmlDefinitionElement];
 
 declare module '../../global' {
-    interface JsGlobal {
-        d: (...arguments: DArguments) => HtmlDefinition
-    }
+  interface JsGlobal {
+    d: (...arguments: DArguments) => HtmlDefinition;
+  }
 }
 
-JS.d = function(...args: DArguments): HtmlDefinition {
-    const
-        argsCount = arguments.length,
-        nested = [];
+JS.d = function (...args: DArguments): HtmlDefinition {
+  const argsCount = arguments.length;
+  const nested: NestedHtmlDefinition[] = [];
 
-    for (let i = 2; i < argsCount; i++) {
-        nested.push(args[i]);
-    }
+  for (let i = 2; i < argsCount; i++) {
+    nested.push(args[i] as NestedHtmlDefinition);
+  }
 
-    /* Note: ts compiler does not recognize "argsCount > 1" as a guard so we have
-    *  to do this ugly cast here */
-    const attributes = <HtmlDefinitionAttributes|null>(argsCount > 1 ? args[1] : null);
+  const attributes: HtmlDefinitionAttributes | null =
+    argsCount > 1 && args[1] !== undefined ? args[1] : null;
 
-    const namespace: string|undefined = attributes ? attributes['xmlns'] : undefined;
+  const namespace: string | undefined = attributes
+    ? (attributes['xmlns'] as string)
+    : undefined;
 
-    return {
-        element: args[0],
-        attributes: attributes,
-        nested: nested,
-        namespace: namespace
-    };
+  return {
+    element: args[0],
+    attributes: attributes,
+    nested: nested,
+    namespace: namespace,
+  };
 };

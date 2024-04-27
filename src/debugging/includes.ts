@@ -1,10 +1,10 @@
-import {DebugTroubleshooter} from "./debug-troubleshooter";
-import {DefaultViewRenderer} from "../view/default-view-renderer";
-import {NativeDomEngine} from "../view/dom-engine-native";
-import {DefaultBindingRegistry} from "../binding/registry";
-import {NoopTroubleshooter} from "../troubleshooting/noop-troubleshooter";
-import {ErrorsView} from "./errors-view";
-import {ErrorsViewModel} from "./errors-view-model";
+import { DebugTroubleshooter } from './debug-troubleshooter';
+import { DefaultViewRenderer } from '../view/default-view-renderer';
+import { NativeDomEngine } from '../view/dom-engine-native';
+import { DefaultBindingRegistry } from '../binding/registry';
+import { NoopTroubleshooter } from '../troubleshooting/noop-troubleshooter';
+import { ErrorsView } from './errors-view';
+import { ErrorsViewModel } from './errors-view-model';
 
 import '../troubleshooting/global';
 
@@ -14,50 +14,48 @@ const ERROR = console ? console.error : () => undefined;
 const debuggerViewModel = new ErrorsViewModel();
 
 globalThis.JS.TroubleShooterFactory = () => {
-    try {
-        INITIALIZER();
+  try {
+    INITIALIZER();
 
-        const domEngine = new NativeDomEngine();
+    const domEngine = new NativeDomEngine();
 
-        const root = domEngine.getRoot();
+    const root = domEngine.getRoot();
 
-        if (!root) {
-            throw new Error('Cannot find page root element to attach JohnSmith debug tools.')
-        }
-
-        return new DebugTroubleshooter(
-            root,
-            debuggerViewModel,
-            () => {
-                new DefaultViewRenderer(
-                    domEngine,
-                    new DefaultBindingRegistry(),
-                    new NoopTroubleshooter()
-                ).render(root, ErrorsView, debuggerViewModel);
-            });
-    } catch (e) {
-        ERROR(e);
-        ERROR('Noop debugger will be used.');
-
-        return new NoopTroubleshooter();
+    if (!root) {
+      throw new Error(
+        'Cannot find page root element to attach JohnSmith debug tools.'
+      );
     }
+
+    return new DebugTroubleshooter(root, debuggerViewModel, () => {
+      new DefaultViewRenderer(
+        domEngine,
+        new DefaultBindingRegistry(),
+        new NoopTroubleshooter()
+      ).render(root, ErrorsView, debuggerViewModel);
+    });
+  } catch (e) {
+    ERROR(e);
+    ERROR('Noop debugger will be used.');
+
+    return new NoopTroubleshooter();
+  }
 };
 
 const INITIALIZER = () => {
-    LOG("");
+  LOG('');
 
-    LOG("========================================================== ");
-    LOG("       _       _              _____           _ _   _      ");
-    LOG("      | |     | |            / ____|         (_) | | |     ");
-    LOG("      | | ___ | |__  _ __   | (___  _ __ ___  _| |_| |__   ");
-    LOG("  _   | |/ _ \\| '_ \\| '_ \\   \\___ \\| '_ ` _ \\| | __| '_ \\  ");
-    LOG(" | |__| | (_) | | | | | | |  ____) | | | | | | | |_| | | | ");
-    LOG("  \\____/ \\___/|_| |_|_| |_| |_____/|_| |_| |_|_|\\__|_| |_| ");
-    LOG("========================================================== ");
+  LOG(`========================================================== 
+       _       _              _____           _ _   _     
+      | |     | |            / ____|         (_) | | |    
+      | | ___ | |__  _ __   | (___  _ __ ___  _| |_| |__  
+  _   | |/ _ \\| '_ \\| '_ \\   \\___ \\| '_ \` _ \\| | __| '_ \\  
+ | |__| | (_) | | | | | | |  ____) | | | | | | | |_| | | | 
+  \\____/ \\___/|_| |_|_| |_| |_____/|_| |_| |_|_|\\__|_| |_| 
+========================================================== `);
 
-    const style = document.createElement('style');
-    style.type = 'text/css';
-    style.innerHTML = `
+  const style = document.createElement('style');
+  style.innerHTML = `
 .js-debugger section,
 .js-debugger header,
 .js-debugger main,
@@ -134,5 +132,5 @@ const INITIALIZER = () => {
 }
 
     `;
-    document.getElementsByTagName('head')[0].appendChild(style);
+  document.getElementsByTagName('head')[0].appendChild(style);
 };
