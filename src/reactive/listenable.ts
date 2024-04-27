@@ -30,26 +30,23 @@ export enum DataChangeReason {
 }
 
 /**
- * Detailed information about listenable data change.
+ * Represents a link between a set of listeners and a current listener.
+ * @typeparam T The type of the listeners.
  */
-export interface ChangeDetails<T> {
-  reason: DataChangeReason;
-  portion: T;
-}
-
-/**
- * Listenable callback signature.
- */
-// export interface ListenerCallback<T> {
-//     (value: T, oldValue: T|undefined, details: ChangeDetails<T>): void;
-// }
-
 class ListenerLink<T> implements Disposable {
+  /**
+   * Constructs a new ListenerLink instance.
+   * @param allListeners An array containing all the listeners.
+   * @param currentListener The current listener to be managed by this link.
+   */
   constructor(
     private allListeners: T[],
     private currentListener: T
   ) {}
 
+  /**
+   * Disposes of the current listener, removing it from the list of all listeners.
+   */
   public dispose() {
     ArrayUtils.removeItem(this.allListeners, this.currentListener);
   }
@@ -90,6 +87,9 @@ export abstract class Listenable<T> {
   ): Disposable;
 }
 
+/**
+ * A listenable with array target value that supports partial update of the list.
+ */
 export interface PartialListenable<T> {
   /**
    * Attaches a listener to this listenable object. The listener

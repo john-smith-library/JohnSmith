@@ -19,21 +19,22 @@ export class Application {
   private readonly _viewRenderer: ViewRenderer;
   private readonly _troubleshooter: Troubleshooter;
 
-  constructor(
-    domEngine?: DomEngine,
-    bindingRegistry?: BindingRegistry,
-    viewRenderer?: ViewRenderer,
-    troubleshooter?: Troubleshooter
-  ) {
-    this._domEngine = domEngine || new NativeDomEngine();
-    this._bindingRegistry = bindingRegistry || new DefaultBindingRegistry();
+  constructor(options?: {
+    domEngine?: DomEngine;
+    bindingRegistry?: BindingRegistry;
+    viewRenderer?: ViewRenderer;
+    troubleshooter?: Troubleshooter;
+  }) {
+    this._domEngine = options?.domEngine ?? new NativeDomEngine();
+    this._bindingRegistry =
+      options?.bindingRegistry ?? new DefaultBindingRegistry();
     this._troubleshooter =
-      troubleshooter ||
+      options?.troubleshooter ??
       (JS.TroubleShooterFactory
         ? JS.TroubleShooterFactory()
         : new NoopTroubleshooter());
     this._viewRenderer =
-      viewRenderer ||
+      options?.viewRenderer ??
       new DefaultViewRenderer(
         this._domEngine,
         this._bindingRegistry,

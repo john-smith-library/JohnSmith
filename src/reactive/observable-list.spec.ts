@@ -183,3 +183,23 @@ describe('clear', () => {
     expect(observable.getRequiredValue().length).toBe(0);
   });
 });
+
+describe('getRequiredLast', () => {
+  it('returns a value if list is not empty', () => {
+    const observable = new ObservableList<number>([42]);
+
+    expect(observable.getRequiredLast()).toBe(42);
+  });
+
+  it('returns last value if there are many', () => {
+    const observable = new ObservableList<number>([1, 2, 3]);
+
+    expect(observable.getRequiredLast()).toBe(3);
+  });
+
+  it('throws if list is empty', () => {
+    const observable = new ObservableList<number>();
+
+    expect(() => observable.getRequiredLast()).toThrow();
+  });
+});
