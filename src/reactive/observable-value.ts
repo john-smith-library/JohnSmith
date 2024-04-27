@@ -1,10 +1,18 @@
-import { ListenerCallback, Listeners, ReadonlyObservable } from './listenable';
+import {
+  ListenerCallback,
+  Listeners,
+  ListenersAware,
+  ReadonlyObservable,
+} from './listenable';
 import { Disposable } from '../common';
 
 /**
  * Defines a stateful listenable class.
  */
-export class ObservableValue<T> extends ReadonlyObservable<T> {
+export class ObservableValue<T>
+  extends ReadonlyObservable<T>
+  implements ListenersAware
+{
   protected _listeners = new Listeners<T>();
   private _value: T;
 

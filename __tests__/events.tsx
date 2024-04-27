@@ -111,12 +111,12 @@ function dispatchClick(element: HTMLElement) {
   element.dispatchEvent(event);
 }
 
-function assertContextIsVm() {
+function assertContextIsVm(this: unknown) {
   expect(this).toBeDefined();
   expect(this).toBeInstanceOf(ViewModel);
 }
 
-function assertContextIsView() {
+function assertContextIsView(this: unknown) {
   expect(this).toBeDefined();
   expect(this).toBeInstanceOf(ApplicationViewDoubleUnderscore);
 }

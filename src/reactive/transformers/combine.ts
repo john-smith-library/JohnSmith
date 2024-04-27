@@ -1,4 +1,4 @@
-import { Listenable, ListenerCallback } from '../listenable';
+import { Listenable, ListenerCallback, ListenersAware } from '../listenable';
 import { Disposable, Owner } from '../../common';
 
 /**
@@ -27,13 +27,13 @@ export const combine = <TLeft, TRight, TResult>(
   left: Listenable<TLeft>,
   right: Listenable<TRight>,
   transform: (left: unknown, right: TRight) => TResult
-): Listenable<TResult> => new DependantListenableValue(left, right, transform);
+): Listenable<TResult> & ListenersAware =>
+  new DependantListenableValue(left, right, transform);
 
-class DependantListenableValue<
-  TLeft,
-  TRight,
-  TResult,
-> extends Listenable<TResult> {
+class DependantListenableValue<TLeft, TRight, TResult>
+  extends Listenable<TResult>
+  implements ListenersAware
+{
   private _listenersCount = 0;
 
   constructor(

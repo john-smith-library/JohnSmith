@@ -88,6 +88,13 @@ export abstract class Listenable<T> {
 }
 
 /**
+ * Gets the number of listeners attached to this object.
+ */
+export interface ListenersAware {
+  getListenersCount(): number;
+}
+
+/**
  * A listenable with array target value that supports partial update of the list.
  */
 export interface PartialListenable<T> {

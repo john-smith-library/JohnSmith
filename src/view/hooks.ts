@@ -77,7 +77,7 @@ export interface OnBeforeInit {
 }
 
 /**
-
+ * Describes OnInit view hook.
  */
 export interface OnInit {
   onInit(

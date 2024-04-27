@@ -56,4 +56,17 @@ describe('combine observable', function () {
     expect(data.firstName.getListenersCount()).toBe(0);
     expect(data.lastName.getListenersCount()).toBe(0);
   });
+
+  describe('getListenersCount', () => {
+    it('should increase on listen', () => {
+      const data = createCombined();
+      const results: (string | null)[] = [];
+
+      expect(data.fullName.getListenersCount()).toBe(0);
+
+      data.fullName.listen(x => results.push(x), false);
+
+      expect(data.fullName.getListenersCount()).toBe(1);
+    });
+  });
 });

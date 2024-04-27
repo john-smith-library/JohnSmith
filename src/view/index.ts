@@ -1,5 +1,4 @@
 /**
- * Test
  * @module view
  */
 

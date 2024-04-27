@@ -4,7 +4,7 @@ import '../src/view/jsx';
 import '../src/binding/ext/bind';
 
 class ViewModel {
-  constructor(public callback: any) {}
+  constructor(public callback: (element: DomElement) => void) {}
 }
 
 const ApplicationView = (viewModel: ViewModel) => (
