@@ -18,7 +18,7 @@ export class ObservableValue<T>
 
   /**
    * Creates new observable value instance.
-   * @param value optional initial value
+   * @param value initial value
    */
   constructor(value: T) {
     super();
@@ -66,6 +66,23 @@ export class ObservableValue<T>
    */
   public getListenersCount(): number {
     return this._listeners.size();
+  }
+
+  /**
+   * Mutates the current value using the provided action and sets the new value.
+   *
+   * This method is a shortcut for setting values basing on current value. For example
+   * @example
+   * var observable = new ObservableValue<number>(1);
+   * // the mutation:
+   * observable.setValue(observable.getValue() + 1);
+   * // ...can be shorten to
+   * observable.mutate(x => x + 1);
+   * @param action A function that takes the current value and returns the new value.
+   */
+  public mutate(action: (currentValue: T) => T) {
+    const nextValue = action(this._value);
+    this.setValue(nextValue);
   }
 
   /**

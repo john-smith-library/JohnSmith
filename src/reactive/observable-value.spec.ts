@@ -53,34 +53,6 @@ it('passes new value to listener', () => {
   expect(listener.mock.calls[0][0]).toBe('bar');
 });
 
-/*
-it('passes old value to listener', () => {
-    const observable = new ObservableValue('');
-    const listener = jest.fn();
-
-    observable.setValue('foo');
-    observable.listen(listener, false);
-    observable.setValue('bar');
-
-    expect(listener).toHaveBeenCalled();
-    expect(listener.mock.calls[0][1]).toBe('foo');
-});*/
-
-/*
-it('passes changes details to listener', () => {
-    const observable = new ObservableValue('');
-    const listener = jest.fn();
-
-    observable.setValue('foo');
-    observable.listen(listener, false);
-    observable.setValue('bar');
-
-    expect(listener).toHaveBeenCalledWith(
-        (<any>(expect)).anything(),
-        (<any>(expect)).anything(),
-        { reason: DataChangeReason.replace, portion: 'bar' });
-});*/
-
 describe('hasValue', () => {
   it('returns false if value is null', () => {
     const observable = new ObservableValue<string | null>('');
@@ -113,5 +85,13 @@ describe('getRequiredValue', () => {
     expect(() => {
       observable.getRequiredValue();
     }).toThrow();
+  });
+});
+
+describe('mutate', () => {
+  it('should update value', () => {
+    const observable = new ObservableValue<number>(0);
+    observable.mutate(x => x + 1);
+    expect(observable.getValue()).toBe(1);
   });
 });
