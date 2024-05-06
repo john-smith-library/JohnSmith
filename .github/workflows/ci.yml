@@ -40,7 +40,7 @@ jobs:
           SSH_DEPLOY_KEY: ${{ secrets.SITE_PUBLISH_PRIVATE_KEY }}
 
         with:
-          source-directory: dist_docs/
+          source-directory: dist_doc/
           #destination-github-username: <external org/user name>
           destination-repository-name: john-smith-library/john-smith-library.github.io
           #user-email: <your email>
