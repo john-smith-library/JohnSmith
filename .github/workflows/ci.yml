@@ -16,3 +16,33 @@ jobs:
       - run: npm run build
       - run: npm run test
       - run: npm run lint -- --fix
+      - run: npm run build_docs
+      - name: Deploy to external repository
+        uses: cpina/github-action-push-to-another-repository@main
+        # env:
+          # 🏗️ <internal repository>, run GitHub Action.
+          # 🎁 <external repository>, receiving Artifacts.
+          #
+          # Way 1: using Personal Access Token
+          # @see https://cpina.github.io/push-to-another-repository-docs/setup-using-personal-access-token.html#setup-personal-access-token
+          # 1.1 Generate Personal Access Token: <external repository>/<Avatar>/Settings/Developer settings/Personal access tokens/Generate new token
+          #     Select `No expiration` and Check `✅️ repo    Full control of private repositories`, Generate and then Copy the Token
+          # 1.2 Then make the token available to the GitHub Action: <internal repository>/Settings/Secrets/Actions/New repository secret
+          #     Name: EXTERNAL_REPOSITORY_PERSONAL_ACCESS_TOKEN, Value Paste the Token
+          #API_TOKEN_GITHUB: ${{ secrets.EXTERNAL_REPOSITORY_PERSONAL_ACCESS_TOKEN }}
+          # Way 2: using SSH deploy keys
+          # @see https://cpina.github.io/push-to-another-repository-docs/setup-using-ssh-deploy-keys.html#setup-ssh-deploy-keys
+          # 2.1 Generate an SSH key in terminal (Leave the passphrase empty)
+          # 2.2 Add public key in the external repository: <external repository>/Settings/Deploy keys/Add deploy key
+          #     Name: DEPLOY_PUBLIC_KEY, Value Paste the public key. Enable "✅️ Allow write access"
+          # 2.3 Add private key in the source repository: <external repository>/Settings/Secrets/Actions/New repository secret
+          #     Name: DEPLOY_PRIVATE_KEY, Value Paste the private key.
+          # SSH_DEPLOY_KEY: ${{ secrets.DEPLOY_PRIVATE_KEY }}
+
+        with:
+          source-directory: dist_docs/
+          #destination-github-username: <external org/user name>
+          destination-repository-name: john-smith-library.github.io
+          #user-email: <your email>
+          # It defaults to `main`
+          #target-branch: "gh-pages"
