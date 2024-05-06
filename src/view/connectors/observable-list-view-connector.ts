@@ -21,6 +21,10 @@ interface IRenderedValueData<T> {
 export class ObservableListViewConnector<T> implements Disposable {
   private readonly _link: Disposable | null = null;
 
+  /**
+   * @internal
+   * @private
+   */
   private _renderedValues: IRenderedValueData<T>[];
 
   constructor(

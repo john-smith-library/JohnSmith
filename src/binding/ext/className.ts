@@ -1,3 +1,12 @@
+/**
+ * Extend the DefaultBindingRegistry prototype to support the `$className` binding.
+ * This binding allows adding or removing CSS class names based on reactive data.
+ *
+ * See {@link view/jsx/default-intrinsic-element!DefaultIntrinsicElements#$className | $className} for details.
+ *
+ * @module
+ */
+
 import { DefaultBindingRegistry } from '../registry';
 import { DomElement } from '../../view';
 import { isListenable, Listenable } from '../../reactive';

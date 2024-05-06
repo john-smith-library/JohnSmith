@@ -19,7 +19,7 @@ import { Disposable } from '../../common';
 export const map = <TValue, TResult>(
   listenable: Listenable<TValue>,
   mapper: (value: TValue) => TResult
-) => new MappedListenable(listenable, mapper);
+): Listenable<TResult> => new MappedListenable(listenable, mapper);
 
 class MappedListenable<TSource, TTarget> extends Listenable<TTarget> {
   constructor(
