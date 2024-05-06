@@ -42,7 +42,7 @@ jobs:
         with:
           source-directory: dist_docs/
           #destination-github-username: <external org/user name>
-          destination-repository-name: john-smith-library.github.io
+          destination-repository-name: john-smith-library/john-smith-library.github.io
           #user-email: <your email>
           # It defaults to `main`
           #target-branch: "gh-pages"
