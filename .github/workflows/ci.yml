@@ -19,7 +19,7 @@ jobs:
       - run: npm run build_docs
       - name: Deploy to external repository
         uses: cpina/github-action-push-to-another-repository@main
-        # env:
+        env:
           # 🏗️ <internal repository>, run GitHub Action.
           # 🎁 <external repository>, receiving Artifacts.
           #
@@ -37,7 +37,7 @@ jobs:
           #     Name: DEPLOY_PUBLIC_KEY, Value Paste the public key. Enable "✅️ Allow write access"
           # 2.3 Add private key in the source repository: <external repository>/Settings/Secrets/Actions/New repository secret
           #     Name: DEPLOY_PRIVATE_KEY, Value Paste the private key.
-          # SSH_DEPLOY_KEY: ${{ secrets.DEPLOY_PRIVATE_KEY }}
+          SSH_DEPLOY_KEY: ${{ secrets.SITE_PUBLISH_PRIVATE_KEY }}
 
         with:
           source-directory: dist_docs/
