@@ -1,7 +1,3 @@
-/**
- * @module view
- */
-
 import { DomElement } from './element';
 import { ViewDefinition } from './view-definition';
 import { Disposable } from '../common';

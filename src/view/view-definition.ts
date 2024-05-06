@@ -1,7 +1,3 @@
-/**
- * @module view
- */
-
 import { Listenable } from '../reactive';
 
 import '../binding/default';

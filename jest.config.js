@@ -1,5 +1,6 @@
 module.exports = {
   preset: 'ts-jest',
+  coverageReporters: ["json-summary"],
   testEnvironment: 'jsdom',
     testPathIgnorePatterns: ["/node_modules/", '/__tests__/_helpers.ts'],
     globals: {

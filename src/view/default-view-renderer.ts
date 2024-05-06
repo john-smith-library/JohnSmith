@@ -36,9 +36,6 @@ export class DefaultViewRenderer implements ViewRenderer {
 
   /**
    * @inheritDoc
-   * @param element @inheritDoc
-   * @param view @inheritDoc
-   * @param viewModel @inheritDoc
    */
   public render<ViewModel>(
     element: DomElement,
