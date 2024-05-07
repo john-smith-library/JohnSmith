@@ -14,13 +14,13 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
       - run: npm ci
       - run: npm run build
-      - run: npm run test
+      - run: npm run test --coverage
       - run: npm run lint -- --fix
       - run: npm run build_docs
       - run: |
-          mkdir artifacts/lib
-          cp dist_doc artifacts/lib/docs
-          mkdir artifacts/lib/coverage
+          mkdir -p artifacts/lib
+          cp -r dist_doc artifacts/lib/docs
+          cp -r coverage artifacts/lib/coverage
       - name: Deploy to external repository
         uses: cpina/github-action-push-to-another-repository@main
         env:
