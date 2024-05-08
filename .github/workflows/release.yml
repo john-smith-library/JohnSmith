@@ -12,8 +12,11 @@ jobs:
         with:
           node-version: '20.x'
           registry-url: 'https://registry.npmjs.org'
+
       - run: npm ci
-      - run: npm run test
+      - run: npm run test:coverage
+      - run: npx --yes jest-coverage-badges
+      - run: npm run lint -- --fix
 
       - run: |
           git config user.name "GitHub Actions Bot"
@@ -30,24 +33,21 @@ jobs:
         with:
           branch: master
 
-#      - name: Tutorial🠖Init
-#        run: |
-#          npm install
-#          npm install john-smith@latest
-#        working-directory: ./src_tutorial
-#
-#      - name: Tutorial🠖Build Code
-#        run: |
-#          npm run build_samples_code
-#          npm run build_styles
-#        working-directory: ./src_tutorial
-#
-#      - name: Tutorial🠖Build Pages
-#        run: npm run build_site
-#        working-directory: ./src_tutorial
-#
-#      - name: Tutorial🠖Deploy
-#        uses: peaceiris/actions-gh-pages@v3
-#        with:
-#          github_token: ${{ secrets.GITHUB_TOKEN }}
-#          publish_dir: ./dist_tutorial
+      - name: Build docs
+        run: |
+          npm run build_docs
+          mkdir -p artifacts/lib
+          cp -r dist_doc artifacts/lib/docs
+          cp -r coverage artifacts/lib/coverage
+
+      - name: Copy artifacts to site repository
+        uses: cpina/github-action-push-to-another-repository@main
+        env:
+          SSH_DEPLOY_KEY: ${{ secrets.SITE_PUBLISH_PRIVATE_KEY }}
+
+        with:
+          source-directory: artifacts/
+          target-directory: artifacts/
+          destination-github-username: john-smith-library
+          destination-repository-name: john-smith-library.github.io
+          user-email: <>
