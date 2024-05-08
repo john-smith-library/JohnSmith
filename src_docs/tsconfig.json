@@ -1,0 +1,8 @@
+{
+  "extends": "../tsconfig.eslint.json",
+  "compilerOptions": {
+    "paths": {
+      "john-smith/*": ["../src/*"]
+    }
+  }
+}
