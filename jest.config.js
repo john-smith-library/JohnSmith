@@ -1,13 +1,13 @@
 module.exports = {
   preset: 'ts-jest',
-  coverageReporters: ["json-summary"],
+  coverageReporters: ["json-summary", "clover", "json", "lcov", "text"],
   testEnvironment: 'jsdom',
     testPathIgnorePatterns: ["/node_modules/", '/__tests__/_helpers.ts'],
     globals: {
       'js-test': {
-        tsConfig: {
+        tsconfig: {
             "compilerOptions": {
-                "target": "es5",
+                "target": "es6",
                 "module": "commonjs",
                 "declaration": true,
                 "outDir": "./dist_test",
