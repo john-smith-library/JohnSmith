@@ -3,6 +3,7 @@ import { Disposable, Owner, ToDisposable } from '../common';
 import {
   HtmlDefinition,
   NestedHtmlDefinition,
+  TemplateFactory,
   ViewDefinition,
 } from './view-definition';
 import { DomEngine } from './dom-engine';
@@ -133,6 +134,22 @@ export class DefaultViewRenderer implements ViewRenderer {
     viewModel: ViewModel
   ): ViewRuntimeData {
     const viewDefinitionUntyped = viewDefinition as any;
+
+    const viewDefinitionIsAnArrowFunction: boolean =
+      typeof viewDefinition === 'function' &&
+      viewDefinition.prototype === undefined;
+
+    if (viewDefinitionIsAnArrowFunction) {
+      const instance = (viewDefinition as TemplateFactory<ViewModel>)(
+        viewModel
+      );
+
+      return {
+        template: instance,
+        viewInstance: instance,
+      };
+    }
+
     const instance = new viewDefinitionUntyped(viewModel);
 
     if (instance.template) {
