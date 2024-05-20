@@ -1,5 +1,5 @@
 /**
- * Extend the DefaultBindingRegistry prototype to support the `$className` binding.
+ * Extends the `DefaultBindingRegistry` prototype to support the `$className` binding.
  * This binding allows adding or removing CSS class names based on reactive data.
  *
  * See {@link view/jsx/default-intrinsic-element!DefaultIntrinsicElements#$className | $className} for details.
@@ -14,7 +14,7 @@ import { AbstractListenableConnector } from '../../view/connectors/abstract';
 import { Owner } from '../../common';
 
 /**
- * Extend the DefaultBindingRegistry prototype to support the $className binding.
+ * Extend the `DefaultBindingRegistry` prototype to support the `$className` binding.
  * This binding allows adding or removing CSS class names based on reactive data.
  * @param element The DOM element to which the CSS class name(s) will be applied.
  * @param bindingArgs The binding arguments, which can be either a string, a Listenable, or a Record of Listenable<boolean>.
@@ -71,7 +71,7 @@ DefaultBindingRegistry.prototype['$className'] = (
   return result;
 };
 
-/**
+/*
  * Extends the DefaultIntrinsicElements interface to include the $className member.
  */
 declare module '../../view/jsx/default-intrinsic-element' {
