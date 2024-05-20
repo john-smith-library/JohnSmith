@@ -52,7 +52,7 @@ export interface OnBeforeInit {
    * A callback method that is invoked right after the corresponding View
    * is processed and added to the DOM but before any connectors are activated.
    *
-   * Any changes to View Model would not take any affect on DOM right away at this
+   * Any changes to View Model would not take any affects on DOM right away at this
    * stage so this hook is not recommended for such manipulations (use {@link OnInit}
    * instead). The hook thought can be used for subscribing to View Model events.
    * In such case please make sure the unsubscribe call is returned as result.
