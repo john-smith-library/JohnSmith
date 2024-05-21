@@ -2,6 +2,8 @@ import { Troubleshooter } from '../src/troubleshooting/troubleshooter';
 import { DomElement, HtmlDefinition } from '../src/view';
 import { Disposable, NoopDisposable } from '../src/common';
 import { Application } from '../src';
+import { setupAppContainer } from './_helpers';
+import '../src/view/jsx';
 
 interface Issue {
   code: string;
@@ -9,6 +11,7 @@ interface Issue {
 
 interface BindingNotFoundIssue extends Issue {
   code: 'bindingNotFound';
+  binding: string;
   context: DomElement;
 }
 
@@ -35,6 +38,7 @@ class TroubleshootingSpy implements Troubleshooter {
   public bindingNotFound(code: string, context: DomElement): Disposable {
     this.issues.push({
       code: 'bindingNotFound',
+      binding: code,
       context: context,
     });
 
@@ -85,5 +89,29 @@ describe('troubleshooting', () => {
         element: 'nonExistingElement',
       });
     });
+  });
+  describe('unknown binding', () => {
+    it(
+      'reports an error',
+      setupAppContainer(container => {
+        const troubleshootingSpy = new TroubleshootingSpy();
+
+        const application = new Application({
+          troubleshooter: troubleshootingSpy,
+        });
+
+        application.render<null>(
+          container,
+          () => <span $unknown={'test'}></span>,
+          null
+        );
+
+        expect(troubleshootingSpy.issues.length).toBeGreaterThan(0);
+        expect(troubleshootingSpy.issues[0]).toMatchObject({
+          code: 'bindingNotFound',
+          binding: '$unknown',
+        });
+      })
+    );
   });
 });
