@@ -26,7 +26,12 @@ export class NullViewConnector<T> extends AbstractListenableConnector<T> {
         return null;
       }
 
-      return _viewRenderer.render(target, view, undefined);
+      return _viewRenderer.render(
+        null as any, // todo
+        target,
+        view,
+        undefined
+      );
     });
   }
 }

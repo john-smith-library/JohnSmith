@@ -2,9 +2,10 @@ import { ViewDefinition } from '../view-definition';
 import { Listenable } from '../../reactive';
 import { ViewComponent } from '../view-component';
 import { Disposable } from '../../common';
-import { ObservableValueViewConnector } from '../connectors';
-import { DomElement } from '../element';
+import { DomElement, DomNode } from '../element';
 import { ViewRenderer } from '../view-renderer';
+import { AbstractListenableConnector } from '../connectors/abstract';
+import { DomEngine } from '../dom-engine';
 
 export interface ValueData<T> {
   view: ViewDefinition<T>;
@@ -20,13 +21,40 @@ export class Value<T> implements ViewComponent<ValueData<T>> {
 
   public $$createBinding(
     parent: DomElement,
-    renderer: ViewRenderer
+    placeholder: DomNode,
+    renderer: ViewRenderer,
+    domEngine: DomEngine
   ): Disposable {
-    return new ObservableValueViewConnector(
+    let actualPlaceholder = placeholder;
+    let previousRoot: DomNode | null = null;
+
+    return new AbstractListenableConnector<T>(
       this.data.model,
-      parent,
-      this.data.view,
-      renderer
+      (value: T | null | undefined) => {
+        if (value !== null && value !== undefined) {
+          const rerenderedView = renderer.render(
+            parent,
+            actualPlaceholder,
+            this.data.view,
+            value
+          );
+
+          previousRoot = rerenderedView.root;
+
+          return {
+            dispose: () => {
+              if (previousRoot != null) {
+                actualPlaceholder = domEngine.createMarkerElement();
+                previousRoot.insertAfter(actualPlaceholder);
+              }
+
+              rerenderedView.dispose();
+            },
+          };
+        }
+
+        return null;
+      }
     );
   }
 }

@@ -2,9 +2,10 @@ import { ViewDefinition } from '../view-definition';
 import { Listenable } from '../../reactive';
 import { ViewComponent } from '../view-component';
 import { Disposable } from '../../common';
-import { DomElement } from '../element';
+import { DomElement, DomNode } from '../element';
 import { ViewRenderer } from '../view-renderer';
-import { NullViewConnector } from '../connectors/null-view-connector';
+import { AbstractListenableConnector } from '../connectors/abstract';
+import { DomEngine } from '../dom-engine';
 
 export interface NullData<T> {
   view: ViewDefinition<void>;
@@ -20,13 +21,40 @@ export class Null<T> implements ViewComponent<NullData<T>> {
 
   public $$createBinding(
     parent: DomElement,
-    renderer: ViewRenderer
+    placeholder: DomNode,
+    renderer: ViewRenderer,
+    domEngine: DomEngine
   ): Disposable {
-    return new NullViewConnector(
+    let actualPlaceholder = placeholder;
+    let previousRoot: DomNode | null = null;
+
+    return new AbstractListenableConnector<T | undefined>(
       this.data.model,
-      parent,
-      this.data.view,
-      renderer
+      (value: T | null | undefined) => {
+        if (value !== null && value !== undefined) {
+          return null;
+        }
+
+        const renderingResult = renderer.render(
+          parent,
+          actualPlaceholder,
+          this.data.view,
+          undefined
+        );
+
+        previousRoot = renderingResult.root;
+
+        return {
+          dispose: () => {
+            if (previousRoot != null) {
+              actualPlaceholder = domEngine.createMarkerElement();
+              previousRoot.insertAfter(actualPlaceholder);
+            }
+
+            renderingResult.dispose();
+          },
+        };
+      }
     );
   }
 }

@@ -1,5 +1,6 @@
 import { setupAppContainerAndRender } from './_helpers';
 import { Value } from '../src/view/components/value';
+import '@testing-library/jest-dom';
 import '../src/view/jsx';
 
 class Person {
@@ -67,7 +68,8 @@ it(
     ApplicationView,
     new ApplicationViewModel(null),
     container => {
-      expect(container.innerHTML).toBe('<div></div>');
+      expect(container.children.length).toBe(1);
+      expect(container.firstElementChild).toBeEmptyDOMElement();
     }
   )
 );
@@ -78,7 +80,8 @@ it(
     ApplicationViewNoNestedViewModel,
     new ApplicationViewModel(null),
     container => {
-      expect(container.innerHTML).toBe('<span></span>');
+      expect(container).toContainHTML('<span');
+      expect(container.firstElementChild).toBeEmptyDOMElement();
     }
   )
 );

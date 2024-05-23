@@ -1,4 +1,4 @@
-import { DomElement } from './element';
+import { DomNode } from './element';
 import { ViewDefinition } from './view-definition';
 import { Disposable } from '../common';
 
@@ -11,8 +11,9 @@ export interface ViewRenderer {
    * @param viewModel - the view model instance
    */
   render<ViewModel>(
-    element: DomElement,
+    element: DomNode, // todo
+    placeholder: DomNode,
     view: ViewDefinition<ViewModel>,
     viewModel: ViewModel
-  ): Disposable;
+  ): Disposable & { root: DomNode | null };
 }

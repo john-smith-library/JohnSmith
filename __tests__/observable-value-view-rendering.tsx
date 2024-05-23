@@ -1,6 +1,7 @@
 import { ObservableValue } from '../src/reactive';
 import { setupAppContainerAndRender } from './_helpers';
 import { Value } from '../src/view/components/value';
+import '@testing-library/jest-dom';
 import '../src/view/jsx';
 
 class PersonViewModel {
@@ -66,7 +67,7 @@ it(
     ApplicationView,
     new ApplicationViewModel(null),
     container => {
-      expect(container.innerHTML).toBe('<div></div>');
+      expect(container.firstElementChild).toBeEmptyDOMElement();
     }
   )
 );

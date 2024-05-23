@@ -1,5 +1,6 @@
 root = true
 
 [*.ts]
+indent_size = 2
 ij_typescript_force_quote_style = true
 quote_type = single

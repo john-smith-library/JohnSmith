@@ -1,7 +1,15 @@
+export interface DomNode {
+  remove(): void;
+
+  replaceWith(anotherNode: DomNode): void;
+
+  insertAfter(node: DomNode): void;
+}
+
 /**
  * DomText is a wrapper around browser TextNode
  */
-export interface DomText {
+export interface DomText extends DomNode {
   setText(value: string): void;
 }
 
@@ -13,14 +21,12 @@ export interface DomElementClasses {
 /**
  * DomElement is a wrapper around native browser HTMLElement
  */
-export interface DomElement {
+export interface DomElement extends DomNode {
   setInnerText(value: string): void;
 
   setInnerElement(value: DomElement): void;
 
-  appendChild(value: DomElement): void;
-
-  appendText(value: DomText): void;
+  appendChild(value: DomNode): void;
 
   setAttribute(attribute: string, value: any): void;
 
@@ -29,8 +35,6 @@ export interface DomElement {
   attachEventHandler(event: string, callback: () => void): any;
 
   detachEventHandler(event: string, handler: any): void;
-
-  remove(): void;
 
   createClassNames(): DomElementClasses;
 

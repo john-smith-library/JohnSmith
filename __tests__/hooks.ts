@@ -44,7 +44,7 @@ describe('onBeforeInit', () => {
       root: DomElement | null,
       domEngine: DomEngine
     ) {
-      host.appendText(domEngine.createTextNode('manual text'));
+      host.appendChild(domEngine.createTextNode('manual text'));
     }
   }
 

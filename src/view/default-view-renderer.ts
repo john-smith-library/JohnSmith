@@ -1,4 +1,4 @@
-import { DomElement } from './element';
+import { DomElement, DomNode } from './element';
 import { Disposable, Owner, ToDisposable } from '../common';
 import {
   HtmlDefinition,
@@ -40,29 +40,30 @@ export class DefaultViewRenderer implements ViewRenderer {
    */
   public render<ViewModel>(
     element: DomElement,
+    placeholder: DomNode,
     view: ViewDefinition<ViewModel>,
     viewModel: ViewModel
-  ): Disposable {
-    const viewRuntime = DefaultViewRenderer.createViewRuntime(view, viewModel),
-      template = viewRuntime.template;
-
-    const initializers: Initializers = [],
-      context: TraversingContext = {
-        viewInstance: viewRuntime.viewInstance,
-        viewModel: viewModel,
-      },
-      transformedTemplate = this.transformElementsRecursively(
-        element,
-        template,
-        initializers,
-        context,
-        undefined
-      );
+  ): Disposable & { root: DomNode | null } {
+    const viewRuntime = DefaultViewRenderer.createViewRuntime(view, viewModel);
+    const template = viewRuntime.template;
+    const initializers: Initializers = [];
+    const context: TraversingContext = {
+      viewInstance: viewRuntime.viewInstance,
+      viewModel: viewModel,
+    };
+    const transformedTemplate = this.transformElementsRecursively(
+      element,
+      template,
+      initializers,
+      context,
+      undefined
+    );
 
     const result = new Owner();
 
     if (transformedTemplate !== null) {
-      element.appendChild(transformedTemplate);
+      placeholder.replaceWith(transformedTemplate);
+      // element.appendChild(transformedTemplate);
 
       result.own({
         dispose: () => {
@@ -80,7 +81,7 @@ export class DefaultViewRenderer implements ViewRenderer {
         ToDisposable(
           onBeforeInitViewInstance.onBeforeInit(
             element,
-            transformedTemplate,
+            transformedTemplate as DomElement, // todo
             this.domEngine
           )
         )
@@ -100,7 +101,7 @@ export class DefaultViewRenderer implements ViewRenderer {
         ToDisposable(
           onInitViewInstance.onInit(
             element,
-            transformedTemplate,
+            transformedTemplate as DomElement, // todo,
             this.domEngine
           )
         )
@@ -113,20 +114,26 @@ export class DefaultViewRenderer implements ViewRenderer {
     const onUnrenderViewInstance = context.viewInstance as OnUnrender;
     if (onUnrenderViewInstance && onUnrenderViewInstance.onUnrender) {
       return {
+        root: transformedTemplate,
         dispose: () => {
           onUnrenderViewInstance.onUnrender(
             () => {
               result.dispose();
             },
             element,
-            transformedTemplate,
+            transformedTemplate as DomElement, // todo
             this.domEngine
           );
         },
       };
     }
 
-    return result;
+    return {
+      root: transformedTemplate,
+      dispose: () => {
+        result.dispose();
+      },
+    };
   }
 
   private static createViewRuntime<ViewModel>(
@@ -171,7 +178,7 @@ export class DefaultViewRenderer implements ViewRenderer {
     bindings: (() => Disposable)[],
     context: TraversingContext,
     parentNamespace: string | undefined
-  ): DomElement | null {
+  ): DomNode | null {
     if (typeof source.element === 'string') {
       /**
        * If element is string then this
@@ -207,19 +214,12 @@ export class DefaultViewRenderer implements ViewRenderer {
        * HtmlDefenition represents a nested
        * view to be rendered.
        */
-      this.processViewComponent(
+      return this.processViewComponent(
         source.element,
         source.attributes,
         bindings,
         parent
       );
-
-      /**
-       * Return null here as view definition
-       * does not actually represent any dom
-       * element.
-       */
-      return null;
     }
 
     bindings.push(() =>
@@ -234,16 +234,27 @@ export class DefaultViewRenderer implements ViewRenderer {
     constructorArgument: unknown,
     bindings: (() => Disposable)[],
     parent: DomElement
-  ) {
+  ): DomNode | null {
     const component: ViewComponent<unknown> = new constructor(
       constructorArgument
     );
 
     if (!component.$$createBinding) {
-      return;
+      // todo report an issue
+      return null;
     }
 
-    bindings.push(() => component.$$createBinding(parent, this));
+    const viewPlaceholderElement = this.domEngine.createMarkerElement();
+    bindings.push(() =>
+      component.$$createBinding(
+        parent,
+        viewPlaceholderElement,
+        this,
+        this.domEngine
+      )
+    );
+
+    return viewPlaceholderElement;
   }
 
   private processElementNested(
@@ -257,9 +268,9 @@ export class DefaultViewRenderer implements ViewRenderer {
       const nested: NestedHtmlDefinition = source.nested[i];
 
       if (typeof nested === 'string') {
-        result.appendText(this.domEngine.createTextNode(nested));
+        result.appendChild(this.domEngine.createTextNode(nested));
       } else if (typeof nested === 'number') {
-        result.appendText(this.domEngine.createTextNode(nested.toString()));
+        result.appendChild(this.domEngine.createTextNode(nested.toString()));
       } else if ('element' in nested) {
         const newChild = this.transformElementsRecursively(
           result,
@@ -268,6 +279,7 @@ export class DefaultViewRenderer implements ViewRenderer {
           context,
           namespace
         );
+
         if (newChild !== null) {
           result.appendChild(newChild);
         }
@@ -275,7 +287,7 @@ export class DefaultViewRenderer implements ViewRenderer {
         const connectorSource = nested as Listenable<PossiblyFormattable>;
         const connectorTarget = this.domEngine.createTextNode('');
 
-        result.appendText(connectorTarget);
+        result.appendChild(connectorTarget);
 
         bindings.push(
           () => new ListenableTextConnector(connectorSource, connectorTarget)
@@ -284,7 +296,7 @@ export class DefaultViewRenderer implements ViewRenderer {
         /**
          * All the unknown elements rendered as strings
          */
-        result.appendText(
+        result.appendChild(
           this.domEngine.createTextNode(
             nested.toString ? nested.toString() ?? '' : ''
           )

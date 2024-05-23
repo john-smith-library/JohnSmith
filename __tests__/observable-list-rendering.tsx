@@ -1,6 +1,7 @@
-import { setupAppContainerAndRender } from './_helpers';
+import { expectedSingleElement, setupAppContainerAndRender } from './_helpers';
 import { List } from '../src/view/components/list';
 import { ObservableList } from '../src/reactive';
+import '@testing-library/jest-dom';
 import '../src/view/jsx';
 
 class ViewModel {
@@ -77,7 +78,10 @@ it(
     new ViewModel(['1', '2', '3']),
     (container, viewModel) => {
       viewModel.items.clear();
-      expect(container.innerHTML).toBe('<ul></ul>');
+
+      const ul = expectedSingleElement(container, 'ul');
+
+      expect(ul).toBeEmptyDOMElement();
     }
   )
 );
