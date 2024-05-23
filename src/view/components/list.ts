@@ -20,7 +20,6 @@ export class List<T> implements ViewComponent<ListData<T>> {
   }
 
   public $$createBinding(
-    parent: DomElement,
     placeholder: DomNode,
     renderer: ViewRenderer,
     domEngine: DomEngine

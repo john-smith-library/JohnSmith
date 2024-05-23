@@ -136,7 +136,6 @@ export class ObservableListViewConnector<T> implements Disposable {
       const item = items[i];
 
       const itemRenderedValue = this.viewRenderer.render(
-        null as any, // todo
         this.getNextItemPlaceholder(),
         this.viewDefinition,
         item

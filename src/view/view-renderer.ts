@@ -2,6 +2,10 @@ import { DomNode } from './element';
 import { ViewDefinition } from './view-definition';
 import { Disposable } from '../common';
 
+export interface RenderedView extends Disposable {
+  root: DomNode;
+}
+
 export interface ViewRenderer {
   /**
    * Renders a view into a DOM element and returns rendered disposable instance.
@@ -11,9 +15,8 @@ export interface ViewRenderer {
    * @param viewModel - the view model instance
    */
   render<ViewModel>(
-    element: DomNode, // todo
     placeholder: DomNode,
     view: ViewDefinition<ViewModel>,
     viewModel: ViewModel
-  ): Disposable & { root: DomNode | null };
+  ): RenderedView;
 }

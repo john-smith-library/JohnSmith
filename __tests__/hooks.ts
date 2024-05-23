@@ -34,20 +34,6 @@ describe('onBeforeInit', () => {
     }
   }
 
-  class ApplicationViewChangingHostDom implements View, OnBeforeInit {
-    public template(): HtmlDefinition {
-      return JS.d('div');
-    }
-
-    public onBeforeInit(
-      host: DomElement,
-      root: DomElement | null,
-      domEngine: DomEngine
-    ) {
-      host.appendChild(domEngine.createTextNode('manual text'));
-    }
-  }
-
   class ApplicationViewChangingRootDom implements View, OnBeforeInit {
     public template(): HtmlDefinition {
       return JS.d('div');
@@ -70,6 +56,20 @@ describe('onBeforeInit', () => {
       }
     )
   );
+
+  class ApplicationViewChangingHostDom implements View, OnBeforeInit {
+    public template(): HtmlDefinition {
+      return JS.d('div');
+    }
+
+    public onBeforeInit(
+      host: DomElement,
+      root: DomElement | null,
+      domEngine: DomEngine
+    ) {
+      host.appendChild(domEngine.createTextNode('manual text'));
+    }
+  }
 
   it(
     'can modify host DOM',

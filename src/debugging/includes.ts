@@ -32,7 +32,7 @@ globalThis.JS.TroubleShooterFactory = () => {
         domEngine,
         new DefaultBindingRegistry(),
         new NoopTroubleshooter()
-      ).render(root, root, ErrorsView, debuggerViewModel);
+      ).render(root, ErrorsView, debuggerViewModel);
     });
   } catch (e) {
     ERROR(e);

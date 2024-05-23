@@ -20,7 +20,6 @@ export class Null<T> implements ViewComponent<NullData<T>> {
   }
 
   public $$createBinding(
-    parent: DomElement,
     placeholder: DomNode,
     renderer: ViewRenderer,
     domEngine: DomEngine
@@ -36,7 +35,6 @@ export class Null<T> implements ViewComponent<NullData<T>> {
         }
 
         const renderingResult = renderer.render(
-          parent,
           actualPlaceholder,
           this.data.view,
           undefined

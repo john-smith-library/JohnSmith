@@ -11,6 +11,6 @@ export interface Troubleshooter {
 
   unknownHtmlDefinition(
     source: HtmlDefinition,
-    context: DomElement
+    context: DomElement | null
   ): Disposable;
 }

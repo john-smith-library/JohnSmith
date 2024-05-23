@@ -9,7 +9,6 @@ export interface ViewComponent<TData> {
   data?: TData;
 
   $$createBinding(
-    parent: DomElement,
     placeholder: DomNode,
     renderer: ViewRenderer,
     domEngine: DomEngine

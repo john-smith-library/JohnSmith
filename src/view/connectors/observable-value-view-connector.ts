@@ -29,7 +29,6 @@ export class ObservableValueViewConnector<T> implements Disposable {
       (value: T | null | undefined) => {
         if (value !== null && value !== undefined) {
           const rerenderedView = viewRenderer.render(
-            parent,
             this._placeholder ?? placeholder,
             view,
             value

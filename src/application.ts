@@ -62,7 +62,7 @@ export class Application {
       const placeholder = this._domEngine.createMarkerElement();
       actualElement.appendChild(placeholder);
       return this._viewRenderer.render(
-        actualElement,
+        //actualElement,
         placeholder,
         view,
         viewModel

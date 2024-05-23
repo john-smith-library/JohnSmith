@@ -18,7 +18,7 @@ import {
 import '../binding/default';
 import { OnBeforeInit, OnInit, OnUnrender } from './hooks';
 import { ViewComponent, ViewComponentConstructor } from './view-component';
-import { ViewRenderer } from './view-renderer';
+import { RenderedView, ViewRenderer } from './view-renderer';
 import { Troubleshooter } from '../troubleshooting/troubleshooter';
 
 type ViewRuntimeData = { template: HtmlDefinition; viewInstance?: unknown };
@@ -39,11 +39,10 @@ export class DefaultViewRenderer implements ViewRenderer {
    * @inheritDoc
    */
   public render<ViewModel>(
-    element: DomElement,
     placeholder: DomNode,
     view: ViewDefinition<ViewModel>,
     viewModel: ViewModel
-  ): Disposable & { root: DomNode | null } {
+  ): RenderedView {
     const viewRuntime = DefaultViewRenderer.createViewRuntime(view, viewModel);
     const template = viewRuntime.template;
     const initializers: Initializers = [];
@@ -52,7 +51,7 @@ export class DefaultViewRenderer implements ViewRenderer {
       viewModel: viewModel,
     };
     const transformedTemplate = this.transformElementsRecursively(
-      element,
+      null,
       template,
       initializers,
       context,
@@ -80,7 +79,7 @@ export class DefaultViewRenderer implements ViewRenderer {
       result.ownIfNotNull(
         ToDisposable(
           onBeforeInitViewInstance.onBeforeInit(
-            element,
+            null as any,
             transformedTemplate as DomElement, // todo
             this.domEngine
           )
@@ -100,7 +99,7 @@ export class DefaultViewRenderer implements ViewRenderer {
       result.ownIfNotNull(
         ToDisposable(
           onInitViewInstance.onInit(
-            element,
+            null as any,
             transformedTemplate as DomElement, // todo,
             this.domEngine
           )
@@ -114,13 +113,13 @@ export class DefaultViewRenderer implements ViewRenderer {
     const onUnrenderViewInstance = context.viewInstance as OnUnrender;
     if (onUnrenderViewInstance && onUnrenderViewInstance.onUnrender) {
       return {
-        root: transformedTemplate,
+        root: transformedTemplate ?? placeholder,
         dispose: () => {
           onUnrenderViewInstance.onUnrender(
             () => {
               result.dispose();
             },
-            element,
+            null as any,
             transformedTemplate as DomElement, // todo
             this.domEngine
           );
@@ -129,7 +128,7 @@ export class DefaultViewRenderer implements ViewRenderer {
     }
 
     return {
-      root: transformedTemplate,
+      root: transformedTemplate ?? placeholder,
       dispose: () => {
         result.dispose();
       },
@@ -173,7 +172,7 @@ export class DefaultViewRenderer implements ViewRenderer {
   }
 
   private transformElementsRecursively(
-    parent: DomElement,
+    parent: DomElement | null,
     source: HtmlDefinition,
     bindings: (() => Disposable)[],
     context: TraversingContext,
@@ -217,8 +216,7 @@ export class DefaultViewRenderer implements ViewRenderer {
       return this.processViewComponent(
         source.element,
         source.attributes,
-        bindings,
-        parent
+        bindings
       );
     }
 
@@ -232,8 +230,7 @@ export class DefaultViewRenderer implements ViewRenderer {
   private processViewComponent(
     constructor: ViewComponentConstructor<unknown>,
     constructorArgument: unknown,
-    bindings: (() => Disposable)[],
-    parent: DomElement
+    bindings: (() => Disposable)[]
   ): DomNode | null {
     const component: ViewComponent<unknown> = new constructor(
       constructorArgument
@@ -246,12 +243,7 @@ export class DefaultViewRenderer implements ViewRenderer {
 
     const viewPlaceholderElement = this.domEngine.createMarkerElement();
     bindings.push(() =>
-      component.$$createBinding(
-        parent,
-        viewPlaceholderElement,
-        this,
-        this.domEngine
-      )
+      component.$$createBinding(viewPlaceholderElement, this, this.domEngine)
     );
 
     return viewPlaceholderElement;

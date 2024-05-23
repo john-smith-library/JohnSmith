@@ -2,7 +2,7 @@ import { ViewDefinition } from '../view-definition';
 import { Listenable } from '../../reactive';
 import { ViewComponent } from '../view-component';
 import { Disposable } from '../../common';
-import { DomElement, DomNode } from '../element';
+import { DomNode } from '../element';
 import { ViewRenderer } from '../view-renderer';
 import { AbstractListenableConnector } from '../connectors/abstract';
 import { DomEngine } from '../dom-engine';
@@ -20,7 +20,6 @@ export class Value<T> implements ViewComponent<ValueData<T>> {
   }
 
   public $$createBinding(
-    parent: DomElement,
     placeholder: DomNode,
     renderer: ViewRenderer,
     domEngine: DomEngine
@@ -33,7 +32,6 @@ export class Value<T> implements ViewComponent<ValueData<T>> {
       (value: T | null | undefined) => {
         if (value !== null && value !== undefined) {
           const rerenderedView = renderer.render(
-            parent,
             actualPlaceholder,
             this.data.view,
             value
