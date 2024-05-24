@@ -1,6 +1,6 @@
 {
   "name": "john-smith",
-  "version": "4.0.1-alpha.21",
+  "version": "4.0.1-alpha.22",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -22,7 +22,7 @@
     "type": "git",
     "url": "git+https://github.com/guryanovev/JohnSmith.git"
   },
-  "keywords": [],
+  "keywords": ["typescript", "interactive", "UI", "framework"],
   "author": "",
   "license": "MIT",
   "bugs": {
@@ -30,6 +30,7 @@
   },
   "homepage": "https://github.com/guryanovev/JohnSmith#readme",
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.4.5",
     "@types/jest": "29.5.12",
     "@typescript-eslint/eslint-plugin": "7.7.1",
     "@typescript-eslint/parser": "7.7.1",

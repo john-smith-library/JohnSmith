@@ -3,7 +3,6 @@ import { OnBeforeInit } from '../src/view/hooks';
 import { setupAppContainerAndRender } from './_helpers';
 import { DomEngine } from '../src/view/dom-engine';
 
-import '../src/debugging/includes';
 import '../src/view/jsx';
 import { OptionalDisposables } from '../src/common';
 
@@ -11,7 +10,6 @@ describe('onBeforeInit', () => {
   class ViewModel {
     constructor(
       public onBeforeInit: (
-        host: DomElement,
         root: DomElement | null,
         domEngine: DomEngine
       ) => OptionalDisposables
@@ -25,26 +23,8 @@ describe('onBeforeInit', () => {
       return JS.d('div');
     }
 
-    public onBeforeInit(
-      host: DomElement,
-      root: DomElement | null,
-      domEngine: DomEngine
-    ) {
-      this.viewModel.onBeforeInit(host, root, domEngine);
-    }
-  }
-
-  class ApplicationViewChangingHostDom implements View, OnBeforeInit {
-    public template(): HtmlDefinition {
-      return JS.d('div');
-    }
-
-    public onBeforeInit(
-      host: DomElement,
-      root: DomElement | null,
-      domEngine: DomEngine
-    ) {
-      host.appendText(domEngine.createTextNode('manual text'));
+    public onBeforeInit(root: DomElement | null, domEngine: DomEngine) {
+      this.viewModel.onBeforeInit(root, domEngine);
     }
   }
 
@@ -53,7 +33,7 @@ describe('onBeforeInit', () => {
       return JS.d('div');
     }
 
-    public onBeforeInit(host: DomElement, root: DomElement | null) {
+    public onBeforeInit(root: DomElement | null) {
       if (root) {
         root.createClassNames().add('enter');
       }
@@ -67,17 +47,6 @@ describe('onBeforeInit', () => {
       new ViewModel(jest.fn()),
       (container, viewModel) => {
         expect(viewModel.onBeforeInit).toHaveBeenCalled();
-      }
-    )
-  );
-
-  it(
-    'can modify host DOM',
-    setupAppContainerAndRender(
-      ApplicationViewChangingHostDom,
-      {},
-      container => {
-        expect(container.innerHTML).toBe('<div></div>manual text');
       }
     )
   );

@@ -1,4 +1,4 @@
-import { DomElement } from './element';
+import { DomElement, DomNode } from './element';
 import { Disposable, Owner, ToDisposable } from '../common';
 import {
   HtmlDefinition,
@@ -18,16 +18,13 @@ import {
 import '../binding/default';
 import { OnBeforeInit, OnInit, OnUnrender } from './hooks';
 import { ViewComponent, ViewComponentConstructor } from './view-component';
-import { ViewRenderer } from './view-renderer';
+import { RenderedView, ViewRenderer } from './view-renderer';
 import { Troubleshooter } from '../troubleshooting/troubleshooter';
 
 type ViewRuntimeData = { template: HtmlDefinition; viewInstance?: unknown };
 type Initializers = (() => Disposable)[];
 type TraversingContext = { viewInstance: unknown; viewModel: unknown };
 
-/**
- * @internal
- */
 export class DefaultViewRenderer implements ViewRenderer {
   constructor(
     private domEngine: DomEngine,
@@ -39,30 +36,29 @@ export class DefaultViewRenderer implements ViewRenderer {
    * @inheritDoc
    */
   public render<ViewModel>(
-    element: DomElement,
+    placeholder: DomNode,
     view: ViewDefinition<ViewModel>,
     viewModel: ViewModel
-  ): Disposable {
-    const viewRuntime = DefaultViewRenderer.createViewRuntime(view, viewModel),
-      template = viewRuntime.template;
-
-    const initializers: Initializers = [],
-      context: TraversingContext = {
-        viewInstance: viewRuntime.viewInstance,
-        viewModel: viewModel,
-      },
-      transformedTemplate = this.transformElementsRecursively(
-        element,
-        template,
-        initializers,
-        context,
-        undefined
-      );
+  ): RenderedView {
+    const viewRuntime = DefaultViewRenderer.createViewRuntime(view, viewModel);
+    const template = viewRuntime.template;
+    const initializers: Initializers = [];
+    const context: TraversingContext = {
+      viewInstance: viewRuntime.viewInstance,
+      viewModel: viewModel,
+    };
+    const transformedTemplate = this.transformElementsRecursively(
+      null,
+      template,
+      initializers,
+      context,
+      undefined
+    );
 
     const result = new Owner();
 
     if (transformedTemplate !== null) {
-      element.appendChild(transformedTemplate);
+      placeholder.replaceWith(transformedTemplate);
 
       result.own({
         dispose: () => {
@@ -71,6 +67,12 @@ export class DefaultViewRenderer implements ViewRenderer {
       });
     }
 
+    const hooksRoot: DomElement | null =
+      transformedTemplate !== null &&
+      (transformedTemplate as DomElement).setInnerHtml !== undefined
+        ? (transformedTemplate as DomElement)
+        : null;
+
     /**
      * On Before Init
      */
@@ -78,11 +80,7 @@ export class DefaultViewRenderer implements ViewRenderer {
     if (onBeforeInitViewInstance && onBeforeInitViewInstance.onBeforeInit) {
       result.ownIfNotNull(
         ToDisposable(
-          onBeforeInitViewInstance.onBeforeInit(
-            element,
-            transformedTemplate,
-            this.domEngine
-          )
+          onBeforeInitViewInstance.onBeforeInit(hooksRoot, this.domEngine)
         )
       );
     }
@@ -97,13 +95,7 @@ export class DefaultViewRenderer implements ViewRenderer {
     const onInitViewInstance = context.viewInstance as OnInit;
     if (onInitViewInstance && onInitViewInstance.onInit) {
       result.ownIfNotNull(
-        ToDisposable(
-          onInitViewInstance.onInit(
-            element,
-            transformedTemplate,
-            this.domEngine
-          )
-        )
+        ToDisposable(onInitViewInstance.onInit(hooksRoot, this.domEngine))
       );
     }
 
@@ -113,20 +105,25 @@ export class DefaultViewRenderer implements ViewRenderer {
     const onUnrenderViewInstance = context.viewInstance as OnUnrender;
     if (onUnrenderViewInstance && onUnrenderViewInstance.onUnrender) {
       return {
+        root: transformedTemplate ?? placeholder,
         dispose: () => {
           onUnrenderViewInstance.onUnrender(
             () => {
               result.dispose();
             },
-            element,
-            transformedTemplate,
+            hooksRoot,
             this.domEngine
           );
         },
       };
     }
 
-    return result;
+    return {
+      root: transformedTemplate ?? placeholder,
+      dispose: () => {
+        result.dispose();
+      },
+    };
   }
 
   private static createViewRuntime<ViewModel>(
@@ -166,12 +163,12 @@ export class DefaultViewRenderer implements ViewRenderer {
   }
 
   private transformElementsRecursively(
-    parent: DomElement,
+    parent: DomElement | null,
     source: HtmlDefinition,
     bindings: (() => Disposable)[],
     context: TraversingContext,
     parentNamespace: string | undefined
-  ): DomElement | null {
+  ): DomNode | null {
     if (typeof source.element === 'string') {
       /**
        * If element is string then this
@@ -207,19 +204,11 @@ export class DefaultViewRenderer implements ViewRenderer {
        * HtmlDefenition represents a nested
        * view to be rendered.
        */
-      this.processViewComponent(
+      return this.processViewComponent(
         source.element,
         source.attributes,
-        bindings,
-        parent
+        bindings
       );
-
-      /**
-       * Return null here as view definition
-       * does not actually represent any dom
-       * element.
-       */
-      return null;
     }
 
     bindings.push(() =>
@@ -232,18 +221,23 @@ export class DefaultViewRenderer implements ViewRenderer {
   private processViewComponent(
     constructor: ViewComponentConstructor<unknown>,
     constructorArgument: unknown,
-    bindings: (() => Disposable)[],
-    parent: DomElement
-  ) {
+    bindings: (() => Disposable)[]
+  ): DomNode | null {
     const component: ViewComponent<unknown> = new constructor(
       constructorArgument
     );
 
     if (!component.$$createBinding) {
-      return;
+      // todo report an issue
+      return null;
     }
 
-    bindings.push(() => component.$$createBinding(parent, this));
+    const viewPlaceholderElement = this.domEngine.createMarkerElement();
+    bindings.push(() =>
+      component.$$createBinding(viewPlaceholderElement, this, this.domEngine)
+    );
+
+    return viewPlaceholderElement;
   }
 
   private processElementNested(
@@ -257,9 +251,9 @@ export class DefaultViewRenderer implements ViewRenderer {
       const nested: NestedHtmlDefinition = source.nested[i];
 
       if (typeof nested === 'string') {
-        result.appendText(this.domEngine.createTextNode(nested));
+        result.appendChild(this.domEngine.createTextNode(nested));
       } else if (typeof nested === 'number') {
-        result.appendText(this.domEngine.createTextNode(nested.toString()));
+        result.appendChild(this.domEngine.createTextNode(nested.toString()));
       } else if ('element' in nested) {
         const newChild = this.transformElementsRecursively(
           result,
@@ -268,6 +262,7 @@ export class DefaultViewRenderer implements ViewRenderer {
           context,
           namespace
         );
+
         if (newChild !== null) {
           result.appendChild(newChild);
         }
@@ -275,7 +270,7 @@ export class DefaultViewRenderer implements ViewRenderer {
         const connectorSource = nested as Listenable<PossiblyFormattable>;
         const connectorTarget = this.domEngine.createTextNode('');
 
-        result.appendText(connectorTarget);
+        result.appendChild(connectorTarget);
 
         bindings.push(
           () => new ListenableTextConnector(connectorSource, connectorTarget)
@@ -284,7 +279,7 @@ export class DefaultViewRenderer implements ViewRenderer {
         /**
          * All the unknown elements rendered as strings
          */
-        result.appendText(
+        result.appendChild(
           this.domEngine.createTextNode(
             nested.toString ? nested.toString() ?? '' : ''
           )

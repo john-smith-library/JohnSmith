@@ -1,10 +1,11 @@
 import { ViewDefinition } from '../view-definition';
 import { Listenable } from '../../reactive';
 import { ViewComponent } from '../view-component';
-import { DomElement } from '../element';
+import { DomNode } from '../element';
 import { ViewRenderer } from '../view-renderer';
 import { Disposable } from '../../common';
 import { ObservableListViewConnector } from '../connectors';
+import { DomEngine } from '../dom-engine';
 
 export interface ListData<T> {
   view: ViewDefinition<T>;
@@ -19,14 +20,16 @@ export class List<T> implements ViewComponent<ListData<T>> {
   }
 
   public $$createBinding(
-    parent: DomElement,
-    renderer: ViewRenderer
+    placeholder: DomNode,
+    renderer: ViewRenderer,
+    domEngine: DomEngine
   ): Disposable {
     return new ObservableListViewConnector(
       this.data.model,
-      parent,
+      placeholder,
       this.data.view,
-      renderer
+      renderer,
+      domEngine
     );
   }
 }

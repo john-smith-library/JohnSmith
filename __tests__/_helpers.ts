@@ -58,3 +58,16 @@ export class DisposableStub implements Disposable {
     this.disposed = true;
   }
 }
+
+export const expectedSingleElement = (
+  container: HTMLElement,
+  tag: string
+): HTMLElement => {
+  expect(container.firstElementChild).not.toBeNull();
+  expect(container.firstElementChild!.nextElementSibling).toBeNull();
+  expect(container.firstElementChild!.tagName.toLowerCase()).toBe(
+    tag.toLowerCase()
+  );
+
+  return container.firstElementChild! as HTMLElement;
+};

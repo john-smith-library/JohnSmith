@@ -23,10 +23,12 @@ class DetailsView implements View, OnInit {
         <section>
             <header>Details View2</header>
             <section>Details content {this.vm.message}</section>
-            <section $bind={this.bindSection} $unknown={'1'}  $unknown2={'1'}   $unknown3={'1'} class="active"></section>
+            <section $bind={this.bindSection} $unknown={'1'}  $unknown2={'1'}   $unknown3={'1'} class="active">
+                Error section
+            </section>
         </section>;
 
-    bindSection(dom: DomElement, viewModel: DetailsViewModel) {
+    bindSection(dom: DomElement) {
         dom.setInnerText('Custom dom manipulation  ');
 
         dom.setAttribute('style', 'color: green');
@@ -82,12 +84,9 @@ const ApplicationView = (vw: ApplicationViewModel) =>
             <input type="checkbox" $checked={vw.rememberMe} />
         </section>
     </section>;
-//
-//const $app = document.getElementById('app1');
-//if ($app) {
-    const
-        application = new Application(),
-        applicationViewModel = new ApplicationViewModel();
+
+    const application = new Application();
+    const applicationViewModel = new ApplicationViewModel();
 
     application.render(
         'app',

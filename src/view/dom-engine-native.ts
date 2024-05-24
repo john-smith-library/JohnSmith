@@ -1,5 +1,19 @@
-import { DomElement, DomElementClasses, DomText } from './element';
+import { DomElement, DomElementClasses, DomNode, DomText } from './element';
 import { DomEngine } from './dom-engine';
+
+abstract class NativeNode implements DomNode {
+  protected constructor(public readonly element: Node) {}
+
+  public abstract replaceWith(anotherNode: DomNode): void;
+
+  public remove(): void {
+    if (this.element.parentNode) {
+      this.element.parentNode.removeChild(this.element);
+    }
+  }
+
+  public abstract insertAfter(node: DomNode): void;
+}
 
 class ManualDomElementClasses implements DomElementClasses {
   private readonly _classNames: string[];
@@ -29,11 +43,35 @@ class ManualDomElementClasses implements DomElementClasses {
   }
 }
 
+class NativeComment extends NativeNode {
+  constructor(public readonly comment: Comment) {
+    super(comment);
+  }
+
+  public replaceWith(anotherNode: DomNode): void {
+    this.comment.replaceWith((anotherNode as NativeNode).element);
+  }
+
+  public insertAfter(node: DomNode): void {
+    this.comment.after((node as NativeNode).element);
+  }
+}
+
 /**
  * DomElement based on DOM Core level 2 API
  */
-class NativeElement implements DomElement {
-  constructor(private element: HTMLElement) {}
+class NativeElement extends NativeNode implements DomElement {
+  constructor(public readonly element: HTMLElement) {
+    super(element);
+  }
+
+  public replaceWith(anotherNode: DomNode): void {
+    this.element.replaceWith((anotherNode as NativeNode).element);
+  }
+
+  public insertAfter(node: DomNode): void {
+    this.element.after((node as NativeNode).element);
+  }
 
   public setInnerText(value: string) {
     this.element.innerText = value;
@@ -43,12 +81,8 @@ class NativeElement implements DomElement {
     this.element.innerHTML = value;
   }
 
-  public appendChild(value: DomElement): void {
-    this.element.appendChild((value as NativeElement).element);
-  }
-
-  public appendText(value: DomText): void {
-    this.element.appendChild((value as DomNativeText).textNode);
+  public appendChild(value: DomNode): void {
+    this.element.appendChild((value as unknown as NativeNode).element);
   }
 
   public setAttribute(attribute: string, value: any): void {
@@ -99,11 +133,21 @@ class NativeElement implements DomElement {
   }
 }
 
-class DomNativeText implements DomText {
-  constructor(public textNode: Text) {}
+class DomNativeText extends NativeNode implements DomText {
+  constructor(public textNode: Text) {
+    super(textNode);
+  }
+
+  public replaceWith(anotherNode: DomNode): void {
+    this.textNode.replaceWith((anotherNode as NativeNode).element);
+  }
 
   public setText(value: string): void {
     this.textNode.nodeValue = value;
+  }
+
+  public insertAfter(node: DomNode): void {
+    this.textNode.after((node as NativeNode).element);
   }
 }
 
@@ -116,13 +160,17 @@ export class NativeDomEngine implements DomEngine {
     return new NativeElement(document.createElement(tag));
   }
 
+  public createMarkerElement(): DomNode {
+    return new NativeComment(document.createComment('JS-placeholder'));
+  }
+
   public createNamespaceElement(namespace: string, tag: string): DomElement {
     return new NativeElement(
       document.createElementNS(namespace, tag) as HTMLElement
     ); // todo
   }
 
-  public resolveElement(element: any): DomElement | null {
+  public resolveElement(element: unknown): DomElement | null {
     if (typeof element === 'string') {
       const elementById = document.getElementById(element);
       if (elementById) {
@@ -130,8 +178,8 @@ export class NativeDomEngine implements DomEngine {
       }
     }
 
-    if (element.nodeType > 0) {
-      return new NativeElement(element);
+    if (element && typeof element === 'object' && 'nodeType' in element) {
+      return new NativeElement(element as HTMLElement);
     }
 
     return null;

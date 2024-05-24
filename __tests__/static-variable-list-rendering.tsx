@@ -1,5 +1,6 @@
-import { setupAppContainerAndRender } from './_helpers';
+import { expectedSingleElement, setupAppContainerAndRender } from './_helpers';
 import { List } from '../src/view/components/list';
+import '@testing-library/jest-dom';
 import '../src/view/jsx';
 
 class ViewModel {
@@ -24,6 +25,6 @@ it(
 it(
   'should render empty if null',
   setupAppContainerAndRender(ListView, new ViewModel(null), container => {
-    expect(container.innerHTML).toBe('<ul></ul>');
+    expect(expectedSingleElement(container, 'ul')).toBeEmptyDOMElement();
   })
 );

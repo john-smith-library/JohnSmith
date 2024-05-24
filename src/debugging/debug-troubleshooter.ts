@@ -58,7 +58,7 @@ export class DebugTroubleshooter implements Troubleshooter {
   ): Disposable {
     return this.pushErrorMessage(
       'Unsupported HTML Definition detected: [' + source.element + ']',
-      context
+      context || this.rootContext
     );
   }
 

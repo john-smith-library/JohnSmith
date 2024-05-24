@@ -1,4 +1,4 @@
-import { DomElement, DomText } from './element';
+import { DomElement, DomNode, DomText } from './element';
 
 /**
  * Describes DOM operations.
@@ -8,6 +8,11 @@ export interface DomEngine {
    * Method to create a DOM element with the specified tag.
    */
   createElement(tag: string): DomElement;
+
+  /**
+   * Creates temporary marker element to be replaced with other markup later.
+   */
+  createMarkerElement(): DomNode;
 
   /**
    * Method to create a DOM element within a specified namespace and tag
@@ -27,7 +32,7 @@ export interface DomEngine {
    * Returns the corresponding DomElement if found, otherwise null.
    * @param element native element object or it's id
    */
-  resolveElement(element: any): DomElement | null;
+  resolveElement(element: unknown): DomElement | null;
 
   /**
    * Method to get the root element of the DOM tree.
