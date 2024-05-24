@@ -1,7 +1,7 @@
 import { ViewDefinition } from '../view-definition';
 import { Listenable } from '../../reactive';
 import { ViewComponent } from '../view-component';
-import { DomElement, DomNode } from '../element';
+import { DomNode } from '../element';
 import { ViewRenderer } from '../view-renderer';
 import { Disposable } from '../../common';
 import { ObservableListViewConnector } from '../connectors';

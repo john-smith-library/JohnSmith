@@ -22,7 +22,7 @@
     "type": "git",
     "url": "git+https://github.com/guryanovev/JohnSmith.git"
   },
-  "keywords": [],
+  "keywords": ["typescript", "interactive", "UI", "framework"],
   "author": "",
   "license": "MIT",
   "bugs": {

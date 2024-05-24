@@ -27,12 +27,15 @@ globalThis.JS.TroubleShooterFactory = () => {
       );
     }
 
+    const debuggerUiRoot = domEngine.createMarkerElement();
+    root.appendChild(debuggerUiRoot);
+
     return new DebugTroubleshooter(root, debuggerViewModel, () => {
       new DefaultViewRenderer(
         domEngine,
         new DefaultBindingRegistry(),
         new NoopTroubleshooter()
-      ).render(root, ErrorsView, debuggerViewModel);
+      ).render(debuggerUiRoot, ErrorsView, debuggerViewModel);
     });
   } catch (e) {
     ERROR(e);
@@ -129,6 +132,7 @@ const INITIALIZER = () => {
 
 .js-debugger-error {
     background: rgba(255, 0, 0, 0.3);
+    border: 2px dashed #FF3333;
 }
 
     `;

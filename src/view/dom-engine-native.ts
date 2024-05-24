@@ -170,7 +170,7 @@ export class NativeDomEngine implements DomEngine {
     ); // todo
   }
 
-  public resolveElement(element: any): DomElement | null {
+  public resolveElement(element: unknown): DomElement | null {
     if (typeof element === 'string') {
       const elementById = document.getElementById(element);
       if (elementById) {
@@ -178,8 +178,8 @@ export class NativeDomEngine implements DomEngine {
       }
     }
 
-    if (element.nodeType > 0) {
-      return new NativeElement(element);
+    if (element && typeof element === 'object' && 'nodeType' in element) {
+      return new NativeElement(element as HTMLElement);
     }
 
     return null;

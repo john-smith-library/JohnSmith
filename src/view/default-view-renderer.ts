@@ -25,9 +25,6 @@ type ViewRuntimeData = { template: HtmlDefinition; viewInstance?: unknown };
 type Initializers = (() => Disposable)[];
 type TraversingContext = { viewInstance: unknown; viewModel: unknown };
 
-/**
- * @internal
- */
 export class DefaultViewRenderer implements ViewRenderer {
   constructor(
     private domEngine: DomEngine,
@@ -62,7 +59,6 @@ export class DefaultViewRenderer implements ViewRenderer {
 
     if (transformedTemplate !== null) {
       placeholder.replaceWith(transformedTemplate);
-      // element.appendChild(transformedTemplate);
 
       result.own({
         dispose: () => {
@@ -71,6 +67,12 @@ export class DefaultViewRenderer implements ViewRenderer {
       });
     }
 
+    const hooksRoot: DomElement | null =
+      transformedTemplate !== null &&
+      (transformedTemplate as DomElement).setInnerHtml !== undefined
+        ? (transformedTemplate as DomElement)
+        : null;
+
     /**
      * On Before Init
      */
@@ -78,11 +80,7 @@ export class DefaultViewRenderer implements ViewRenderer {
     if (onBeforeInitViewInstance && onBeforeInitViewInstance.onBeforeInit) {
       result.ownIfNotNull(
         ToDisposable(
-          onBeforeInitViewInstance.onBeforeInit(
-            null as any,
-            transformedTemplate as DomElement, // todo
-            this.domEngine
-          )
+          onBeforeInitViewInstance.onBeforeInit(hooksRoot, this.domEngine)
         )
       );
     }
@@ -97,13 +95,7 @@ export class DefaultViewRenderer implements ViewRenderer {
     const onInitViewInstance = context.viewInstance as OnInit;
     if (onInitViewInstance && onInitViewInstance.onInit) {
       result.ownIfNotNull(
-        ToDisposable(
-          onInitViewInstance.onInit(
-            null as any,
-            transformedTemplate as DomElement, // todo,
-            this.domEngine
-          )
-        )
+        ToDisposable(onInitViewInstance.onInit(hooksRoot, this.domEngine))
       );
     }
 
@@ -119,8 +111,7 @@ export class DefaultViewRenderer implements ViewRenderer {
             () => {
               result.dispose();
             },
-            null as any,
-            transformedTemplate as DomElement, // todo
+            hooksRoot,
             this.domEngine
           );
         },

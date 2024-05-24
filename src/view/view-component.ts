@@ -1,5 +1,5 @@
 import { Disposable } from '../common';
-import { DomElement, DomNode } from './element';
+import { DomNode } from './element';
 import { ViewRenderer } from './view-renderer';
 import { DomEngine } from './dom-engine';
 

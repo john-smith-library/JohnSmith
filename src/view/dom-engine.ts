@@ -32,7 +32,7 @@ export interface DomEngine {
    * Returns the corresponding DomElement if found, otherwise null.
    * @param element native element object or it's id
    */
-  resolveElement(element: any): DomElement | null;
+  resolveElement(element: unknown): DomElement | null;
 
   /**
    * Method to get the root element of the DOM tree.

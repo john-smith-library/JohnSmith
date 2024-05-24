@@ -64,13 +64,11 @@ export interface OnBeforeInit {
    * View hosting DOM element and DOM Engine service are provided in case of any manual
    * changes should be applied.
    *
-   * @param host DOM Element this view is rendering to
    * @param root rendered component root DOM Element. Can be null if the corresponding view
    * does not render any HTML and just renders another component as a root.
    * @param domEngine a helper service to build DOM manually.
    */
   onBeforeInit(
-    host: DomElement,
     root: DomElement | null,
     domEngine: DomEngine
   ): OptionalDisposables;
@@ -80,11 +78,7 @@ export interface OnBeforeInit {
  * Describes OnInit view hook.
  */
 export interface OnInit {
-  onInit(
-    host: DomElement,
-    root: DomElement | null,
-    domEngine: DomEngine
-  ): OptionalDisposables;
+  onInit(root: DomElement | null, domEngine: DomEngine): OptionalDisposables;
 }
 
 /**
@@ -93,7 +87,6 @@ export interface OnInit {
 export interface OnUnrender {
   onUnrender(
     unrender: () => void,
-    host: DomElement,
     root: DomElement | null,
     domEngine: DomEngine
   ): void;

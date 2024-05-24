@@ -10,7 +10,7 @@ export interface ViewRenderer {
   /**
    * Renders a view into a DOM element and returns rendered disposable instance.
    *
-   * @param element - the DOM element to render to
+   * @param placeholder - the DOM element to render to, will be replaced with the View if rendering is successful
    * @param view - the view definition to render
    * @param viewModel - the view model instance
    */

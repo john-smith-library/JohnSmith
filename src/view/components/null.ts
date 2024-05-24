@@ -2,7 +2,7 @@ import { ViewDefinition } from '../view-definition';
 import { Listenable } from '../../reactive';
 import { ViewComponent } from '../view-component';
 import { Disposable } from '../../common';
-import { DomElement, DomNode } from '../element';
+import { DomNode } from '../element';
 import { ViewRenderer } from '../view-renderer';
 import { AbstractListenableConnector } from '../connectors/abstract';
 import { DomEngine } from '../dom-engine';
@@ -12,6 +12,16 @@ export interface NullData<T> {
   model: T | Listenable<T | null | undefined> | null | undefined;
 }
 
+/**
+ * Connects a Null value to a DOM HTML Element via rendering a View.
+ * The View should not expect any View Model.
+ *
+ * If the Value is listenable then the View will be re-rendered
+ * on every Value change.
+ *
+ * If the Value is not null or undefined the corresponding DOM Element
+ * will be cleared.
+ */
 export class Null<T> implements ViewComponent<NullData<T>> {
   data: NullData<T>;
 

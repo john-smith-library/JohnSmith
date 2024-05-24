@@ -12,6 +12,14 @@ export interface ValueData<T> {
   model: T | Listenable<T | null> | null;
 }
 
+/**
+ * Connects a Value to a DOM HTML Element via rendering a View.
+ * If the Value is listenable then the View will be re-rendered
+ * on every Value change.
+ *
+ * If the Value is null or undefined the corresponding DOM Element
+ * will be cleared.
+ */
 export class Value<T> implements ViewComponent<ValueData<T>> {
   data: ValueData<T>;
 
@@ -31,13 +39,13 @@ export class Value<T> implements ViewComponent<ValueData<T>> {
       this.data.model,
       (value: T | null | undefined) => {
         if (value !== null && value !== undefined) {
-          const rerenderedView = renderer.render(
+          const renderedView = renderer.render(
             actualPlaceholder,
             this.data.view,
             value
           );
 
-          previousRoot = rerenderedView.root;
+          previousRoot = renderedView.root;
 
           return {
             dispose: () => {
@@ -46,7 +54,7 @@ export class Value<T> implements ViewComponent<ValueData<T>> {
                 previousRoot.insertAfter(actualPlaceholder);
               }
 
-              rerenderedView.dispose();
+              renderedView.dispose();
             },
           };
         }
