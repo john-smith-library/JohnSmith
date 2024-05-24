@@ -1,6 +1,6 @@
 {
   "name": "john-smith",
-  "version": "4.0.1-alpha.22",
+  "version": "4.0.1-alpha.23",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -22,7 +22,12 @@
     "type": "git",
     "url": "git+https://github.com/guryanovev/JohnSmith.git"
   },
-  "keywords": ["typescript", "interactive", "UI", "framework"],
+  "keywords": [
+    "typescript",
+    "interactive",
+    "UI",
+    "framework"
+  ],
   "author": "",
   "license": "MIT",
   "bugs": {
