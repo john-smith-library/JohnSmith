@@ -46,8 +46,8 @@ jobs:
           SSH_DEPLOY_KEY: ${{ secrets.SITE_PUBLISH_PRIVATE_KEY }}
 
         with:
-          source-directory: artifacts/
-          target-directory: artifacts/
+          source-directory: artifacts/lib
+          target-directory: artifacts/lib
           destination-github-username: john-smith-library
           destination-repository-name: john-smith-library.github.io
           user-email: <>
