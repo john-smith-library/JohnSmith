@@ -17,7 +17,6 @@ export class UserView implements View, OnBeforeInit {
 
   public onBeforeInit(
     destination: DomElement,
-    root: DomElement | null,
     domEngine: DomEngine
   ): OptionalDisposables {
     // we can create/change DOM manually here

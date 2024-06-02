@@ -1,0 +1,13 @@
+{
+  "entryPoints": ["src"],
+  "entryPointStrategy": "expand",
+  "theme": "default",
+  "exclude": ["**/*+(spec|index).ts"],
+  "excludeReferences": true,
+  "includes": "src_docs",
+  "out": "dist_doc",
+  "plugin": [
+    "typedoc-plugin-merge-modules"
+  ],
+  "mergeModulesMergeMode": "module"
+}
