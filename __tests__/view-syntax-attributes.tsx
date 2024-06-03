@@ -1,9 +1,9 @@
 import { setupAppContainerAndRender } from './_helpers';
 import '../src/view/jsx';
-import { Listenable } from '../src/reactive';
+import { Listenable, ObservableValue } from '../src/reactive';
 
 interface IdProvider {
-  id: string | null | undefined | Listenable<string>;
+  id: string | null | undefined | Listenable<string | undefined>;
 }
 
 const ApplicationView = (viewModel: IdProvider) => (
@@ -46,6 +46,19 @@ describe('view', () => {
       },
       container => {
         expect(container.innerHTML).toBe('<section checked=""></section>');
+      }
+    )
+  );
+
+  it(
+    'removes attribute if dynamic value is undefined',
+    setupAppContainerAndRender(
+      ApplicationView,
+      {
+        id: new ObservableValue<string | undefined>(undefined),
+      },
+      container => {
+        expect(container.innerHTML).toBe('<section></section>');
       }
     )
   );

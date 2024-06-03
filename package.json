@@ -1,6 +1,6 @@
 {
   "name": "john-smith",
-  "version": "4.0.1-alpha.23",
+  "version": "4.0.1-alpha.24",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -14,7 +14,8 @@
     "build_demo": "cd src_demo && webpack",
     "build_demo_local": "cd src_demo_local && webpack",
     "run_demo_local": "cd src_demo_local && webpack --watch",
-    "build_docs": "typedoc --theme default --exclude \"**/*+(spec|index).ts\" --includes src_docs --out dist_doc --entryPointStrategy expand --excludeReferences --excludeInternal --plugin typedoc-plugin-mermaid --categorizeByGroup true src",
+    "build_docs_old": "typedoc --theme default --exclude \"**/*+(spec|index).ts\" --includes src_docs --out dist_doc --entryPointStrategy expand --excludeReferences --excludeInternal --plugin typedoc-plugin-mermaid  --plugin typedoc-plugin-merge-modules --mergeModulesMergeMode module --categorizeByGroup true src",
+    "build_docs": "typedoc --options typedoc.json",
     "pack": "npm run prebuild && npm run clean && npm run build && cpy package.json dist/",
     "compile_docs_samples": "cd src_docs & tsc --noEmit"
   },

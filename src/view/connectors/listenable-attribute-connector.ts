@@ -7,9 +7,9 @@ import { DomElement } from '../element';
  */
 export class ListenableAttributeConnector<
   T,
-> extends AbstractListenableConnector<T> {
+> extends AbstractListenableConnector<T | undefined> {
   constructor(
-    source: Listenable<T | null> | null | undefined,
+    source: Listenable<T | null | undefined> | null | undefined,
     target: DomElement,
     attributeName: string
   ) {

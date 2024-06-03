@@ -31,6 +31,15 @@ it('notifies listeners about initial value by default', () => {
   expect(callback.mock.calls[0][0]).toBe('foo');
 });
 
+it('notifies listeners about initial value even if it is undefined', () => {
+  const observable = new ObservableValue<string | undefined>(undefined);
+  const callback = jest.fn();
+
+  observable.listen(callback);
+
+  expect(callback).toHaveBeenCalledWith(undefined);
+});
+
 it('does not notify listeners about initial if flag set', () => {
   const observable = new ObservableValue('');
   const callback = jest.fn();

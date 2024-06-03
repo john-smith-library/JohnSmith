@@ -122,11 +122,24 @@ export class Listeners<T> {
 
   public add(
     listener: ListenerCallback<T>,
-    initial: T | undefined
+    initial: T,
+    raiseInitial: true
+  ): Disposable;
+
+  public add(
+    listener: ListenerCallback<T>,
+    initial: undefined,
+    raiseInitial: false
+  ): Disposable;
+
+  public add(
+    listener: ListenerCallback<T>,
+    initial: T | undefined,
+    raiseInitial: boolean
   ): Disposable {
     this._items.push(listener);
-    if (initial !== undefined) {
-      listener(initial);
+    if (raiseInitial) {
+      listener(initial!);
     }
 
     return new ListenerLink(this._items, listener);

@@ -97,8 +97,10 @@ export class ObservableValue<T>
     listener: ListenerCallback<T>,
     raiseInitial?: boolean
   ): Disposable {
-    const initial =
-      raiseInitial === undefined || raiseInitial ? this.getValue() : undefined;
-    return this._listeners.add(listener, initial);
+    const actualRaiseInitial = raiseInitial === undefined || raiseInitial;
+
+    return actualRaiseInitial
+      ? this._listeners.add(listener, this.getValue(), true)
+      : this._listeners.add(listener, undefined, false);
   }
 }

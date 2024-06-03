@@ -1,12 +1,20 @@
-import { Listenable, ListenerCallback, Listeners } from './listenable';
+import {
+  Listenable,
+  ListenerCallback,
+  Listeners,
+  ListenersAware,
+} from './listenable';
 import { Disposable } from '../common';
 
 /**
- * Events are stateless listenables that only notify on incoming data change.
+ * Events are stateless reactive actors that notify it`s listeners on data trigger.
+ *
+ * *Stateless* in terms of Events means they never store current value and do not
+ * have methods like `getValue`, `setValue` etc.
  *
  * Use [[trigger]] method to initiate listener notification.
  */
-export class Event<T> extends Listenable<T> {
+export class Event<T> extends Listenable<T> implements ListenersAware {
   private _listeners = new Listeners<T>();
 
   /**
@@ -20,14 +28,13 @@ export class Event<T> extends Listenable<T> {
    * Attaches a listener to this event. The listener
    * will be called for every change related to the listenable.
    *
-   * Please note that for Events the old value is always `undefined` as there
-   * is no state preserved. Because of the same reason, Events never rise
-   * the initial callback.
+   * Please note that `raiseInitial` argument of `Listenable` contract
+   * gets ignored by Events as Events never store any state.
    *
    * @param listener the listener callback
    */
   public listen(listener: ListenerCallback<T>): Disposable {
-    return this._listeners.add(listener, undefined);
+    return this._listeners.add(listener, undefined, false);
   }
 
   /**
