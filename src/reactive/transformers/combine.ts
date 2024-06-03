@@ -26,7 +26,7 @@ import { Disposable, Owner } from '../../common';
 export const combine = <TLeft, TRight, TResult>(
   left: Listenable<TLeft>,
   right: Listenable<TRight>,
-  transform: (left: unknown, right: TRight) => TResult
+  transform: (left: TLeft, right: TRight) => TResult
 ): Listenable<TResult> & ListenersAware =>
   new DependantListenableValue(left, right, transform);
 

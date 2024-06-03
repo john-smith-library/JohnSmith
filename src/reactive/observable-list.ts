@@ -76,7 +76,7 @@ export class ObservableList<T>
   /** Removes all items from the list */
   public clear(): void {
     const currentValue = this.getValue();
-    if (currentValue !== null) {
+    if (currentValue.length > 0) {
       const removed = currentValue.splice(0, currentValue.length);
       this.reactOnChange(removed, DataChangeReason.remove);
     }
@@ -106,8 +106,7 @@ export class ObservableList<T>
   }
 
   public forEach(callback: (item: T) => void, thisArg?: unknown) {
-    const array: T[] = this.getValue() || [];
-    array.forEach(callback, thisArg);
+    this.getValue().forEach(callback, thisArg);
   }
 
   private reactOnChange(portion: T[], reason: DataChangeReason): void {

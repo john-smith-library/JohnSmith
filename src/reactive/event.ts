@@ -34,7 +34,7 @@ export class Event<T> extends Listenable<T> implements ListenersAware {
    * @param listener the listener callback
    */
   public listen(listener: ListenerCallback<T>): Disposable {
-    return this._listeners.add(listener, undefined);
+    return this._listeners.add(listener, undefined, false);
   }
 
   /**

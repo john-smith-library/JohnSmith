@@ -203,3 +203,15 @@ describe('getRequiredLast', () => {
     expect(() => observable.getRequiredLast()).toThrow();
   });
 });
+
+describe('listenPartial', () => {
+  it('respects raiseInitial', () => {
+    const observable = new ObservableList<number>();
+    observable.setValue([1, 2, 42, 101]);
+
+    const callback = jest.fn();
+    observable.listenPartial(callback, false);
+
+    expect(callback).not.toHaveBeenCalled();
+  });
+});
