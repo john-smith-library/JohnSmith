@@ -60,4 +60,15 @@ describe('$className with record', () => {
       }
     )
   );
+
+  it(
+    'supports constant value',
+    setupAppContainerAndRender(
+      () => <span $className={{ active: true, rounded: false }}></span>,
+      undefined,
+      container => {
+        expect(container.innerHTML).toBe('<span class="active"></span>');
+      }
+    )
+  );
 });

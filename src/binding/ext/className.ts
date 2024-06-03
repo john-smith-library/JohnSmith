@@ -47,14 +47,17 @@ DefaultBindingRegistry.prototype['$className'] = (
     );
   }
 
-  // If bindingArgs is not a string or a Listenable, assume it's a Record of Listenable<boolean>
+  // If bindingArgs is not a string or a Listenable, assume it's a Record of Listenable<boolean> or boolean
   const result = new Owner();
-  const classNameRecord = bindingArgs as Record<string, Listenable<boolean>>;
+  const classNameRecord = bindingArgs as Record<
+    string,
+    Listenable<boolean> | boolean
+  >;
 
   for (const className in classNameRecord) {
     result.own(
       new AbstractListenableConnector<boolean>(
-        classNameRecord[className] as Listenable<boolean>,
+        classNameRecord[className],
         (classShouldBeApplied: boolean | null) => {
           if (classShouldBeApplied) {
             classNames.add(className);
@@ -92,6 +95,6 @@ declare module '../../view/jsx/default-intrinsic-element' {
     $className?:
       | Listenable<string | null>
       | string
-      | Record<string, Listenable<boolean>>;
+      | Record<string, Listenable<boolean> | boolean>;
   }
 }
