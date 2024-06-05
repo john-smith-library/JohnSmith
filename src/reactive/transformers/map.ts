@@ -5,14 +5,9 @@ import { Disposable } from '../../common';
  * Creates new listenable that emits values applying the mapper function
  * to source listenable values.
  *
- *     const name = new ObservableValue<string>();
+ * @example
+ * [[include:reactive/transformers/map.ts]]
  *
- *     const uppercaseName = map(name, n => n == null ? null : n.toUpperCase());
- *
- *     uppercaseName.listen(x => console.log(x));
- *     name.setValue('John');
- *
- *     // Outputs: JOHN
  * @param listenable target listenable object
  * @param mapper mapping function
  */

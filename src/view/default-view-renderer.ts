@@ -126,6 +126,9 @@ export class DefaultViewRenderer implements ViewRenderer {
     };
   }
 
+  /**
+   * @internal
+   */
   private static createViewRuntime<ViewModel>(
     viewDefinition: ViewDefinition<ViewModel>,
     viewModel: ViewModel
