@@ -3,34 +3,7 @@
  *
  * Approximate rendering diagram to understand the Hooks order:
  *
- * ```mermaid
- * sequenceDiagram
- *   Application->>+ViewRenderer: Render ViewDefinition with ViewModel
- *   ViewRenderer->>+View: instantiate and get template()
- *   View-->>-ViewRenderer: -
- *   rect rgb(191, 223, 255)
- *   note over View: OnBeforeInit hook
- *   ViewRenderer->>+View: onBeforeInit()
- *   View-->>-ViewRenderer: Disposables to track (if any)
- *   end
- *   ViewRenderer->>ViewRenderer: Setup connectors, run initializers
- *   rect rgb(191, 223, 255)
- *   note over View: OnInit hook
- *   ViewRenderer->>+View: onInit()
- *   View-->>-ViewRenderer: Disposables to track (if any)
- *   end
- *   ViewRenderer-->>-Application: View is ready
- *   Note over Application: Later during the lifecycle...
- *   activate Application
- *   Application-->>Application: Dispose the View
- *   rect rgb(191, 223, 255)
- *   note over View: OnUnrender hook
- *   Application->>+View: onUnrender()
- *   View-->>ViewRenderer: unrender callback
- *   View-->>-Application: View disposed
- *   end
- *   deactivate Application
- * ```
+ * ![Hooks Diagram](media://hooks.png)
  *
  * @module
  */

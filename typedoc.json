@@ -9,5 +9,6 @@
   "plugin": [
     "typedoc-plugin-merge-modules"
   ],
-  "mergeModulesMergeMode": "module"
+  "mergeModulesMergeMode": "module",
+  "media": "./src_docs/assets"
 }
