@@ -1,4 +1,8 @@
-import { expectedSingleElement, setupAppContainerAndRender } from './_helpers';
+import {
+  expectedSingleElement,
+  noComments,
+  setupAppContainerAndRender,
+} from './_helpers';
 import { List } from '../src/view/components/list';
 import '@testing-library/jest-dom';
 import '../src/view/jsx';
@@ -18,7 +22,9 @@ const ListView = (viewModel: ViewModel) => (
 it(
   'should render',
   setupAppContainerAndRender(ListView, new ViewModel([1, 2, 3]), container => {
-    expect(container.innerHTML).toBe('<ul><li>1</li><li>2</li><li>3</li></ul>');
+    expect(noComments(container.innerHTML)).toBe(
+      '<ul><li>1</li><li>2</li><li>3</li></ul>'
+    );
   })
 );
 

@@ -1,5 +1,9 @@
-import { expectedSingleElement, setupAppContainerAndRender } from './_helpers';
-import { List } from '../src/view/components/list';
+import {
+  expectedSingleElement,
+  noComments,
+  setupAppContainerAndRender,
+} from './_helpers';
+import { List, Value } from '../src/view/components';
 import { ObservableList } from '../src/reactive';
 import '@testing-library/jest-dom';
 import '../src/view/jsx';
@@ -26,7 +30,7 @@ it(
     ListView,
     new ViewModel(['initial 1', 'initial 2']),
     container => {
-      expect(container.innerHTML).toBe(
+      expect(noComments(container.innerHTML)).toBe(
         '<ul><li>initial 1</li><li>initial 2</li></ul>'
       );
     }
@@ -40,7 +44,7 @@ it(
     new ViewModel(['1', '2']),
     (container, viewModel) => {
       viewModel.items.add('3');
-      expect(container.innerHTML).toBe(
+      expect(noComments(container.innerHTML)).toBe(
         '<ul><li>1</li><li>2</li><li>3</li></ul>'
       );
     }
@@ -54,7 +58,7 @@ it(
     new ViewModel(['1', '2']),
     (container, viewModel) => {
       viewModel.items.setValue(['3']);
-      expect(container.innerHTML).toBe('<ul><li>3</li></ul>');
+      expect(noComments(container.innerHTML)).toBe('<ul><li>3</li></ul>');
     }
   )
 );
@@ -66,7 +70,9 @@ it(
     new ViewModel(['1', '2', '3']),
     (container, viewModel) => {
       viewModel.items.remove('2');
-      expect(container.innerHTML).toBe('<ul><li>1</li><li>3</li></ul>');
+      expect(noComments(container.innerHTML)).toBe(
+        '<ul><li>1</li><li>3</li></ul>'
+      );
     }
   )
 );
@@ -98,3 +104,76 @@ it(
     }
   )
 );
+
+it(
+  'continues rendering new items after clear (regression)',
+  setupAppContainerAndRender(
+    ListView,
+    new ViewModel(['1', '2', '3']),
+    (container, viewModel) => {
+      viewModel.items.clear();
+      viewModel.items.add('5');
+
+      expect(noComments(container.innerHTML)).toBe('<ul><li>5</li></ul>');
+    }
+  )
+);
+
+describe('List/Value composition', () => {
+  const TestView = (vm: ViewModel) => (
+    // Please note the view we define here
+    // It uses Value component as a direct root of the List view.
+    // With this setup there are no physical DOM elements between
+    // two components definitions (Value comes right under List).
+    <List
+      view={item => <Value view={x => <li>{x}</li>} model={item}></Value>}
+      model={vm.items}
+    ></List>
+  );
+
+  it(
+    'renders single initial value',
+    setupAppContainerAndRender(TestView, new ViewModel(['1']), container => {
+      expect(noComments(container.innerHTML)).toBe('<li>1</li>');
+    })
+  );
+
+  it(
+    'renders single initial values in order',
+    setupAppContainerAndRender(
+      TestView,
+      new ViewModel(['1', '2']),
+      container => {
+        expect(noComments(container.innerHTML)).toBe('<li>1</li><li>2</li>');
+      }
+    )
+  );
+
+  it(
+    'renders initial values',
+    setupAppContainerAndRender(
+      TestView,
+      new ViewModel(['1', '2', '3']),
+      container => {
+        expect(noComments(container.innerHTML)).toBe(
+          '<li>1</li><li>2</li><li>3</li>'
+        );
+      }
+    )
+  );
+
+  it(
+    'continues rendering new items after clear with root Value (regression)',
+    setupAppContainerAndRender(
+      TestView,
+      new ViewModel(['1', '2', '3']),
+      (container, viewModel) => {
+        console.log(container.innerHTML);
+        viewModel.items.clear();
+        viewModel.items.add('5');
+
+        expect(noComments(container.innerHTML)).toBe('<li>5</li>');
+      }
+    )
+  );
+});

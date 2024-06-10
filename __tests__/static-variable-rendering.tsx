@@ -37,6 +37,39 @@ it(
 );
 
 it(
+  'should render null',
+  setupAppContainerAndRender(
+    () => <div>{null}</div>,
+    undefined,
+    container => {
+      expect(container.innerHTML).toBe('<div></div>');
+    }
+  )
+);
+
+it(
+  'should render undefined',
+  setupAppContainerAndRender(
+    () => <div>{undefined}</div>,
+    undefined,
+    container => {
+      expect(container.innerHTML).toBe('<div></div>');
+    }
+  )
+);
+
+it(
+  'should render boolean',
+  setupAppContainerAndRender(
+    () => <div>{true}</div>,
+    undefined,
+    container => {
+      expect(container.innerHTML).toBe('<div>true</div>');
+    }
+  )
+);
+
+it(
   'should render objects with toString',
   setupAppContainerAndRender(
     vm => <div>The message is: {vm.message}</div>,

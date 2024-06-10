@@ -1,4 +1,4 @@
-import { setupAppContainerAndRender } from './_helpers';
+import { noComments, setupAppContainerAndRender } from './_helpers';
 import { HtmlDefinition, View } from '../src/view';
 import { Value } from '../src/view/components/value';
 import '../src/view/jsx';
@@ -25,7 +25,7 @@ describe('view', () => {
   it(
     'can render nested view as a root',
     setupAppContainerAndRender(ApplicationView, new ViewModel(), container => {
-      expect(container.innerHTML).toBe('<span>inner</span>');
+      expect(noComments(container.innerHTML)).toBe('<span>inner</span>');
     })
   );
 });

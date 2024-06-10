@@ -1,4 +1,4 @@
-import { setupAppContainerAndRender } from './_helpers';
+import { noComments, setupAppContainerAndRender } from './_helpers';
 import { Value } from '../src/view/components/value';
 import '@testing-library/jest-dom';
 import '../src/view/jsx';
@@ -57,7 +57,9 @@ it(
     ApplicationViewWithRootNested,
     new ApplicationViewModel(JOHN_SMITH),
     container => {
-      expect(container.innerHTML).toBe('<article>John Smith</article>');
+      expect(noComments(container.innerHTML)).toBe(
+        '<article>John Smith</article>'
+      );
     }
   )
 );

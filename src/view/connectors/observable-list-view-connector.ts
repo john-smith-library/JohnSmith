@@ -5,7 +5,7 @@ import {
   isPartialListenable,
   Listenable,
 } from '../../reactive';
-import { DomNode } from '../element';
+import { DomMarker, DomNode } from '../element';
 import { ViewDefinition } from '../view-definition';
 import { ViewRenderer } from '../view-renderer';
 import { DomEngine } from '../dom-engine';
@@ -23,7 +23,6 @@ export class ObservableListViewConnector<T> implements Disposable {
   private readonly _link: Disposable | null = null;
 
   /**
-   * @internal
    * @private
    */
   private _renderedValues: IRenderedValueData<T>[];
@@ -99,10 +98,10 @@ export class ObservableListViewConnector<T> implements Disposable {
         const itemRenderedValue = this.findRenderedValue(item);
 
         if (itemRenderedValue) {
-          if (this._renderedValues.length === 1) {
-            this._initialPlaceholder = this.domEngine.createMarkerElement();
-            itemRenderedValue.root!.insertAfter(this._initialPlaceholder);
-          }
+          // if (this._renderedValues.length === 1) {
+          //   this._initialPlaceholder = this.domEngine.createMarkerElement();
+          //   itemRenderedValue.root!.insertAfter(this._initialPlaceholder);
+          // }
 
           itemRenderedValue.dispose();
           this.removeRenderedValue(itemRenderedValue);
@@ -111,12 +110,12 @@ export class ObservableListViewConnector<T> implements Disposable {
     } else if (reason == DataChangeReason.add) {
       this.appendItems(value);
     } else {
-      if (this._renderedValues.length > 0) {
-        this._initialPlaceholder = this.domEngine.createMarkerElement();
-        this._renderedValues[
-          this._renderedValues.length - 1
-        ].renderedValue.root!.insertAfter(this._initialPlaceholder);
-      }
+      // if (this._renderedValues.length > 0) {
+      //   this._initialPlaceholder = this.domEngine.createMarkerElement();
+      //   this._renderedValues[
+      //     this._renderedValues.length - 1
+      //   ].renderedValue.root!.insertAfter(this._initialPlaceholder);
+      // }
 
       for (i = 0; i < this._renderedValues.length; i++) {
         this._renderedValues[i].renderedValue.dispose();
@@ -154,18 +153,23 @@ export class ObservableListViewConnector<T> implements Disposable {
     }
   }
 
-  private getNextItemPlaceholder(): DomNode {
-    if (this._renderedValues.length !== 0) {
-      const lastRendered =
-        this._renderedValues[this._renderedValues.length - 1];
+  private getNextItemPlaceholder(): DomMarker {
+    const result = this.domEngine.createMarkerElement('list-next');
+    this._initialPlaceholder.insertBefore(result);
 
-      if (lastRendered.renderedValue.root !== null) {
-        const result = this.domEngine.createMarkerElement();
-        lastRendered.renderedValue.root.insertAfter(result);
-        return result;
-      }
-    }
+    return result;
 
-    return this._initialPlaceholder;
+    // if (this._renderedValues.length !== 0) {
+    //   const lastRendered =
+    //     this._renderedValues[this._renderedValues.length - 1];
+    //
+    //   if (lastRendered.renderedValue.root !== null) {
+    //     const result = this.domEngine.createMarkerElement('list-next');
+    //     lastRendered.renderedValue.root.insertAfter(result);
+    //     return result;
+    //   }
+    // }
+    //
+    // return this._initialPlaceholder;
   }
 }

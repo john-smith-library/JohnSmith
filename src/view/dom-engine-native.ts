@@ -1,4 +1,10 @@
-import { DomElement, DomElementClasses, DomNode, DomText } from './element';
+import {
+  DomElement,
+  DomElementClasses,
+  DomMarker,
+  DomNode,
+  DomText,
+} from './element';
 import { DomEngine } from './dom-engine';
 
 abstract class NativeNode implements DomNode {
@@ -13,6 +19,7 @@ abstract class NativeNode implements DomNode {
   }
 
   public abstract insertAfter(node: DomNode): void;
+  public abstract insertBefore(node: DomNode): void;
 }
 
 class ManualDomElementClasses implements DomElementClasses {
@@ -44,6 +51,8 @@ class ManualDomElementClasses implements DomElementClasses {
 }
 
 class NativeComment extends NativeNode {
+  readonly isMarker = true;
+
   constructor(public readonly comment: Comment) {
     super(comment);
   }
@@ -54,6 +63,10 @@ class NativeComment extends NativeNode {
 
   public insertAfter(node: DomNode): void {
     this.comment.after((node as NativeNode).element);
+  }
+
+  public insertBefore(node: DomNode): void {
+    this.comment.before((node as NativeNode).element);
   }
 }
 
@@ -71,6 +84,10 @@ class NativeElement extends NativeNode implements DomElement {
 
   public insertAfter(node: DomNode): void {
     this.element.after((node as NativeNode).element);
+  }
+
+  public insertBefore(node: DomNode): void {
+    this.element.before((node as NativeNode).element);
   }
 
   public setInnerText(value: string) {
@@ -149,6 +166,10 @@ class DomNativeText extends NativeNode implements DomText {
   public insertAfter(node: DomNode): void {
     this.textNode.after((node as NativeNode).element);
   }
+
+  public insertBefore(node: DomNode): void {
+    this.textNode.before((node as NativeNode).element);
+  }
 }
 
 export class NativeDomEngine implements DomEngine {
@@ -160,8 +181,12 @@ export class NativeDomEngine implements DomEngine {
     return new NativeElement(document.createElement(tag));
   }
 
-  public createMarkerElement(): DomNode {
-    return new NativeComment(document.createComment('JS-placeholder'));
+  public createMarkerElement(id?: string): DomMarker {
+    return new NativeComment(
+      document.createComment(
+        'JS-placeholder' + (id === undefined ? '' : '-' + id)
+      )
+    );
   }
 
   public createNamespaceElement(namespace: string, tag: string): DomElement {

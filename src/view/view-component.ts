@@ -1,5 +1,5 @@
 import { Disposable } from '../common';
-import { DomNode } from './element';
+import { DomMarker } from './element';
 import { ViewRenderer } from './view-renderer';
 import { DomEngine } from './dom-engine';
 
@@ -7,9 +7,10 @@ export type ViewComponentConstructor<T> = { new (data: T): ViewComponent<T> };
 
 export interface ViewComponent<TData> {
   data?: TData;
+  markerId?: string;
 
   $$createBinding(
-    placeholder: DomNode,
+    placeholder: DomMarker,
     renderer: ViewRenderer,
     domEngine: DomEngine
   ): Disposable;

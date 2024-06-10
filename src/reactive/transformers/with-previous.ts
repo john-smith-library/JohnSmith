@@ -1,6 +1,3 @@
-/**
- * @module reactive/transformers
- */
 import { Disposable } from '../../common';
 import { Listenable, ListenerCallback } from '../listenable';
 

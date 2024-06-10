@@ -1,4 +1,4 @@
-import { DomElement, DomNode } from './element';
+import { DomElement, DomMarker, DomNode } from './element';
 import { Disposable, Owner, ToDisposable } from '../common';
 import {
   HtmlDefinition,
@@ -36,7 +36,7 @@ export class DefaultViewRenderer implements ViewRenderer {
    * @inheritDoc
    */
   public render<ViewModel>(
-    placeholder: DomNode,
+    placeholder: DomMarker,
     view: ViewDefinition<ViewModel>,
     viewModel: ViewModel
   ): RenderedView {
@@ -58,13 +58,21 @@ export class DefaultViewRenderer implements ViewRenderer {
     const result = new Owner();
 
     if (transformedTemplate !== null) {
-      placeholder.replaceWith(transformedTemplate);
-
-      result.own({
-        dispose: () => {
-          transformedTemplate.remove();
-        },
-      });
+      if (transformedTemplate.isMarker) {
+        placeholder.insertAfter(transformedTemplate);
+        result.own({
+          dispose: () => {
+            placeholder.remove();
+          },
+        });
+      } else {
+        placeholder.replaceWith(transformedTemplate);
+        result.own({
+          dispose: () => {
+            transformedTemplate.remove();
+          },
+        });
+      }
     }
 
     const hooksRoot: DomElement | null =
@@ -119,13 +127,21 @@ export class DefaultViewRenderer implements ViewRenderer {
     }
 
     return {
-      root: transformedTemplate ?? placeholder,
+      root:
+        transformedTemplate === null || transformedTemplate.isMarker
+          ? placeholder
+          : transformedTemplate,
+
+      //transformedTemplate?.isMarker ? placeholder : transformedTemplate!, //transformedTemplate ?? placeholder,
       dispose: () => {
         result.dispose();
       },
     };
   }
 
+  /**
+   * @internal
+   */
   private static createViewRuntime<ViewModel>(
     viewDefinition: ViewDefinition<ViewModel>,
     viewModel: ViewModel
@@ -232,7 +248,9 @@ export class DefaultViewRenderer implements ViewRenderer {
       return null;
     }
 
-    const viewPlaceholderElement = this.domEngine.createMarkerElement();
+    const viewPlaceholderElement = this.domEngine.createMarkerElement(
+      component.markerId
+    );
     bindings.push(() =>
       component.$$createBinding(viewPlaceholderElement, this, this.domEngine)
     );
@@ -250,42 +268,74 @@ export class DefaultViewRenderer implements ViewRenderer {
     for (let i = 0; i < source.nested.length; i++) {
       const nested: NestedHtmlDefinition = source.nested[i];
 
-      if (typeof nested === 'string') {
-        result.appendChild(this.domEngine.createTextNode(nested));
-      } else if (typeof nested === 'number') {
-        result.appendChild(this.domEngine.createTextNode(nested.toString()));
-      } else if ('element' in nested) {
-        const newChild = this.transformElementsRecursively(
-          result,
-          nested,
-          bindings,
-          context,
-          namespace
-        );
-
-        if (newChild !== null) {
-          result.appendChild(newChild);
-        }
-      } else if ('listen' in nested) {
-        const connectorSource = nested as Listenable<PossiblyFormattable>;
-        const connectorTarget = this.domEngine.createTextNode('');
-
-        result.appendChild(connectorTarget);
-
-        bindings.push(
-          () => new ListenableTextConnector(connectorSource, connectorTarget)
-        );
-      } else {
-        /**
-         * All the unknown elements rendered as strings
-         */
-        result.appendChild(
-          this.domEngine.createTextNode(
-            nested.toString ? nested.toString() ?? '' : ''
-          )
-        );
-      }
+      this.processElementNestedItem(
+        nested,
+        result,
+        bindings,
+        context,
+        namespace
+      );
     }
+  }
+
+  private processElementNestedItem(
+    nested: NestedHtmlDefinition,
+    result: DomElement,
+    bindings: (() => Disposable)[],
+    context: TraversingContext,
+    namespace: string | undefined
+  ) {
+    if (nested === null || nested === undefined) {
+      return;
+    }
+
+    if (typeof nested === 'string') {
+      result.appendChild(this.domEngine.createTextNode(nested));
+      return;
+    }
+
+    if (typeof nested === 'number' || typeof nested === 'boolean') {
+      result.appendChild(this.domEngine.createTextNode(nested.toString()));
+      return;
+    }
+
+    if ('element' in nested) {
+      const newChild = this.transformElementsRecursively(
+        result,
+        nested,
+        bindings,
+        context,
+        namespace
+      );
+
+      if (newChild !== null) {
+        result.appendChild(newChild);
+      }
+
+      return;
+    }
+
+    if ('listen' in nested) {
+      const connectorSource = nested as Listenable<PossiblyFormattable>;
+      const connectorTarget = this.domEngine.createTextNode('');
+
+      result.appendChild(connectorTarget);
+
+      bindings.push(
+        () => new ListenableTextConnector(connectorSource, connectorTarget)
+      );
+
+      return;
+    }
+
+    /**
+     * All the unknown elements rendered as strings
+     */
+    result.appendChild(
+      this.domEngine.createTextNode(
+        nested.toString ? nested.toString() ?? '' : ''
+      )
+    );
   }
 
   private processElementAttributes(
