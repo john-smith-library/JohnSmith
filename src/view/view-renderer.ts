@@ -1,4 +1,4 @@
-import { DomNode } from './element';
+import { DomMarker, DomNode } from './element';
 import { ViewDefinition } from './view-definition';
 import { Disposable } from '../common';
 
@@ -15,7 +15,7 @@ export interface ViewRenderer {
    * @param viewModel - the view model instance
    */
   render<ViewModel>(
-    placeholder: DomNode,
+    placeholder: DomMarker,
     view: ViewDefinition<ViewModel>,
     viewModel: ViewModel
   ): RenderedView;

@@ -1,4 +1,4 @@
-import { DomElement, DomNode } from './element';
+import { DomElement, DomMarker, DomNode } from './element';
 import { Disposable, Owner, ToDisposable } from '../common';
 import {
   HtmlDefinition,
@@ -36,7 +36,7 @@ export class DefaultViewRenderer implements ViewRenderer {
    * @inheritDoc
    */
   public render<ViewModel>(
-    placeholder: DomNode,
+    placeholder: DomMarker,
     view: ViewDefinition<ViewModel>,
     viewModel: ViewModel
   ): RenderedView {
@@ -58,13 +58,21 @@ export class DefaultViewRenderer implements ViewRenderer {
     const result = new Owner();
 
     if (transformedTemplate !== null) {
-      placeholder.replaceWith(transformedTemplate);
-
-      result.own({
-        dispose: () => {
-          transformedTemplate.remove();
-        },
-      });
+      if (transformedTemplate.isMarker) {
+        placeholder.insertAfter(transformedTemplate);
+        result.own({
+          dispose: () => {
+            placeholder.remove();
+          },
+        });
+      } else {
+        placeholder.replaceWith(transformedTemplate);
+        result.own({
+          dispose: () => {
+            transformedTemplate.remove();
+          },
+        });
+      }
     }
 
     const hooksRoot: DomElement | null =
@@ -119,7 +127,12 @@ export class DefaultViewRenderer implements ViewRenderer {
     }
 
     return {
-      root: transformedTemplate ?? placeholder,
+      root:
+        transformedTemplate === null || transformedTemplate.isMarker
+          ? placeholder
+          : transformedTemplate,
+
+      //transformedTemplate?.isMarker ? placeholder : transformedTemplate!, //transformedTemplate ?? placeholder,
       dispose: () => {
         result.dispose();
       },
@@ -235,7 +248,9 @@ export class DefaultViewRenderer implements ViewRenderer {
       return null;
     }
 
-    const viewPlaceholderElement = this.domEngine.createMarkerElement();
+    const viewPlaceholderElement = this.domEngine.createMarkerElement(
+      component.markerId
+    );
     bindings.push(() =>
       component.$$createBinding(viewPlaceholderElement, this, this.domEngine)
     );

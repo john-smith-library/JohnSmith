@@ -71,3 +71,34 @@ export const expectedSingleElement = (
 
   return container.firstElementChild! as HTMLElement;
 };
+
+export const noComments = (value: string): string => {
+  let result = '';
+
+  let i = 0;
+
+  while (i < value.length) {
+    let nextCommentStart = value.indexOf('<!--', i);
+
+    if (nextCommentStart === -1) {
+      nextCommentStart = value.length;
+    }
+
+    while (i < nextCommentStart) {
+      result += value[i];
+      i++;
+    }
+
+    i++;
+
+    if (nextCommentStart < value.length) {
+      const nextCommentEnd = value.indexOf('-->', nextCommentStart + 4);
+      console.log(result, nextCommentEnd);
+      i = nextCommentEnd + 3;
+    }
+
+    console.log(result + 'i = ' + i);
+  }
+
+  return result;
+};

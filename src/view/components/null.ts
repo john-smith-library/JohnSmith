@@ -2,7 +2,7 @@ import { ViewDefinition } from '../view-definition';
 import { Listenable } from '../../reactive';
 import { ViewComponent } from '../view-component';
 import { Disposable } from '../../common';
-import { DomNode } from '../element';
+import { DomMarker, DomNode } from '../element';
 import { ViewRenderer } from '../view-renderer';
 import { AbstractListenableConnector } from '../connectors/abstract';
 import { DomEngine } from '../dom-engine';
@@ -30,7 +30,7 @@ export class Null<T> implements ViewComponent<NullData<T>> {
   }
 
   public $$createBinding(
-    placeholder: DomNode,
+    placeholder: DomMarker,
     renderer: ViewRenderer,
     domEngine: DomEngine
   ): Disposable {

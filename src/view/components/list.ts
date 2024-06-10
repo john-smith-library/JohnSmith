@@ -14,6 +14,7 @@ export interface ListData<T> {
 
 export class List<T> implements ViewComponent<ListData<T>> {
   data: ListData<T>;
+  markerId = 'list';
 
   constructor(data: ListData<T>) {
     this.data = data;

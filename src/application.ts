@@ -59,7 +59,7 @@ export class Application {
     const actualElement: DomElement | null =
       this._domEngine.resolveElement(element);
     if (actualElement !== null) {
-      const placeholder = this._domEngine.createMarkerElement();
+      const placeholder = this._domEngine.createMarkerElement('root');
       actualElement.appendChild(placeholder);
       return this._viewRenderer.render(placeholder, view, viewModel);
     }

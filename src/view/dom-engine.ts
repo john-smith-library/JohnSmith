@@ -1,4 +1,4 @@
-import { DomElement, DomNode, DomText } from './element';
+import { DomElement, DomMarker, DomText } from './element';
 
 /**
  * Describes DOM operations.
@@ -12,7 +12,7 @@ export interface DomEngine {
   /**
    * Creates temporary marker element to be replaced with other markup later.
    */
-  createMarkerElement(): DomNode;
+  createMarkerElement(id?: string): DomMarker;
 
   /**
    * Method to create a DOM element within a specified namespace and tag

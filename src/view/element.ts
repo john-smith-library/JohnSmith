@@ -4,6 +4,14 @@ export interface DomNode {
   replaceWith(anotherNode: DomNode): void;
 
   insertAfter(node: DomNode): void;
+
+  insertBefore(node: DomNode): void;
+
+  readonly isMarker?: true;
+}
+
+export interface DomMarker extends DomNode {
+  readonly isMarker: true;
 }
 
 /**
