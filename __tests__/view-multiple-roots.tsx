@@ -71,7 +71,7 @@ describe('multiple roots mixed nodes', () => {
 
 const MultipleRootTable = (viewModel: ViewModel) => (
   <table>
-    <tbody data-testid="tbody">
+    <tbody data-testid={viewModel.toString()}>
       <List
         view={number => (
           <VirtualNode

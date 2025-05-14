@@ -2,7 +2,7 @@ import { HtmlDefinition, ViewDefinition } from '../view-definition';
 import { ViewComponent } from '../view-component';
 import { Disposable, Owner } from '../../common';
 import { DomEngine } from '../dom-engine';
-import { DomMarker, DomNode } from '../element';
+import { DomMarker } from '../element';
 import { ViewRenderer } from '../view-renderer';
 
 export interface VirtualNodeData {
