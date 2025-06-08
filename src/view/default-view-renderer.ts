@@ -1,5 +1,5 @@
 import { DomElement, DomMarker, DomNode } from './element';
-import { Disposable, Owner, ToDisposable } from '../common';
+import { Disposable, IsDisposable, Owner, ToDisposable } from '../common';
 import {
   HtmlDefinition,
   NestedHtmlDefinition,
@@ -96,7 +96,7 @@ export class DefaultViewRenderer implements ViewRenderer {
     for (let i = initializers.length - 1; i >= 0; i--) {
       result.own(initializers[i]());
     }
-
+    
     /**
      * On Init
      */
@@ -105,6 +105,10 @@ export class DefaultViewRenderer implements ViewRenderer {
       result.ownIfNotNull(
         ToDisposable(onInitViewInstance.onInit(hooksRoot, this.domEngine))
       );
+    }
+
+    if (IsDisposable(context.viewInstance)) {
+      result.own(context.viewInstance);
     }
 
     /**

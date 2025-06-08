@@ -24,6 +24,6 @@ export const NoopDisposable: Disposable = {
   dispose: () => {},
 };
 
-export const IsDisposable = (item: OptionalDisposables): item is Disposable => {
+export const IsDisposable = (item: unknown): item is Disposable => {
   return (item as Disposable).dispose !== undefined;
 };
