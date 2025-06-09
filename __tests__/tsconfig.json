@@ -1,0 +1,9 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "jsx": "react",
+    "jsxFactory": "JS.d"
+  },
+  "include": ["./**/*"],
+  "exclude": ["node_modules"]
+} 
