@@ -8,7 +8,7 @@ class ViewModel {
 }
 
 class ApplicationView implements View, Disposable {
-  constructor(private viewModel: ViewModel, ) {}
+  constructor(private viewModel: ViewModel) {}
 
   public template(): HtmlDefinition {
     return <section>View</section>;
@@ -22,9 +22,13 @@ class ApplicationView implements View, Disposable {
 describe('view with dispose', () => {
   it(
     'dispose called after unrender',
-    setupAppContainerAndRender(ApplicationView, new ViewModel(jest.fn()), (container, viewModel, view) => {
-      view.dispose();
-      expect(viewModel.dispose).toHaveBeenCalled();
-    })
+    setupAppContainerAndRender(
+      ApplicationView,
+      new ViewModel(jest.fn()),
+      (container, viewModel, view) => {
+        view.dispose();
+        expect(viewModel.dispose).toHaveBeenCalled();
+      }
+    )
   );
 });

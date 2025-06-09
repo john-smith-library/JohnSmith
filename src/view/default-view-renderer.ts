@@ -96,7 +96,7 @@ export class DefaultViewRenderer implements ViewRenderer {
     for (let i = initializers.length - 1; i >= 0; i--) {
       result.own(initializers[i]());
     }
-    
+
     /**
      * On Init
      */
